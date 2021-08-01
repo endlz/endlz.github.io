@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>域渗透中的 Kerberos 委派攻击 | 3ND</title>
-<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627825033165">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="域渗透中的 Kerberos 委派攻击 | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
@@ -25,7 +25,7 @@
     <div class="main-content">
       <div class="site-header">
   <a href="https://3nd.xyz">
-  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627825033165" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -61,21 +61,15 @@
     
   </div>
   <div class="social-container">
-    
-      
-        <a href="https://github.com/inspiringz" target="_blank">
-          <i class="ri-github-line"></i>
-        </a>
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
+    <a href="https://github.com/inspiringz" target="_blank">
+      <i class="ri-github-fill"></i>
+    </a>
+    <a href="mailto:z@3nd.xyz" target="_blank">
+      <i class="ri-mail-send-fill"></i>
+  </a>
+  <a href="#">
+    <i class="ri-fire-fill"></i>
+</a>
   </div>
 </div>
 
@@ -382,7 +376,7 @@ secretsdump.exe -no-pass -k 2012dc.ins.z
 <p><strong>*</strong> <code>MachineAccountQuota</code> MAQ 是一个域级别的属性，默认情况下可以允许非特权用户(普通域用户)将主机连接到 AD 域，能连接的主机数最多不超过 10 台。该值表示允许域用户在域中创建的计算机帐户数，默认为 10，计算机账户默认注册 RestrictedKrbHost/domain 和 HOST/domain SPN。</p>
 <pre><code class="language-sh">Get-DomainObject -Identity &quot;dc=ins,dc=z&quot; -Domain ins.z | select MachineAccountQuota
 </code></pre>
-<p>在 <a href="https://blog.ateam.qianxin.com/post/zhe-shi-yi-pian-bu-yi-yang-de-zhen-shi-shen-tou-ce-shi-an-li-fen-xi-wen-zhang/">这是一篇“不一样”的真实渗透测试案例分析文章</a> 中，作者根据 Discuz 数据库中提取的用户名和密码通过 Kerberute 进行用户名撞库及密码喷洒，成功获取到一个普通域用户账号来添加机器账户 <code>evilpc$</code> (含 SPN)，再通过 <code>webdev</code> 服务器 XXE 进行 NTTLMRelay 到域控 LDAP 配置基于资源的约束委派，允许 <code>evilpc$</code> 代表任意账户访问，最后通过 S4U 协议向申请高权限(administrator)票据，进而 PTT 完成对 <code>webdav</code> 服务器的控制。</p>
+<p>在 <a href="https://blog.ateam.qianxin.com/post/zhe-shi-yi-pian-bu-yi-yang-de-zhen-shi-shen-tou-ce-shi-an-li-fen-xi-wen-zhang/">这是一篇“不一样”的真实渗透测试案例分析文章</a> 中，作者根据 Discuz 数据库中提取的用户名和密码通过 Kerberute 进行用户名撞库及密码喷洒，成功获取到一个普通域用户账号来添加机器账户 <code>evilpc$</code> (含 SPN)，再通过 <code>webdav</code> 服务器 XXE 进行 NTTLMRelay 到域控 LDAP 配置基于资源的约束委派，允许 <code>evilpc$</code> 代表任意账户访问，最后通过 S4U 协议向申请高权限(administrator)票据，进而 PTT 完成对 <code>webdav</code> 服务器的控制。</p>
 <p><strong>- Reference -</strong></p>
 <p>[1] <a href="https://xz.aliyun.com/t/7217">域渗透——Kerberos委派攻击</a></p>
 <p>[2] <a href="https://adsecurity.org/?p=1667">Active Directory Security Risk #101: Kerberos Unconstrained Delegation</a></p>
