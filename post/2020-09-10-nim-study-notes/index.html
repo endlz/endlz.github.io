@@ -1,0 +1,1085 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nim Manual Study Notes | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Nim Manual Study Notes | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="Nim 是一种静态类型的、编译型、系统编程语言。它结合了其他成熟语言的成功概念。（如 Python、Ada 和 Modula）
+词法元素
+Nim 词法元素由（字符串）字面值、标识符、关键字、注释、操作符、和其它标点符号构成。
+字符串和字符字..." />
+    <meta name="keywords" content="Notes,Nim" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Nim Manual Study Notes
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-09-10
+              </span>
+              <span>
+                23 min read
+              </span>
+              <span class="page-view" key="20200910193913" title="Nim Manual Study Notes">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/notes/" class="post-tag">
+                  # Notes
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/nim/" class="post-tag">
+                  # Nim
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <p>Nim 是一种静态类型的、编译型、系统编程语言。它结合了其他成熟语言的成功概念。（如 Python、Ada 和 Modula）</p>
+<h2 id="词法元素">词法元素</h2>
+<p>Nim 词法元素由（字符串）字面值、标识符、关键字、注释、操作符、和其它标点符号构成。</p>
+<h3 id="字符串和字符字面量">字符串和字符字面量</h3>
+<p>字符串字面值通过双引号括起来；字符字面值用单引号。特殊字符通过 <code>\</code> 转义: <code>\n</code> 表示换行， <code>\t</code> 表示制表符等.</p>
+<pre><code class="language-nim">r&quot;C:\program files\nim&quot; # 原始字符串字面量，\ 不转义
+'''hello\world''' # 长字符串字面量，\ 不转义
+</code></pre>
+<h3 id="注释">注释</h3>
+<ul>
+<li>
+<p>单行注释：<code>#</code>、文档注释 <code>##</code></p>
+</li>
+<li>
+<p>多行注释：<code>#[....]#</code>、<code>discard '''xxxx'''</code></p>
+</li>
+</ul>
+<h3 id="数字">数字</h3>
+<ul>
+<li>下划线：<code>1_000_000</code> 一百万</li>
+<li>浮点字面值：<code>1.0e9</code> 十亿</li>
+<li>进制：<code>0b</code> <code>0o</code> <code>0x</code></li>
+</ul>
+<h2 id="var-语句">var 语句</h2>
+<pre><code class="language-nim">var x, y: int # 声明 x 和 y 拥有类型 ``int``
+var
+  x, y: int
+  # 可以有注释
+  a, b, c: string
+</code></pre>
+<h2 id="赋值语句">赋值语句</h2>
+<pre><code class="language-nim">var x = &quot;abc&quot; # 引入一个新变量 `x` 并且赋值给它
+x = &quot;xyz&quot;     # 赋新值给 `x`
+var x, y = 3  # 给变量 `x` 和 `y` 赋值 3
+</code></pre>
+<h2 id="常量">常量</h2>
+<pre><code class="language-nim">const x = &quot;abc&quot;
+const
+  x = 1
+  # 这也可以有注释
+  y = 2
+  z = y + 5 # 计算是可能的
+</code></pre>
+<h2 id="let-语句">let 语句</h2>
+<p>let 语句像 var 语句一样但声明的符号是 <code>单赋值</code> 变量：初始化后它们的值将不能改变。</p>
+<pre><code class="language-nim">let x = &quot;abc&quot; # 引入一个新变量 `x` 并绑定一个值
+x = &quot;xyz&quot;     # 非法: 给 `x` 赋值
+</code></pre>
+<p>let 和 const 的区别在于: let 引入一个变量不能重新赋值。 const 表示 <strong>强制编译期求值并放入数据段</strong>:</p>
+<pre><code class="language-nim">const input = readLine(stdin) # 错误: 需要常量表达式
+let input = readLine(stdin)   # 可以
+</code></pre>
+<h2 id="流程控制语句">流程控制语句</h2>
+<h3 id="if-语句">if 语句</h3>
+<pre><code class="language-nim">let name = readLine(stdin)
+if name == &quot;&quot;:
+  echo &quot;Poor soul, you lost your name?&quot;
+elif name == &quot;name&quot;:
+  echo &quot;Very funny, your name is name.&quot;
+else:
+  echo &quot;Hi, &quot;, name, &quot;!&quot;
+</code></pre>
+<h3 id="case-语句">Case 语句</h3>
+<pre><code class="language-nim">let name = readLine(stdin)
+case name
+of &quot;&quot;:
+  echo &quot;Poor soul, you lost your name?&quot;
+of &quot;name&quot;:
+  echo &quot;Very funny, your name is name.&quot;
+of &quot;Dave&quot;, &quot;Frank&quot;: # 对于分支允许使用逗号分隔的值列表
+  echo &quot;Cool name!&quot;
+else:
+  echo &quot;Hi, &quot;, name, &quot;!&quot;
+</code></pre>
+<p>case 语句可以处理整型、其它序数类型和字符串。对整型或序数类型值，也可以用范围：</p>
+<pre><code class="language-nim">from strutils import parseInt
+
+echo &quot;A number please: &quot;
+let n = parseInt(readLine(stdin))
+case n
+of 0..2, 4..7: echo &quot;The number is in the set: {0, 1, 2, 4, 5, 6, 7}&quot;
+of 3, 8: echo &quot;The number is 3 or 8&quot;
+else: discard # 空 discard 语句 =&gt; 什么都不做
+</code></pre>
+<h3 id="while-语句">While 语句</h3>
+<pre><code class="language-nim">echo &quot;What's your name? &quot;
+var name = readLine(stdin)
+while name == &quot;&quot;:
+  echo &quot;Please tell me your name: &quot;
+  name = readLine(stdin)
+</code></pre>
+<h3 id="for-语句">For 语句</h3>
+<pre><code class="language-nim">echo &quot;Counting to ten: &quot;
+for i in countup(1, 10): # 倒数  countdown(10, 1)
+  echo i
+# --&gt; Outputs 1 2 3 4 5 6 7 8 9 10 on different lines
+for i in 1..10: # 1..10
+for i in 0..&lt;10: # 零索引计数 0..9 -&gt; for i in 0..&lt;s.len
+for index, item in [&quot;a&quot;, &quot;b&quot;].pairs:
+  echo item, &quot; at index &quot;, index
+# =&gt; a at index 0
+# =&gt; b at index 1
+</code></pre>
+<h3 id="作用域和块语句">作用域和块语句</h3>
+<pre><code class="language-nim">while false:
+  var x = &quot;hi&quot;
+echo x # 不行
+block myblock:
+  var x = &quot;hi&quot;
+echo x # 不行
+</code></pre>
+<h3 id="break-语句">Break 语句</h3>
+<pre><code class="language-nim">block myblock:
+  echo &quot;entering block&quot;
+  while true:
+    echo &quot;looping&quot;
+    break # 跳出循环,但不跳出块
+  echo &quot;still in block&quot;
+
+block myblock2:
+  echo &quot;entering block&quot;
+  while true:
+    echo &quot;looping&quot;
+    break myblock2 # 跳出块 (和循环)
+  echo &quot;still in block&quot;
+</code></pre>
+<h3 id="continue-语句">Continue 语句</h3>
+<pre><code class="language-nim">while true:
+  let x = readLine(stdin)
+  if x == &quot;&quot;: continue
+  echo x
+</code></pre>
+<h3 id="when-语句">When 语句</h3>
+<p>when 语句几乎等价于 if 语句, 但有以下区别:</p>
+<ul>
+<li>每个条件必须是常量表达式，因为它被编译器求值。</li>
+<li>分支内的语句不打开新作用域。</li>
+<li>编译器检查语义并仅为属于第一个求值为 true 的条件生成代码。</li>
+</ul>
+<p>when 语句在写平台特定代码时有用，类似于 C 语言中的 <code>#ifdef</code> 结构。</p>
+<pre><code class="language-nim">when system.hostOS == &quot;windows&quot;:
+  echo &quot;running on Windows!&quot;
+elif system.hostOS == &quot;linux&quot;:
+  echo &quot;running on Linux!&quot;
+elif system.hostOS == &quot;macosx&quot;:
+  echo &quot;running on Mac OS X!&quot;
+else:
+  echo &quot;unknown operating system&quot;
+</code></pre>
+<h2 id="语句和缩进">语句和缩进</h2>
+<p>简单语句不必缩进（不能包含其它语句：属于简单语句的赋值, 过程调用或 return 语句），复杂语句必须缩进，避免歧义。</p>
+<pre><code class="language-nim"># 单个赋值语句不需要缩进:
+if x: x = false
+
+# 嵌套 if 语句需要缩进:
+if x:
+  if y:
+    y = false
+  else:
+    y = true
+
+# 需要缩进, 因为条件后有两个语句：
+if x:
+  x = false
+  y = false
+</code></pre>
+<p>表达式为了更好的可读性可以在某些地方缩进：</p>
+<pre><code class="language-nim">if thisIsaLongCondition() and
+    thisIsAnotherLongCondition(1,
+       2, 3, 4):
+  x = true
+</code></pre>
+<p>用小括号和分号 (😉 可以在只允许表达式的地方使用语句：</p>
+<pre><code class="language-nim">const fac4 = (var x = 1; for i in 1..4: x *= i; x)
+</code></pre>
+<h2 id="过程procedure">过程（procedure）</h2>
+<pre><code class="language-nim">proc yes(question: string): bool =
+  echo question, &quot; (y/n)&quot;
+  while true:
+    case readLine(stdin)
+    of &quot;y&quot;, &quot;Y&quot;, &quot;yes&quot;, &quot;Yes&quot;: return true
+    of &quot;n&quot;, &quot;N&quot;, &quot;no&quot;, &quot;No&quot;: return false
+    else: echo &quot;Please be clear: yes or no&quot;
+
+if yes(&quot;Should I delete all your important files?&quot;):
+  echo &quot;I'm sorry Dave, I'm afraid I can't do that.&quot;
+else:
+  echo &quot;I think you know what the problem is just as well as I do.&quot;
+</code></pre>
+<h3 id="result-变量">Result 变量</h3>
+<p>一个返回值的过程有一个隐式 result 变量声明代表返回值。一个没有表达式的 return 语句是 return result 的简写。 result 总在过程的结尾自动返回如果退出时没有 return 语句.</p>
+<pre><code class="language-nim">proc sumTillNegative(x: varargs[int]): int =
+  for i in x:
+    if i &lt; 0:
+      return
+    result = result + i
+
+echo sumTillNegative() # echos 0
+echo sumTillNegative(3, 4, 5) # echos 12
+echo sumTillNegative(3, 4 , -1 , 6) # echos 7
+</code></pre>
+<h3 id="形参">形参</h3>
+<p>形参在过程体中不可改变，这允许编译器以最高效的方式实现参数传递。如果在一个过程内需要可以改变的变量，它必须在过程体中用 <code>var</code> 声明:</p>
+<pre><code class="language-nim"># 遮蔽形参名
+proc printSeq(s: seq, nprinted: int = -1) =
+  var nprinted = if nprinted == -1: s.len else: min(nprinted, s.len)
+  for i in 0 .. &lt;nprinted:
+    echo s[i]
+</code></pre>
+<p>如果过程需要为调用者修改实参，可以用 var 参数:</p>
+<pre><code class="language-nim">proc divmod(a, b: int; res, remainder: var int) =
+  res = a div b        # 整除
+  remainder = a mod b  # 整数取模操作
+
+var
+  x, y: int
+divmod(8, 5, x, y) # 修改 x 和 y
+echo x
+echo y
+</code></pre>
+<h3 id="discard-语句">Discard 语句</h3>
+<p>Nim 不允许静默地丢弃一个返回值，通过 discard 指定即可：</p>
+<pre><code class="language-nim">discard yes(&quot;May I ask a pointless question?&quot;)
+</code></pre>
+<p>返回类型可以被隐式地忽略如果调用的方法、迭代器已经用 discardable pragma 声明过：</p>
+<pre><code class="language-nim">proc p(x, y: int): int {.discardable.} =
+  return x + y
+
+p(3, 4) # now valid
+</code></pre>
+<h3 id="命名参数">命名参数</h3>
+<pre><code class="language-nim">proc createWindow(x, y, width, height: int; title: string;
+                  show: bool): Window =
+   ...
+
+var w = createWindow(show = true, title = &quot;My Application&quot;,
+                     x = 0, y = 0, height = 600, width = 800)
+</code></pre>
+<h3 id="默认值">默认值</h3>
+<pre><code class="language-nim">proc createWindow(x = 0, y = 0, width = 500, height = 700,
+                  title = &quot;unknown&quot;,
+                  show = true): Window =
+   ...
+
+var w = createWindow(title = &quot;My Application&quot;, height = 600, width = 800)
+</code></pre>
+<h3 id="重载过程">重载过程</h3>
+<p>Nim 提供类似 C++ 的过程重载能力：</p>
+<pre><code class="language-nim">proc toString(x: int): string = ...
+proc toString(x: bool): string =
+  if x: result = &quot;true&quot;
+  else: result = &quot;false&quot;
+
+echo toString(13)   # calls the toString(x: int) proc
+echo toString(true) # calls the toString(x: bool) proc
+</code></pre>
+<h3 id="操作符">操作符</h3>
+<pre><code class="language-nim">proc `$` (x: myDataType): string = ...
+# 现在$操作符对myDataType生效，重载解析确保$对内置类型像之前一样工作。
+</code></pre>
+<h3 id="前向声明">前向声明</h3>
+<pre><code class="language-nim">proc even(n: int): bool # 前向声明
+
+proc odd(n: int): bool =
+  assert(n &gt;= 0) # 确保我们没有遇到负递归
+  if n == 0: false
+  else:
+    n == 1 or even(n-1)
+
+proc even(n: int): bool =
+  assert(n &gt;= 0) # 确保我们没有遇到负递归
+  if n == 1: false
+  else:
+    n == 0 or odd(n-1)
+</code></pre>
+<h2 id="迭代器">迭代器</h2>
+<pre><code class="language-nim">iterator countup(a, b: int): int =
+  var res = a
+  while res &lt;= b:
+    yield res
+    inc(res)
+</code></pre>
+<p>迭代器看起来像过程，但有几点重要的差异：</p>
+<ul>
+<li>迭代器只能从循环中调用。</li>
+<li>迭代器不能包含 return 语句（过程不能包含 yield 语句）。</li>
+<li>迭代器没有隐式 result 变量。</li>
+<li>迭代器不支持递归。</li>
+<li>迭代器不能前向声明，因为编译器必须能够内联迭代器。（这个限制将在编译器的未来版本中消失。）</li>
+</ul>
+<h2 id="基本类型">基本类型</h2>
+<h3 id="布尔值">布尔值</h3>
+<p>bool: true / flase，操作符 <code>not</code>, <code>and</code>, <code>or</code>, <code>xor</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>!=</code>, <code>==</code>。</p>
+<h3 id="字符">字符</h3>
+<p>char: 1 byte, ord(char) -&gt; int, chr(int) -&gt; char, $char -&gt; string.</p>
+<h3 id="字符串">字符串</h3>
+<p>字符串变量（string）可改变，Nim 中字符串有长度限制，以零结尾。获取字符串长度 <code>.len</code>，字符串赋值产生拷贝，拼接字符串可使用 <code>&amp;</code> 和 <code>add</code> 进行追加。</p>
+<h3 id="整型">整型</h3>
+<p>Nim有以下内置整型：</p>
+<pre><code class="language-nim">int int8 int16 int32 int64 uint uint8 uint16 uint32 uint64
+</code></pre>
+<p>默认整型是 <code>int</code> 。整型字面值可以用 <code>类型前缀</code> 来指定一个非默认整数类型：</p>
+<pre><code class="language-nim">let
+  x = 0     # x 是 ``int``
+  y = 0'i8  # y 是 ``int8``
+  z = 0'i64 # z 是 ``int64``
+  u = 0'u   # u 是 ``uint``
+</code></pre>
+<p>多数常用整数用来计数内存中的对象，所以 int 和指针具有相同的大小。</p>
+<p>整数支持通用操作符 <code>+ - * div mod &lt; &lt;= == != &gt; &gt;=</code> 。 也支持 <code>and or xor not</code> 操作符，并提供按位操作。 左移用 <code>shl</code> ，右移用 <code>shr</code> 。位移操作符实参总是被当作无符号整型。普通乘法或除法可以做算术位移。</p>
+<h3 id="浮点">浮点</h3>
+<p>Nim 有这些内置浮点类型：<code>float float32 float64</code>。默认浮点类型是<code>float</code>。在当前的实现， float 是 64 位。</p>
+<pre><code class="language-nim">var
+  x = 0.0      # x 是 ``float``
+  y = 0.0'f32  # y 是 ``float32``
+  z = 0.0'f64  # z 是 ``float64``
+</code></pre>
+<p><strong>自动类型转换</strong>在表达式中使用不同类型时执行：短类型转换为长类型。整数类型不会自动转换为浮点类型，反之亦然。使用 <code>toInt</code> 和 <code>toFloat</code> 过程来转换。</p>
+<pre><code class="language-nim">var
+  x: int32 = 1.int32   # 与调用 int32(1) 相同
+  y: int8  = int8('a') # 'a' == 97'i8
+  z: float = 2.5       # int(2.5) 向下取整为 2
+  sum: int = int(x) + int(y) + int(z) # sum == 100
+</code></pre>
+<h2 id="内部类型表示">内部类型表示</h2>
+<pre><code class="language-nim">var
+  myBool = true
+  myCharacter = 'n'
+  myString = &quot;nim&quot;
+  myInteger = 42
+  myFloat = 3.14
+echo myBool, &quot;:&quot;, repr(myBool)
+# --&gt; true:true
+echo myCharacter, &quot;:&quot;, repr(myCharacter)
+# --&gt; n:'n'
+echo myString, &quot;:&quot;, repr(myString)
+# --&gt; nim:0x10fa8c050&quot;nim&quot;
+echo myInteger, &quot;:&quot;, repr(myInteger)
+# --&gt; 42:42
+echo myFloat, &quot;:&quot;, repr(myFloat)
+# --&gt; 3.1400000000000001e+00:3.1400000000000001e+00
+</code></pre>
+<h2 id="高级类型">高级类型</h2>
+<p>在 Nim 中新类型可以在 type 语句里定义：</p>
+<pre><code class="language-nim">type
+  biggestInt = int64      # 可用的最大整数类型
+  biggestFloat = float64  # 可用的最大浮点类型
+</code></pre>
+<h3 id="枚举">枚举</h3>
+<p>枚举类型的变量只能赋值为枚举指定的值。这些值是有序符号的集合。每个符号映射到内部的一个整数类型。第一个符号用运行时的 0 表示，第二个用 1，以此类推。例如：</p>
+<pre><code class="language-nim">type
+  Direction = enum
+    north, east, south, west
+
+var x = south     # `x`是`Direction`; 值是`south`
+echo x            # 向标准输出写&quot;south&quot;
+</code></pre>
+<p>枚举的符号可以被限定以避免歧义：<code>Direction.south</code>。<code>$</code> 操作符可以将任何枚举值转换为它的名字， <code>ord</code> 过程可以转换为它底层的整数类型。</p>
+<h3 id="序数类型">序数类型</h3>
+<p>枚举、整型、 char、 bool（和子范围）叫做序数类型。序数类型有一些特殊操作：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Operation</th>
+<th style="text-align:center">Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">ord(x)</td>
+<td style="text-align:center">返回表示 x 的整数值</td>
+</tr>
+<tr>
+<td style="text-align:center">inc(x)</td>
+<td style="text-align:center">x 递增1</td>
+</tr>
+<tr>
+<td style="text-align:center">inc(x, n)</td>
+<td style="text-align:center">x 递增 n; n 是整数</td>
+</tr>
+<tr>
+<td style="text-align:center">dec(x)</td>
+<td style="text-align:center">x 递减1</td>
+</tr>
+<tr>
+<td style="text-align:center">dec(x, n)</td>
+<td style="text-align:center">x 递减 n; n 是整数</td>
+</tr>
+<tr>
+<td style="text-align:center">succ(x)</td>
+<td style="text-align:center">返回 x 的下一个值</td>
+</tr>
+<tr>
+<td style="text-align:center">succ(x, n)</td>
+<td style="text-align:center">返回 x 后的第n个值</td>
+</tr>
+<tr>
+<td style="text-align:center">pred(x)</td>
+<td style="text-align:center">返回 x 的前一个值</td>
+</tr>
+<tr>
+<td style="text-align:center">pred(x, n)</td>
+<td style="text-align:center">返回 x 前的第n个值</td>
+</tr>
+</tbody>
+</table>
+<p>inc, dec, succ 和 pred 操作通过抛出 EOutOfRange 或 EOverflow 异常而失败。</p>
+<h3 id="子范围">子范围</h3>
+<p>一个子范围是一个整型或枚举类型值（基本类型）的范围。例如：</p>
+<pre><code class="language-nim">type
+  MySubrange = range[0..5]
+</code></pre>
+<p>MySubrange 是只包含 0 到 5 的 int 范围。赋任何其它值给 MySubrange 类型的变量是编译期或运行时错误。允许给子范围赋值它的基类型，反之亦然。</p>
+<h3 id="集合类型">集合类型</h3>
+<p>集合的基类型只能是固定大小的序数类型，它们是:</p>
+<ul>
+<li><code>int8</code>-<code>int16</code></li>
+<li><code>uint8</code>/<code>byte</code>-<code>uint16</code></li>
+<li><code>char</code></li>
+<li><code>enum</code></li>
+</ul>
+<pre><code class="language-nim">type
+  CharSet = set[char]
+var
+  x: CharSet
+x = {'a'..'z', '0'..'9'} # 构造一个包含'a'到'z'和'0'到'9'的集合
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">操作符</th>
+<th style="text-align:center">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">A + B</td>
+<td style="text-align:center">并集</td>
+</tr>
+<tr>
+<td style="text-align:center">A * B</td>
+<td style="text-align:center">交集</td>
+</tr>
+<tr>
+<td style="text-align:center">A - B</td>
+<td style="text-align:center">差集</td>
+</tr>
+<tr>
+<td style="text-align:center">A == B</td>
+<td style="text-align:center">相等</td>
+</tr>
+<tr>
+<td style="text-align:center">A &lt;= B</td>
+<td style="text-align:center">子集</td>
+</tr>
+<tr>
+<td style="text-align:center">A &lt; B</td>
+<td style="text-align:center">真子集</td>
+</tr>
+<tr>
+<td style="text-align:center">e in A</td>
+<td style="text-align:center">元素</td>
+</tr>
+<tr>
+<td style="text-align:center">e notin A</td>
+<td style="text-align:center">A不包含元素e</td>
+</tr>
+<tr>
+<td style="text-align:center">contains(A, e)</td>
+<td style="text-align:center">包含元素e</td>
+</tr>
+<tr>
+<td style="text-align:center">card(A)</td>
+<td style="text-align:center">A的基 (集合A中的元素数量)</td>
+</tr>
+<tr>
+<td style="text-align:center">incl(A, elem)</td>
+<td style="text-align:center">同 A = A + {elem}</td>
+</tr>
+<tr>
+<td style="text-align:center">excl(A, elem)</td>
+<td style="text-align:center">同 A = A - {elem}</td>
+</tr>
+</tbody>
+</table>
+<h3 id="位字段">位字段</h3>
+<pre><code class="language-nim">type
+  MyFlag* {.size: sizeof(cint).} = enum # 枚举
+    A
+    B
+    C
+    D
+  MyFlags = set[MyFlag] # 集合
+
+proc toNum(f: MyFlags): int = cast[cint](f) # 强转
+proc toFlags(v: int): MyFlags = cast[MyFlags](v)
+
+assert toNum({}) == 0
+assert toNum({A}) == 1
+assert toNum({D}) == 8
+assert toNum({A, C}) == 5
+assert toFlags(0) == {}
+assert toFlags(7) == {A, B, C}
+</code></pre>
+<h3 id="数组">数组</h3>
+<pre><code class="language-type">type
+  IntArray = array[0..5, int] # 一个索引为 0..5 的数​组
+var
+  x: IntArray
+x = [1, 2, 3, 4, 5, 6]
+for i in low(x)..high(x): # 最小/大索引
+  echo x[i]
+</code></pre>
+<pre><code class="language-nim">type
+  Direction = enum
+    north, east, south, west
+  BlinkLights = enum
+    off, on, slowBlink, mediumBlink, fastBlink
+  LevelSetting = array[north..west, BlinkLights]
+var
+  level: LevelSetting
+level[north] = on
+level[south] = slowBlink
+level[east] = fastBlink
+echo repr(level)  # --&gt; [on, fastBlink, slowBlink, off]
+echo low(level)   # --&gt; north
+echo len(level)   # --&gt; 4
+echo high(level)  # --&gt; west
+</code></pre>
+<pre><code class="language-nim">type
+  LightTower = array[1..10, array[north..west, BlinkLights]]
+type
+  IntArray = array[0..5, int] # 一个索引为0..5的数​组
+  QuickArray = array[6, int]  # 一个索引为0..5的数​组
+var
+  x: IntArray
+  y: QuickArray
+x = [1, 2, 3, 4, 5, 6]
+y = x
+for i in low(x)..high(x):
+  echo x[i], y[i]
+</code></pre>
+<h3 id="序列">序列</h3>
+<p>序列类似数组但是动态长度，可以在运行时改变。因为序列是大小可变的它们总是分配在堆上，被垃圾回收。</p>
+<p>序列总是以从零开始的 int 类型索引。 len , low 和 high 操作符也可用于序列。 x[i] 标记可以用于访问 x 的第i个元素。</p>
+<p>序列可以用数组构造器 <code>[]</code> 数组到序列操作符 <code>@</code> 构成。另一个为序列分配空间的方法是调用内置 newSeq 过程。</p>
+<pre><code class="language-nim">var
+  x: seq[int] # 整数序列引用
+x = @[1, 2, 3, 4, 5, 6] # @ 把数组转成分配在堆上的序列
+</code></pre>
+<pre><code class="language-nim">for value in @[3, 4, 5]:
+  echo value
+# --&gt; 3
+# --&gt; 4
+# --&gt; 5
+
+for i, value in @[3, 4, 5]:
+  echo &quot;index: &quot;, $i, &quot;, value:&quot;, $value
+# --&gt; index: 0, value:3
+# --&gt; index: 1, value:4
+# --&gt; index: 2, value:5
+</code></pre>
+<h3 id="开放数组">开放数组</h3>
+<blockquote>
+<p>注意: 开放数组只用于形参。</p>
+</blockquote>
+<pre><code class="language-nim">var
+  fruits:   seq[string]       # 字符串序列用 '@[]' 初始化
+  capitals: array[3, string]  # 固定大小的字符串数组
+
+capitals = [&quot;New York&quot;, &quot;London&quot;, &quot;Berlin&quot;]   # 数组 'capitals' 允许只有三个元素的赋值
+fruits.add(&quot;Banana&quot;)          # 序列 'fruits' 在运行时动态扩展
+fruits.add(&quot;Mango&quot;)
+
+proc openArraySize(oa: openArray[string]): int =
+  oa.len
+
+assert openArraySize(fruits) == 2     # 过程接受一个序列作为形参
+assert openArraySize(capitals) == 3   # 也可以是一个数组
+</code></pre>
+<h3 id="可变参数">可变参数</h3>
+<p>varargs 参数像开放数组形参。 它也表示实现传递数量可变的实参给过程。编译器将实参列表自动转换为数组：</p>
+<pre><code class="language-nim">proc myWriteln(f: File, a: varargs[string]) =
+  for s in items(a):
+    write(f, s)
+  write(f, &quot;\n&quot;)
+
+myWriteln(stdout, &quot;abc&quot;, &quot;def&quot;, &quot;xyz&quot;)
+# 编译器转为:
+myWriteln(stdout, [&quot;abc&quot;, &quot;def&quot;, &quot;xyz&quot;])
+</code></pre>
+<p>转换只在可变形参是过程头部的最后一个形参时完成。它也可以在这个情景执行类型转换：</p>
+<pre><code class="language-nim">proc myWriteln(f: File, a: varargs[string, `$`]) =
+  for s in items(a):
+    write(f, s)
+  write(f, &quot;\n&quot;)
+
+myWriteln(stdout, 123, &quot;abc&quot;, 4.0)
+# 编译器转为:
+myWriteln(stdout, [$123, $&quot;abc&quot;, $4.0])
+</code></pre>
+<p>在示例中 <code>$</code> 适用于任何传递给形参 a 的实参。注意 <code>$</code> 适用于空字符串指令。</p>
+<h3 id="切片">切片</h3>
+<pre><code class="language-nim">var
+  a = &quot;Nim is a progamming language&quot;
+  b = &quot;Slices are useless.&quot;
+
+echo a[7..12] # --&gt; 'a prog'
+b[11..^2] = &quot;useful&quot;
+echo b # --&gt; 'Slices are useful.'
+</code></pre>
+<pre><code class="language-nim">&quot;Slices are useless.&quot;
+ |          |     |
+ 0         11    17   使用索引
+^19        ^8    ^2   使用^
+</code></pre>
+<p><code>b[0..^1]</code> == <code>b[0..b.len-1]</code> == <code>b[0..&lt;b.len]</code> -&gt; <code>^1</code> &lt;=&gt; <code>b.len-1</code></p>
+<h3 id="对象">对象</h3>
+<pre><code class="language-nim">type
+  Person = object
+    name: string
+    age: int
+
+var person1 = Person(name: &quot;Peter&quot;, age: 30)
+
+echo person1.name # &quot;Peter&quot;
+echo person1.age  # 30
+
+var person2 = person1 # 复制person 1
+
+person2.age += 14
+
+echo person1.age # 30
+echo person2.age # 44
+
+
+# 顺序可以改变
+let person3 = Person(age: 12, name: &quot;Quentin&quot;)
+
+# 不需要指定每个成员
+let person4 = Person(age: 3)
+# 未指定的成员将用默认值初始化。本例中它是一个空字符串。
+doAssert person4.name == &quot;&quot;
+</code></pre>
+<p>在定义的模块外可见的对象字段需要加上 <code>*</code> :</p>
+<pre><code class="language-nim">type
+  Person* = object # 其它模块可见
+    name*: string  # 这个类型的字段在其它模块可见
+    age*: int
+</code></pre>
+<h3 id="元组">元组</h3>
+<pre><code class="language-nim">type
+  # 类型表示一个人:
+  # 一个人有名字和年龄。
+  Person = tuple
+    name: string
+    age: int
+  
+  # 等价类型的语法。
+  PersonX = tuple[name: string, age: int]
+  
+  # 匿名字段语法
+  PersonY = (string, int)
+
+var
+  person: Person
+  personX: PersonX
+  personY: PersonY
+
+person = (name: &quot;Peter&quot;, age: 30)
+# Person和PersonX等价
+personX = person
+
+# 用匿名字段创建一个元组：
+personY = (&quot;Peter&quot;, 30)
+
+# 有匿名字段元组兼容有字段名元组。
+person = personY
+personY = person
+
+# 通常用于短元组初始化语法
+person = (&quot;Peter&quot;, 30)
+
+echo person.name # &quot;Peter&quot;
+echo person.age  # 30
+
+echo person[0] # &quot;Peter&quot;
+echo person[1] # 30
+
+# 你不需要在一个独立类型段中声明元组。
+var building: tuple[street: string, number: int]
+building = (&quot;Rue del Percebe&quot;, 13)
+echo building.street
+
+# 下面的行不能编译，它们是不同的元组。
+#person = building
+# --&gt; Error: type mismatch: got (tuple[street: string, number: int])
+#     but expected 'Person'
+</code></pre>
+<p>元组只有在变量赋值期间可以解包:</p>
+<pre><code class="language-nim">import os
+
+let
+  path = &quot;usr/local/nimc.html&quot;
+  (dir, name, ext) = splitFile(path)
+  baddir, badname, badext = splitFile(path)
+echo dir      # 输出 `usr/local`
+echo name     # 输出 `nimc`
+echo ext      # 输出 `.html`
+# 下面输出同样的行:
+# `(dir: usr/local, name: nimc, ext: .html)`
+echo baddir
+echo badname
+echo badext
+</code></pre>
+<h3 id="引用和指针类型">引用和指针类型</h3>
+<p>Nim 区分 <strong>被追踪</strong> 和 <strong>未追踪</strong> 引用。未追踪引用也被称为 <strong>指针</strong> 。追踪的引用指向垃圾回收堆里的对象，未追踪引用指向手动分配对象或内存中其它地方的对象。因此未追踪引用是 <strong>不安全的</strong>。 为了某些低级的操作（例如，访问硬件），未追踪的引用是必须的。</p>
+<p>追踪的引用用 <code>ref</code> 关键字声明；未追踪引用用 <code>ptr</code> 关键字声明。</p>
+<p>空 <code>[]</code> 下标标记可以用来<strong>解引用</strong>一个引用，表示获取引用指向的内容。<code>.</code>（访问一个元组/对象字段操作符）和 <code>[]</code> (数组/字符串/序列索引操作符）操作符为引用类型执行隐式解引用操作：</p>
+<pre><code class="language-nim">type
+  Node = ref object
+    le, ri: Node
+    data: int
+var
+  n: Node
+new(n)
+n.data = 9
+# 不必写n[].data; 实际上n[].data是不提倡的!
+</code></pre>
+<p>为了分配一个新追踪的对象，必须使用内置过程 new 。 为了处理未追踪内存， 可以用 alloc, dealloc 和 realloc，如果一个引用指向 nothing, 它的值是 <code>nil</code>。</p>
+<h3 id="过程类型">过程类型</h3>
+<p>过程类型是指向过程的指针。 <code>nil</code> 是过程类型变量允许的值。Nim 使用过程类型达到 函数式编程技术。</p>
+<pre><code class="language-nim">proc echoItem(x: int) = echo x
+
+proc forEach(action: proc (x: int)) =
+  const
+    data = [2, 3, 5, 7, 11]
+  for d in items(data):
+    action(d)
+
+forEach(echoItem)
+</code></pre>
+<h2 id="模块">模块</h2>
+<p>Nim 支持用模块的概念把一个程序拆分成片段。每个模块在它自己的文件里。模块实现了 信息隐藏和编译隔离 。一个模块可以通过 <code>import</code> 语句访问另一个模块符号。 只有标记了星号(<code>*</code>)的顶级符号被导出：</p>
+<pre><code class="language-nim"># Module A
+var
+  x*, y: int
+
+proc `*` *(a, b: seq[int]): seq[int] =
+  # 分配新序列：
+  newSeq(result, len(a))
+  # 两个序列相乘：
+  for i in 0..len(a)-1: result[i] = a[i] * b[i]
+
+when isMainModule:
+  # 测试序列乘 ``*`` :
+  assert(@[1, 2, 3] * @[1, 2, 3] == @[1, 4, 9])
+</code></pre>
+<p>模块限定：</p>
+<pre><code class="language-nim"># Module A
+var x*: string
+
+# Module B
+var x*: int
+
+# Module C
+import A, B
+write(stdout, x) # error: x 有歧义
+write(stdout, A.x) # okay: 用了限定
+
+var x = 4
+write(stdout, x) # 没有歧义: 使用模块 C 的 x
+</code></pre>
+<h3 id="排除符号">排除符号</h3>
+<pre><code class="language-nim">import mymodule except y
+</code></pre>
+<h3 id="from-语句">From 语句</h3>
+<pre><code class="language-nim">from mymodule import x, y, z # --&gt; x()
+from mymodule as m import nil # --&gt; m.x()
+</code></pre>
+<h3 id="include-模块">Include 模块</h3>
+<p>include 语句和导入一个模块做不同的基础工作：它只包含一个文件的内容。 include 语句在把一个大模块拆分为几个文件时有用：</p>
+<pre><code class="language-nim">include fileA, fileB, fileC
+</code></pre>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E8%AF%8D%E6%B3%95%E5%85%83%E7%B4%A0">词法元素</a>
+<ul>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E5%AD%97%E7%AC%A6%E5%AD%97%E9%9D%A2%E9%87%8F">字符串和字符字面量</a></li>
+<li><a href="#%E6%B3%A8%E9%87%8A">注释</a></li>
+<li><a href="#%E6%95%B0%E5%AD%97">数字</a></li>
+</ul>
+</li>
+<li><a href="#var-%E8%AF%AD%E5%8F%A5">var 语句</a></li>
+<li><a href="#%E8%B5%8B%E5%80%BC%E8%AF%AD%E5%8F%A5">赋值语句</a></li>
+<li><a href="#%E5%B8%B8%E9%87%8F">常量</a></li>
+<li><a href="#let-%E8%AF%AD%E5%8F%A5">let 语句</a></li>
+<li><a href="#%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5">流程控制语句</a>
+<ul>
+<li><a href="#if-%E8%AF%AD%E5%8F%A5">if 语句</a></li>
+<li><a href="#case-%E8%AF%AD%E5%8F%A5">Case 语句</a></li>
+<li><a href="#while-%E8%AF%AD%E5%8F%A5">While 语句</a></li>
+<li><a href="#for-%E8%AF%AD%E5%8F%A5">For 语句</a></li>
+<li><a href="#%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E5%9D%97%E8%AF%AD%E5%8F%A5">作用域和块语句</a></li>
+<li><a href="#break-%E8%AF%AD%E5%8F%A5">Break 语句</a></li>
+<li><a href="#continue-%E8%AF%AD%E5%8F%A5">Continue 语句</a></li>
+<li><a href="#when-%E8%AF%AD%E5%8F%A5">When 语句</a></li>
+</ul>
+</li>
+<li><a href="#%E8%AF%AD%E5%8F%A5%E5%92%8C%E7%BC%A9%E8%BF%9B">语句和缩进</a></li>
+<li><a href="#%E8%BF%87%E7%A8%8Bprocedure">过程（procedure）</a>
+<ul>
+<li><a href="#result-%E5%8F%98%E9%87%8F">Result 变量</a></li>
+<li><a href="#%E5%BD%A2%E5%8F%82">形参</a></li>
+<li><a href="#discard-%E8%AF%AD%E5%8F%A5">Discard 语句</a></li>
+<li><a href="#%E5%91%BD%E5%90%8D%E5%8F%82%E6%95%B0">命名参数</a></li>
+<li><a href="#%E9%BB%98%E8%AE%A4%E5%80%BC">默认值</a></li>
+<li><a href="#%E9%87%8D%E8%BD%BD%E8%BF%87%E7%A8%8B">重载过程</a></li>
+<li><a href="#%E6%93%8D%E4%BD%9C%E7%AC%A6">操作符</a></li>
+<li><a href="#%E5%89%8D%E5%90%91%E5%A3%B0%E6%98%8E">前向声明</a></li>
+</ul>
+</li>
+<li><a href="#%E8%BF%AD%E4%BB%A3%E5%99%A8">迭代器</a></li>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B">基本类型</a>
+<ul>
+<li><a href="#%E5%B8%83%E5%B0%94%E5%80%BC">布尔值</a></li>
+<li><a href="#%E5%AD%97%E7%AC%A6">字符</a></li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2">字符串</a></li>
+<li><a href="#%E6%95%B4%E5%9E%8B">整型</a></li>
+<li><a href="#%E6%B5%AE%E7%82%B9">浮点</a></li>
+</ul>
+</li>
+<li><a href="#%E5%86%85%E9%83%A8%E7%B1%BB%E5%9E%8B%E8%A1%A8%E7%A4%BA">内部类型表示</a></li>
+<li><a href="#%E9%AB%98%E7%BA%A7%E7%B1%BB%E5%9E%8B">高级类型</a>
+<ul>
+<li><a href="#%E6%9E%9A%E4%B8%BE">枚举</a></li>
+<li><a href="#%E5%BA%8F%E6%95%B0%E7%B1%BB%E5%9E%8B">序数类型</a></li>
+<li><a href="#%E5%AD%90%E8%8C%83%E5%9B%B4">子范围</a></li>
+<li><a href="#%E9%9B%86%E5%90%88%E7%B1%BB%E5%9E%8B">集合类型</a></li>
+<li><a href="#%E4%BD%8D%E5%AD%97%E6%AE%B5">位字段</a></li>
+<li><a href="#%E6%95%B0%E7%BB%84">数组</a></li>
+<li><a href="#%E5%BA%8F%E5%88%97">序列</a></li>
+<li><a href="#%E5%BC%80%E6%94%BE%E6%95%B0%E7%BB%84">开放数组</a></li>
+<li><a href="#%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0">可变参数</a></li>
+<li><a href="#%E5%88%87%E7%89%87">切片</a></li>
+<li><a href="#%E5%AF%B9%E8%B1%A1">对象</a></li>
+<li><a href="#%E5%85%83%E7%BB%84">元组</a></li>
+<li><a href="#%E5%BC%95%E7%94%A8%E5%92%8C%E6%8C%87%E9%92%88%E7%B1%BB%E5%9E%8B">引用和指针类型</a></li>
+<li><a href="#%E8%BF%87%E7%A8%8B%E7%B1%BB%E5%9E%8B">过程类型</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A8%A1%E5%9D%97">模块</a>
+<ul>
+<li><a href="#%E6%8E%92%E9%99%A4%E7%AC%A6%E5%8F%B7">排除符号</a></li>
+<li><a href="#from-%E8%AF%AD%E5%8F%A5">From 语句</a></li>
+<li><a href="#include-%E6%A8%A1%E5%9D%97">Include 模块</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2020-9-30-fluent-py-study-notes/">
+                <h3 class="post-title" style="text-align: left;">
+                  Fluent Python Study Notes
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2020-07-08-oracle-injection-learn-note/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  Oracle 操作语句及注入总结
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

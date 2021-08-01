@@ -1,0 +1,1673 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Java Course Review Note | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Java Course Review Note | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="C0 Memo
+- 基本概述 -
+课程名称：Java 语言及网络编程
+考试时间：2020-01-07(14:00-15:40) 博2-A101
+注意事项：复习以课件为主
+- 题型分布 -
+
+选择题
+读程序写结果
+程序填空
+编程大题 (2)
+..." />
+    <meta name="keywords" content="Java,Course" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Java Course Review Note
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-01-05
+              </span>
+              <span>
+                47 min read
+              </span>
+              <span class="page-view" key="20200105160929" title="Java Course Review Note">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/java/" class="post-tag">
+                  # Java
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/course/" class="post-tag">
+                  # Course
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <h2 id="c0-memo">C0 Memo</h2>
+<p><strong>- 基本概述 -</strong></p>
+<p>课程名称：Java 语言及网络编程</p>
+<p>考试时间：2020-01-07(14:00-15:40) 博2-A101</p>
+<p>注意事项：复习以课件为主</p>
+<p><strong>- 题型分布 -</strong></p>
+<ul>
+<li>选择题</li>
+<li>读程序写结果</li>
+<li>程序填空</li>
+<li>编程大题 (2)
+<ul>
+<li>面向对象★</li>
+<li>网络编程 / 多线程 / ★ GUI 用户界面 / 类库</li>
+</ul>
+</li>
+</ul>
+<p><strong>参考链接 &gt;</strong> <a href="https://comydream.github.io/2019/01/04/java-review/">Java 复习 - ComyDream</a></p>
+<h2 id="c12-env">C1/2 env</h2>
+<p>Path Class_PATH</p>
+<h2 id="c3-语言基础">C3 语言基础</h2>
+<pre><code>1.Java 中的八种数据类型
+  所占字节数 精度
+  相互转换 Bool不可转换
+2.表达式多个操作数相互运算的规则结果类型
+  int(float) 只保留整数部分
+  + 算术加 字符串连接加 
+      char 'a'+1 =&gt; 98  &quot;a&quot;+1=&quot;a1&quot;
+3.标识符的命名规则 数字/下划线/$/字母
+4.表达式运算符及优先级关系 短路与 短路或
+5.选择语句的两个if swith case break
+6.循环 跳转 break continue 转义字符
+7.一维二维数组的定义与初始化操作 new
+8.参数传递
+</code></pre>
+<p><strong>-★ 标识符 -</strong></p>
+<p><strong>标识符</strong>：是程序员用来标记语言中元素名称的命名记号。</p>
+<p>Java 中的标识符遵守先定义后使用的原则。即只有定义了的标识符，才可在语句部分使用。<br>
+Java 定义标识符的规则：</p>
+<ul>
+<li>由<strong>字母、 数字、下划线、 $</strong> 组成。不能由数字开头。</li>
+<li>不能是 Java 中的保留字(关键字)。</li>
+<li>大小写敏感，长度无限制。</li>
+</ul>
+<p><strong>- 命名规范 -</strong></p>
+<ul>
+<li>
+<p>类名 / 接口名：每个字的首字母都需要大写。</p>
+</li>
+<li>
+<p>方法名：第一个字的首字母小写，其余字的首字母大写。</p>
+</li>
+<li>
+<p>常量名：所有字的所有字母都要大写，并且字与字之间用下划线连接</p>
+</li>
+<li>
+<p>变量名：第一个字的首字母小写，其他字的首字母大写，不要使用下滑线，避免使用 <code>$</code>。</p>
+</li>
+</ul>
+<p><strong>- 注释 -</strong></p>
+<p>Java有三种注释形式：</p>
+<ul>
+<li><code>//</code> 单行注释。表示从此向后，直到行尾都是注释。</li>
+<li><code>/*……*/</code> 块注释。在 <code>/*</code> 和 <code>*/</code> 之间都是注释。</li>
+<li><code>/**……*/</code> 文档注释。所有在 <code>/**</code> 和 <code>*/</code> 之间的内容可以用来自动形成文档。</li>
+</ul>
+<h3 id="变量类型">变量类型</h3>
+<p><strong>- 变量 -</strong></p>
+<p>Java 的变量有两种：<strong>局部变量</strong>、<strong>类成员变量</strong>，变量必须先定义后使用。</p>
+<p><strong>局部变量在使用前必须给定初值，否则，将编译出错，而类成员变量无此要求。</strong></p>
+<p><strong>★ 基本数据类型表</strong>：</p>
+<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-01-06-14-14-33.png" alt="" loading="lazy"></figure>
+<p>注意: <strong>Java 中不可将布尔类型看做整型值</strong>。</p>
+<p><strong>缺省值</strong>就是默认的初值,只对成员变量有用。局部变量没有缺省值。</p>
+<p><strong>- 常量 -</strong></p>
+<p>常量是指在程序运行过程中其值不变的量，分为<strong>数值常量</strong>和<strong>符号常量</strong>。</p>
+<ul>
+<li>
+<p>数值常量 <code>123</code>、<code>052(8)</code>、<code>0x2A</code>、<code>12L</code>、<code>12.1f</code>、<code>true</code>、<code>'x'</code>、<code>&quot;Test&quot;</code>；</p>
+</li>
+<li>
+<p>符号常量 <code>final 类型 常量名 = 值;</code>；</p>
+</li>
+</ul>
+<p>注意事项：</p>
+<ol>
+<li>常量只能赋值一次(初始化)；</li>
+<li><strong>类静态成员常量</strong>只能在定义时初始化；</li>
+<li><strong>方法中的常量</strong>(局部常量)可以在定义时初始化，也可以先定义，以后再初始化。</li>
+</ol>
+<h3 id="运算符及优先级">运算符及优先级</h3>
+<p>运算符按其功能分为七类：</p>
+<ol>
+<li>算术运算符  <code>+</code>、<code>-</code>、 <code>*</code>、 <code>/</code>、<code>%</code>、 <code>++</code>、 <code>--</code>；</li>
+<li>关系运算符  <code>&gt;</code>、<code>&lt;</code>、 <code>&gt;=</code>、 <code>&lt;=</code>、 <code>==</code>、 <code>!=</code>、<code>instanceof</code>(对象运算符)；</li>
+<li>逻辑运算符  <code>!</code>、<code>&amp;&amp;</code>、<code>||</code>、<code>&amp;</code>、<code>|</code>；</li>
+<li>位运算符     <code>&gt;&gt;</code>、<code>&lt;&lt;</code>、<code>&gt;&gt;&gt;</code>、<code>&amp;</code>、<code>|</code>、<code>^</code>、<code>~</code>；</li>
+<li>条件运算符  <code>? :</code>；</li>
+<li>赋值运算符  <code>=</code>、<code>+=</code>、<code>-=</code> 、<code>*=</code> 、<code>/=</code>；</li>
+<li>其他：下标运算符<code>[]</code>.</li>
+</ol>
+<p>运算符优先级：</p>
+<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-01-06-14-40-31.png" alt="" loading="lazy"></figure>
+<p><strong>优先级</strong>：() &gt; 单目运算符 &gt; 双目运算符 &gt; 三目运算符 &gt; 赋值运算符.</p>
+<p>双目：算术 &gt; 关系 &gt; 逻辑。</p>
+<p><strong>结合性</strong>：大多数运算符结合性为从左至右，<strong>赋值运算符的结合性为从右至左</strong>。</p>
+<pre><code class="language-java">int a, b = 3, c = 5; a = b = c; // a = b = c = 5	
+</code></pre>
+<h3 id="数据类型转换">数据类型转换</h3>
+<p><strong>方式</strong>：自动类型转换、手动强制类型转换，隐含强制转换。</p>
+<p><strong>- 自动类型转换 -</strong></p>
+<p><strong>Java 中整型、实型、字符型数据可以混合运算</strong>。运算过程中，Java 自动把精度较低的类型转换为另一种<strong>精度较高</strong>的类型。</p>
+<ul>
+<li>byte、short、char -&gt; int -&gt; long -&gt; float -&gt; double.</li>
+</ul>
+<p><strong>* 如果 byte、short、char 在一起运算时，会先将这些值转换为 int 型。再进行运算，结果为 int 型。</strong></p>
+<p><strong>- 手动强制类型转换 -</strong></p>
+<p>在 Java 中直接将高精度的值赋给低精度的变量会导致<strong>编译出错</strong>。这时可用<strong>强制类型转换</strong>来解决。</p>
+<p>强制类型转换可能造成信息的丢失，<strong>布尔型与其它基本类型之间不能转换</strong>。</p>
+<pre><code class="language-java">int i; byte b, c;
+b = (byte)345; // c = 89  10 进制转为 2 进制取低 8 位
+c = (byte)356; // c = 100 10 进制转为 2 进制取低 8 位
+i = (int)(3.8 + 6); // i = 9, 取整 不进行四舍五入
+</code></pre>
+<p>运算类型提升功能：</p>
+<ul>
+<li>在运算过程中，运算的结果至少是 int 型，即如果参与运算的两个数级别比 int 型低或是 int 型，则结果为 int 型。</li>
+<li>参与运算的数据如果有一个级别比 int 型高，则运算结果的类型与类型级别高的数相同。</li>
+<li>参与运算的两个数据如果类型不一样，会先把低级的数据转换成高级的类型的数据后再作运算，结果是高级的类型。</li>
+</ul>
+<p><strong>- 隐含类型转换 -</strong></p>
+<p>Java 中允许把 int 类型的<strong>常量</strong>赋给 byte、short 变量时不需要强制类型转换:</p>
+<pre><code class="language-java">byte b = 123; short s = 123; // 合法
+b = b + 3; // 不合法
+</code></pre>
+<p>但是把 int 类型的<strong>变量</strong>赋给 byte、short 类型的变量时必须强制转换，否则会出错.</p>
+<pre><code class="language-java">int i = 123; byte b = i;  //byte b = (byte)i;
+byte a = 1; byte c = (byte)(a + b);
+</code></pre>
+<h3 id="简单语句和复合语句">简单语句和复合语句</h3>
+<p><strong>- I/O -</strong></p>
+<p>1.标准输出 <strong>System.out</strong> 对象</p>
+<p><code>System.out</code> 对象中包含的最常用的方法是：</p>
+<ul>
+<li><code>println</code>(参数) 向标准输出设备(显示器)打印一行文本并换行</li>
+<li><code>print</code>(参数) 向标准输出设备(显示器)打印一行文本但不换行</li>
+</ul>
+<p>参数类型：<code>boolean</code>, <code>char</code>, <code>char[]</code>, <code>double</code>, <code>float</code>, <code>int</code>, <code>long</code>, <code>Object</code>, <code>String</code>.</p>
+<p>2.标准输入 <strong>System.in</strong> 对象</p>
+<p><code>System.in</code> 是字节流, 作用是从标准输入读一个字节, 常用的方法如下:</p>
+<ul>
+<li>int read()   从流中读取一个字节并将该字节作为整数返回, 若没有数据则返回 <code>-1</code>;</li>
+<li>int read(byte b[])    从流中读取多个字节放到 b 中, 返回实际读取到的字节数;</li>
+<li>int read(byte b[], int off, int len)    从流中读取最多 len 字节的数据, 放到数组 b 的下标 off 开始的单元中，返回读取到的字节数;</li>
+</ul>
+<p>eg1 &gt; ReadChar.java(读取一个字符):</p>
+<pre><code class="language-java">import java.io.*;
+public class ReadChar{
+    public static void main(String args[]){
+    try {
+        char ch = (char)System.in.read();
+        System.out.println(ch);    
+    } catch(IOException e){}
+   } 
+}
+</code></pre>
+<p>eg2 &gt; ReadString.java(读取一串字符):</p>
+<pre><code class="language-java">import java.io.*;    
+public class ReadString {
+    public static void main(String args[]) {
+        char c;
+        try {
+            do {
+                c = (char)System.in.read();  
+                System.out.print(c);
+            } while(c != '\n');
+         } catch(IOException e){}
+     }
+}
+</code></pre>
+<p>eg3 &gt; ReadStringOrInt.java</p>
+<pre><code class="language-java">//从键盘读一数字串或一个整数
+import java.io.*;
+class ReadStringOrInt {
+    public static void main(String args[]) {
+        byte buf[] = new byte[20];
+        String str;
+        int anInt;
+        try {
+            System.in.read(buf);
+            str = new String(buf);
+            anInt = Integer.parseInt(str.trim());
+        } catch(Exception e) {}
+    }
+}
+</code></pre>
+<p>要将数字串转换成实数，则：</p>
+<pre><code class="language-java">float f = Float.parseFloat(str.trim()); //转成单精度数
+double d = Double.parseDouble(str.trim()); //转成双精度数
+</code></pre>
+<p><strong>- 控制语句 -</strong></p>
+<ul>
+<li>
+<p><strong>选择语句</strong></p>
+<p><strong>&gt; if-else</strong> 语句</p>
+<pre><code class="language-java">if(expr1) {
+
+} else if (expr2) {
+
+} else {
+
+}
+</code></pre>
+<p><strong>&gt; switch</strong> 语句<br>
+表达式必须是符合 <code>byte</code>, <code>char</code>, <code>short</code> 和 <code>int</code> 类型的表达式, 不能是浮点类型或字符串，case 子句中常量的类型必须与表达式的类型相容,且每个常量必须不同。<br>
+case 后面可以有多条语句，不用加 <code>{}</code>。</p>
+<pre><code class="language-java">switch(expr) {
+  case 常量1: 语句1; break;
+  case 常量n: 语句n; break;
+  default: 缺省处理语句; [break];
+}
+</code></pre>
+</li>
+<li>
+<p><strong>循环语句</strong></p>
+<p><strong>&gt; while</strong> 语句</p>
+<pre><code class="language-java">while(expr) {}
+</code></pre>
+<p><strong>&gt; do while</strong> 语句</p>
+<pre><code class="language-java">do {} while(expr)
+</code></pre>
+<p><strong>&gt; for</strong> 语句</p>
+<pre><code class="language-java">for(expr1; expr2; expr3){}
+</code></pre>
+</li>
+<li>
+<p><strong>跳转语句</strong></p>
+<p><strong>&gt; break</strong> 语句<br>
+使程序的流程从一个语句块的内部跳转出来。</p>
+<ul>
+<li>从 switch 语句的分支中跳出来</li>
+<li>从循环体内跳出来<br>
+<strong>&gt; continue</strong> 语句<br>
+Continue 语句只结束本次循环,而不是终止整个循环的执行。<br>
+<strong>&gt; return</strong> 语句</li>
+<li>结束方法的运行，并返回一个值。</li>
+<li>如果该方法没有返回值（void），则 return 后不能跟表达式。</li>
+</ul>
+</li>
+</ul>
+<h3 id="数组操作">数组操作</h3>
+<p>Java 中，数组是独立的类，有自身的方法，不只是变量的集合。在 Java 里创建一个数组，需要做如下的工作：</p>
+<ul>
+<li>说明一个变量来存放该数组。</li>
+<li>建立一个新的数组对象（即创建数组空间）并把它赋给这个数组变量。</li>
+<li>在该数组中存储信息。</li>
+</ul>
+<pre><code class="language-java">String list[] = new String[3];
+list[0]= &quot;one&quot;;
+list[1] = &quot;two&quot;;
+</code></pre>
+<p>一维数组的说明格式：</p>
+<pre><code class="language-java">int list[]//类型  数组名[]；
+int[] list//类型[]  数组名；
+</code></pre>
+<p>数组的两种初始化方式：</p>
+<ul>
+<li>像初始化简单类型一样自动初始化数组，即在说明数组的同时进行初始化；</li>
+</ul>
+<pre><code class="language-java">int a[] = {1, 2, 3, 4}
+</code></pre>
+<ul>
+<li>先定义数组，然后为每个元素赋值。例如：</li>
+</ul>
+<pre><code class="language-java">int b[] = new int[3];
+b[0] = 8; b[1] = 9;
+</code></pre>
+<p>错误的形式：</p>
+<pre><code class="language-java">int[] a; a = {1, 2, 3, 4};
+</code></pre>
+<p>其他形式：</p>
+<pre><code class="language-java">int[] a = new int[]{1, 2, 3, 4};
+int[] a;
+a = new int[]{1, 2, 3, 4};
+</code></pre>
+<p><strong>- 二维数组 -</strong></p>
+<p>二维数组说明的格式为：</p>
+<pre><code class="language-java">int intArray[][]; //类型  数组名[][]；
+int[][] intArray; //类型[][]  数组名；
+</code></pre>
+<p>二维数组创建：</p>
+<p>(1) 直接为每一维分配空间，如：</p>
+<pre><code class="language-java">int a[][] = new int[2][3];
+</code></pre>
+<p>(2) 从最高维开始，分别为每一维分配空间，如：</p>
+<pre><code class="language-java">int b[][]=new int[2][ ]; 
+b[0]=new int[3]; 
+b[1]=new int[5];         
+</code></pre>
+<p>元素的初始化：</p>
+<p>(1) 直接对每个元素进行赋值。<br>
+(2) 在说明数组的同时进行初始化。</p>
+<pre><code class="language-java">int a[][] = \{\{2, 3},{1, 5},{3, 4\}\} 
+</code></pre>
+<p>与数组操作相关的<strong>系统函数</strong>：</p>
+<ul>
+<li>
+<p>使用 <strong>Arrays.sort</strong> 来对数组排序</p>
+<pre><code class="language-java">java.util.Arrays.sort(x);  
+</code></pre>
+</li>
+<li>
+<p>使用 <strong>Arrays.binarySearch</strong> 函数对数组进行二分查找</p>
+<pre><code class="language-java">java.util.Arrays.sort(x); //二分查找，在数组 x 中查找 1，输出 0 
+System.out.println(java.util.Arrays.binarySearch(x, 1)); //如果没找到，则会输出一个 &lt; 0 的数
+</code></pre>
+</li>
+<li>
+<p>使用 <strong>System.arraycopy</strong> 函数拷贝数组</p>
+<pre><code class="language-java">int [] x; x = new int[]{3,1,2,4};
+int [] y; y = new int[4];
+System.arraycopy(x, 0, y, 0, 4);
+</code></pre>
+</li>
+<li>
+<p>使用 <strong>Arrays.fill</strong> 函数填充数组</p>
+<pre><code class="language-java">int[] x = new int[]{3,1,2,4};
+java.util.Arrays.fill(x, 7);
+</code></pre>
+</li>
+</ul>
+<h2 id="c4-面向对象">C4 ★ 面向对象</h2>
+<pre><code>* 了解匿名类 内部类 
+会用 会写监听器 事件编程
+方法里的内部类 不可访问方法里的局部变量可以访问方法所属类中的变量
+
+1.类的声明与定义
+2.main方法  程序执行的入口  
+3.Java 源文件的组成 一个公共类
+4.类的成员变量与方法修饰符 缺省 st fi
+5.成员方法的重载
+6.构造方法和this的使用
+7.★类的继承 Object extends 
+8.super的使用 访问父类隐藏属性 构造方法
+9.复杂类对象 子类对象和父类对象之间的相互转换 复杂类创建时的构造方法调用顺序 
+10.抽象类和接口的使用
+11.了解一下包 package import
+12.参数传递 基本类型变量及引用类型在内存上的形式 Java全部为值传递
+13.多个类中的多态
+</code></pre>
+<p><strong>- 类的声明与定义 -</strong></p>
+<p>Java 是一种<strong>纯对象化</strong>的语言，所有的应用程序代码都必须以<strong>类</strong>构成，即使是程序的开始执行点，也必须包含在某个类中。</p>
+<pre><code class="language-java">public class Sample{
+    public static void main(String args[]) {
+       …… //程序代码
+    }
+}
+</code></pre>
+<p>类的定义格式：</p>
+<pre><code class="language-java">[修饰符] class 类名 [extends父类名] [implements接口名列表]
+{
+          [成员变量说明]
+          [构造方法说明]
+          [静态初始化说明]
+          [成员方法说明]
+}；
+</code></pre>
+<ul>
+<li>
+<p>修饰符</p>
+<ul>
+<li><strong>缺省</strong> (默认方式)   这种类只能被同一个包中的类访问；</li>
+<li><strong>public</strong> (公共)   它修饰的类能被所有的类访问；</li>
+<li><strong>abstract</strong> (抽象)  它修饰的类不能被实例化，它可能包含有未实现的方法。</li>
+<li><strong>final</strong> (最终)  它修饰的类不能被继承，即不能有子类。</li>
+<li><strong>extends</strong> (继承) 该保留字用来表明新创建的类继承哪个类, 被继承的类称为此类的父类。extends后面只能跟一个父类名称, 因为Java中一个类最多能继承一个类(<strong>单继承</strong>)。</li>
+<li><strong>implements</strong> (实现)  该保留字用来表明这个类实现了哪些接口，接口名可以有多个。</li>
+</ul>
+</li>
+</ul>
+<p><strong>- 成员变量 -</strong></p>
+<pre><code class="language-java">[修饰符] 成员变量类型 成员变量名列表;
+</code></pre>
+<p>访问权限修饰符: public protected private</p>
+<p>public &gt;protected &gt; 缺省 &gt; private</p>
+<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-01-06-20-08-03.png" alt="" loading="lazy"></figure>
+<p>访问修饰符:</p>
+<ul>
+<li>访问修饰符缺省<br>
+访问修饰符缺省时，成员变量只能被同一包(package) 中的所有类访问，所以也称为包(package)变量。缺省访问修饰符实际是 friendly 修饰符，但因为 friendly 不是 Java 语言的关键字，所以 friendly 修饰符不能显式说明。</li>
+<li>public(公共)<br>
+public 修饰的成员变量可以被程序中的任何类所访问。由于 public 成员变量不受限制, 这易使类的对象引起不希望的修改，建议成员变量尽量不要使用 public 修饰符。</li>
+<li>protected (受保护)<br>
+protected 修饰的成员变量可以被本包及有继承关系的类自由访问。</li>
+<li>private (私有)<br>
+private 修饰的成员变量只能在同一个类中使用。这种方式通常是最为安全的。</li>
+</ul>
+<p>关于访问权限修饰符的总结:</p>
+<ul>
+<li>具有继承关系的子类可以继承父类的一些成员变量，即可以不创建对象就可以直接访问，如果是同一个包的子类可以继承到 public、 缺省和 protected 修饰的变量，如果是不同的包的子类就只能继承到public 和 protected 的；</li>
+<li>如果是其他类，不管是一个包还是不在一个包，都要创建该类的对象才能引用</li>
+<li>如果是 <code>main</code> 方法，不管是本类还是非本类，要访问实例变量都要创建对象，可以引申到其他所有的类方法中</li>
+<li>私有成员只能在本类中访问，如果在 <code>main</code> 方法中访问私有成员 必须创建对象</li>
+</ul>
+<p><strong>&gt; static</strong></p>
+<p>static 修饰的成员变量称为<strong>类变量</strong>(静态变量)；不用 static 修饰的成员变量又叫<strong>对象变量</strong>(实例变量)。</p>
+<p>区别：对象变量依附于具体的对象实例，它的值因具体对象实例的不同而不同，而<strong>类变量为该类的所有对象所共享，它的值不因类的对象不同而不同</strong>。</p>
+<p>可以通过类来访问静态成员变量，也可以通过该类的对象访问静态成员变量。</p>
+<p>形式：<strong>类名.成员变量/对象名.成员变量</strong>。</p>
+<p><strong>&gt; final</strong></p>
+<ul>
+<li>final 定义的成员变量叫最终变量 —— java 中的<strong>常量</strong></li>
+<li>常量在说明以后就不能改变其值</li>
+<li>无论是实例变量，还是类变量，都可以被说明成常量。final 修饰符和 static 修饰符并不冲突</li>
+</ul>
+<p><strong>- 成员方法 -</strong></p>
+<p>首部说明：</p>
+<pre><code class="language-java">[方法修饰符] 返回值类型 方法名（[形参列表]）[ throws 异常列表]
+</code></pre>
+<p>方法修饰符：</p>
+<ul>
+<li>
+<p>访问：缺省、public、protected、private</p>
+</li>
+<li>
+<p>非访问修饰符：static、abstract、final、native、synchronized</p>
+</li>
+</ul>
+<p><strong>类方法（静态方法）注意事项：</strong></p>
+<ul>
+<li>在类方法中不能直接引用对象变量。</li>
+<li>在类方法中不能使用 <strong>super</strong>、<strong>this</strong>关键字(super、this介绍见后)。</li>
+<li>类方法不能直接调用类中的对象方法。</li>
+</ul>
+<p><strong>- 父类对象与子类对象的转换 -</strong></p>
+<p>Java 中父类对象和子类对象的转化需要遵循如下原则：</p>
+<ul>
+<li>
+<p>子类对象转为父类对象时，可以是显示的或隐式的，子类对象直接向父类对象赋值；</p>
+</li>
+<li>
+<p>父类对象不能被任意的转换成某一子类的对象，只有父类对象指向的实际是一个子类对象，那么这个父类对象可以转换成子类对象，但此时必须用<strong>强制类型转换</strong>(<code>(类名) 类对象</code>)。</p>
+</li>
+<li>
+<p>如果一个方法的形式参数定义的是父类对象，那么调用这个方法时，可以使用子类对象作为实际参数。</p>
+</li>
+</ul>
+<p><strong>- 接口 -</strong></p>
+<p>接口定义了一些没有实现的方法和静态常量集，在 Java 面向对象程序设计中起着重用的作用：</p>
+<ul>
+<li>
+<p>使程序设计和实现相互分离</p>
+</li>
+<li>
+<p>弥补 Java 只支持单重继承的不足</p>
+</li>
+<li>
+<p>约束实现接口的类</p>
+</li>
+</ul>
+<p>接口和类的区别：</p>
+<ul>
+<li>类只能单继承，而接口可以<strong>多继承</strong>。</li>
+<li>类中的方法可以是具体的，也可以抽象的。 接口中的方法都是<strong>抽象</strong>的。</li>
+<li>接口中的方法要用<strong>类来实现</strong>，一个类可以实现<strong>多个接口</strong>。</li>
+</ul>
+<p>Java 接口反映了对象较高层次的抽象，<strong>为描述相互似乎没有关系的对象的共性提供了一种有效的手段</strong>。</p>
+<p>接口的说明：</p>
+<pre><code class="language-java">[修饰符] interface 接口名[extends] [接口列表]
+{
+   接口体
+}
+public interface Cookable extends Foodable,Printable
+</code></pre>
+<p>修饰符：缺省（同包访问）、 public（任意访问）</p>
+<p>接口体：定义<strong>常量</strong>和<strong>抽象</strong>方法</p>
+<p>接口中的方法不能使用下面的修饰符：static、native、synchronized、final。</p>
+<p>接口自己不能提供方法的实现，接口中的方法必须由类实现。Java 语言用关键字 <code>implements</code> 声明类中将实现的接口。声明接口的形式：</p>
+<pre><code class="language-java">[类修饰符] class类名 [extends 子句] [ implements 子句]
+</code></pre>
+<pre><code class="language-java">interface Runner{ public void run();}
+interface Swimmer{ public void swim();}
+abstract class Animal {abstract public void eat();}
+
+class Person extends Animal implements Runner,Swimmer {
+//Person是能跑和游泳的动物，所以继承了Animal，同时实现了Runner和Swimmer两个接口
+	public void run() {System.out.println(&quot;run&quot;);}
+	public void swim(){System.out.println(&quot;swim&quot;);}
+	public void eat(){System.out.println(&quot;eat&quot;);}
+}
+</code></pre>
+<p><strong>多个类中的多态</strong>：在具有继承关系的多个类中，子类对父类方法的覆盖（不能是重载父类的方法），即子类和父类可以有相同首部的方法，运行的时间决定每个对象到底执行哪个特定的版本。</p>
+<p>Java 支持<strong>动态绑定</strong>：能在运行期间判断参数的实际类型，并分别调用适当的方法体，从而实现了多态性。在 Java 中所有非 final 和非 static 的方法都会自动地进行动态绑定。</p>
+<ul>
+<li>提高程序的扩展性；</li>
+<li>大大提高了程序的抽象程度和简洁性；</li>
+<li>最大限度地降低了类和程序模块之间的耦合性，提高了类模块的封闭性，使得它们不需了解对方的具体细节，就可以很好地共同工作。</li>
+</ul>
+<p><strong>- 包 -</strong></p>
+<p>包的作用：</p>
+<ul>
+<li>包能够让程序员将类组织成单元，通过文件夹或目录来组织文件和应用程序；</li>
+<li>包减少了名称冲突带来的问题，可以防止同名的类发生冲突；</li>
+<li>包能够更大面积的保护类、变量和方法，而不是分别对每个类进行保护；</li>
+<li>包可以用于标示类。</li>
+</ul>
+<p><strong>编译和运行包中的类</strong> 当程序中用 package 语句指明一个包，在编译时产生的字节码文件（.class文件）需要放到相应的以包名为名称的文件夹目录下：</p>
+<ul>
+<li>手工建立子目录，以包名命名该目录，再将 .class 文件复制到相应目录下。</li>
+<li>在编译时，使用 <code>javac –d</code> 命令。</li>
+</ul>
+<p><strong>- 变量及其传递 -</strong></p>
+<ul>
+<li>
+<p><strong>按值传递</strong> 当将一个参数传递给一个函数时，函数接收的是原始值的一个副本。因此，如果函数修改了该参数，仅改变副本，而原始值保持不变。</p>
+</li>
+<li>
+<p><strong>按引用传递</strong> 当将一个参数传递给一个函数时，函数接收的原始值的内存地址，而不是值的副本，因此，如果修改了该参数，调用代码中的原始值也随之改变</p>
+</li>
+</ul>
+<p>Java 中的参数传递比 C++ 简单，按值传递所有参数，制作所有参数的副本，而不管它们的类型。</p>
+<p>引用型变量比较总结：</p>
+<ul>
+<li>比较两个变量是否同一个对象（即对象引用值是否相同），用 <code>==</code> 和 <code>!=</code></li>
+<li>比较两个变量的内容是否相同用 <code>equals</code> 方法</li>
+<li>自己定义的类如果要支持 equals 方法必须重写从 Object 类继承来的 equals 方法</li>
+</ul>
+<p>Object 中的 equals 方法：</p>
+<pre><code class="language-java">public boolean equals(Object obj){
+   return (this==obj);
+}
+</code></pre>
+<p><strong>- 内部类 -</strong></p>
+<p>内部类的定义: 将类的定义置入一个用于封装它的类（外部类）里...</p>
+<p><strong>匿名类</strong>: 类或方法中定义的一种<strong>没有类名</strong>的特殊内部类。</p>
+<p><strong>作用</strong>：当需要创建一个类的对象而且用不上它的名字时，使用内部类可以使代码看上去简洁清楚。</p>
+<pre><code class="language-java">new interfacename(){……}; / new superclassname(){……};
+</code></pre>
+<p>&gt; demo:</p>
+<pre><code class="language-java">interface Contents{int value();}
+public class Goods4 {
+    public Contents cont() { //返回匿名类对象，该匿名类继承了Contents接口
+        return new Contents() {
+            private int i = 11;
+            public int value() { return i;}
+        };
+    }
+    public static void main(String[] args) {
+   	  Goods4 g = new Goods4();
+   	  Contents c = g.cont();
+    }
+}
+</code></pre>
+<h2 id="c5-异常处理">C5 异常处理</h2>
+<pre><code class="language-java">1.运行时异常与非运行时异常的区别(程序员/编译器)
+2.会用 try catch finally 捕获异常
+3.会用 throws 自定义抛出
+</code></pre>
+<p><strong>- 异常分类 -</strong></p>
+<p>程序错误分类：编译错误（编译器）、运行错误（程序员）。</p>
+<p>异常分类：<strong>运行时异常(Runtime Exception)</strong> 和 <strong>非运行时异常</strong>。</p>
+<p>运行时异常是程序员编写程序不正确所导致的异常，理论上，程序员经过检查和测试可以查出这类错误。如除数为零等，错误的强制类型转换、数组越界访问、空引用。运行时异常不建议捕获，改正错误就好了。</p>
+<ul>
+<li>
+<p><strong>运行时异常</strong> 这些异常是<strong>不检查异常</strong>，程序中可以选择捕获处理，也可以不处理。这些异常一般是由程序逻辑错误引起的，程序应该从逻辑角度尽可能避免这类异常的发生。</p>
+</li>
+<li>
+<p><strong>非运行时异常(编译异常)</strong> 从程序语法角度讲是必须进行处理的异常，如果不处理，程序就不能<strong>编译通过</strong>。如 IOException、SQLException 等以及用户自定义的 Exception 异常，一般情况下不自定义检查异常。</p>
+</li>
+</ul>
+<p><strong>- 捕获异常 -</strong></p>
+<pre><code class="language-java">try {}
+catch (Exception e) {}
+finally {} // finally 总是执行，可以为异常处理事件提供一个清理机制。
+</code></pre>
+<p>访问文件未找到 <code>FileNotFoundException</code>，将可能抛出一个或者若干个异常的代码放入 <code>try</code> 语句块中。</p>
+<p><strong>&gt; 执行过程:</strong></p>
+<ol>
+<li>
+<p>try 块中的语句没有产生异常。try -&gt; finally -&gt; 其他。</p>
+</li>
+<li>
+<p>try 块内的语句产生了异常，且该异常在方法内捕获。try(到异常处) -&gt; catch 子句 -&gt; finally。</p>
+</li>
+<li>
+<p>如果在 catch 语句中又重新抛出了异常。try -&gt; catch -&gt; finally -&gt; 将异常抛给方法的调用者。</p>
+</li>
+</ol>
+<p><strong>- 抛出异常 -</strong></p>
+<p>除了捕获异常，还可以不捕获 —— 抛出异常，交给上层调用它的方法程序处理。</p>
+<p>throws 在方法体头部声明，这样也可以使它的调用者必须考虑处理这些异常。</p>
+<pre><code class="language-java">public void function() throws Exception{......}
+public static void function() throws NumberFormatException{......}
+</code></pre>
+<h2 id="c6-基本类库">C6 基本类库</h2>
+<pre><code>1.java.lang.Object(echos toString)
+2.java.lang.System in/out
+3.java.lang.String
+4.java.lang.StringBuffer
+5.java.lang.Math random/sqrt/pow
+6.常用的数据类型封装类 Intger.toString..
+7.集合类 泛型 java.util.Vector
+8.io包 FileInuputStream FileOutputStream File对象
+9.字节流与字符流的转换
+10.如何调用Buffer.reader Input/Output 如何转换 如何读 ★printStream printWriter
+</code></pre>
+<ul>
+<li>
+<p><strong>java.lang.Object</strong> 整个类层次结构的根节点。</p>
+</li>
+<li>
+<p><strong>java.lang.Math</strong> 提供数学常数及各种函数。</p>
+</li>
+<li>
+<p><strong>java.lang.Thread</strong> 提供对多线程的支持。</p>
+</li>
+<li>
+<p><strong>java.lang.Throwable</strong> 是所有异常的基类。</p>
+</li>
+<li>
+<p><strong>java.lang.String</strong> 不可改变的静态字符串。</p>
+</li>
+<li>
+<p><strong>java.lang.StringBuffer</strong> 动态可变字符串。</p>
+</li>
+</ul>
+<p><strong>- String 类 -</strong></p>
+<p>所有字符串常量都是 String 对象，存储在 String Pool（字符串池）中，字符串池是常量池的一部分。</p>
+<p>String 类对象一旦创建，其内容不可更改。若要更改，则必须创建一个新的 String 对象。</p>
+<p>在比较字符串内容时，不能用 <code>==</code>，而应该用 <code>equals()</code> 方法。（<code>==</code> 比较地址值，<code>equals()</code> 方法比较实体值）</p>
+<p>常用方法：</p>
+<pre><code class="language-java">String str = &quot;hello&quot;;
+System.out.println(substring(2));    //子串，llo
+System.out.println(substring(2, 4));    //子串，ll，左闭右开
+System.out.println(str.length());    //长度，5
+System.out.println(str.charAt(1));    //某个字符，e
+//字符数组转换为String
+char[] s = {'a','b','c'};
+String str = new String(s);
+System.out.println(str);    //abc
+//String转换为字符数组  toCharArray
+String str = &quot;abc&quot;;
+char[] s = str.toCharArray();
+//大小写转换
+String s1 = &quot;Hello&quot;;
+System.out.println(s1.toUpperCase());    //HELLO
+System.out.println(s1.toLowerCase());    //hello
+</code></pre>
+<p><strong>- StringBuffer 类 -</strong></p>
+<ul>
+<li>
+<p>3 种动态构造方法</p>
+<pre><code class="language-java">StringBuffer sb = new StringBuffer();
+StringBuffer sb = new StringBuffer(int length);
+StringBuffer sb = new StringBuffer(String str);
+</code></pre>
+</li>
+<li>
+<p>更新</p>
+<pre><code class="language-java">sb.append(&quot;java&quot;);   //hellojava
+sb.insert(5, &quot;sun&quot;); //hellosunjava
+sb.setCharAt(0, 'H'); //Hellosunjava
+sb.delete(5, 8);     //Hellojava
+</code></pre>
+</li>
+<li>
+<p>相互转换</p>
+<pre><code class="language-java">StringBuffer sb = new StringBuffer(&quot;hello&quot;); //String to StringBuffer: 直接用构造函数
+String s = sb.toString(); //StringBuffer 2 String: 用 toString()方法
+</code></pre>
+</li>
+</ul>
+<p><strong>- Integer 类 -</strong></p>
+<pre><code class="language-java">String string = &quot;123&quot;;
+int a = Integer.parseInt(string); //将字符串转成 int：parseInt()方法
+String aString = Integer.toString(a); //将 int 转成字符串：toString()方法
+</code></pre>
+<p><strong>- Math 类 -</strong></p>
+<pre><code class="language-java">// PI
+double x = Math.PI;
+// 三角函数
+double y = Math.sin(3.14);
+// pow 、sqrt
+double x = Math.pow(double a, double b)
+double x = Math.sqrt(double a) 
+// 得到一个[0,1)之间的随机数
+double c = Math.random();
+// 得到一个[20,80)之间的随机整数
+int c = (int)(Math.random()*60+20);
+// 得到一个[500,600)之间的随机整数
+int c = (int)(Math.random()*100+500);
+// 舍入函数 double
+double x = Math.ceil(double a); //向上取整
+double x = Math.floor(double a); //向下取整
+double x = Math.rint(double a); //四舍五入
+// round() 四舍五入
+int x = Math.round(float a);  // float -&gt; int 
+long x = Math.round(double a); //double -&gt; long
+</code></pre>
+<p><strong>-  java.util.Vector 类 -</strong></p>
+<p>向量与数组的异同：</p>
+<ul>
+<li>
+<p>都是类，均可保存列表。</p>
+</li>
+<li>
+<p>数组一旦定义，空间长度不可变，而向量空间是<strong>动态</strong>的。</p>
+</li>
+<li>
+<p>数组中既能存放基本数据类型，又能存放对象。而向量中<strong>只能存储对象</strong>，若要存储基本数据类型，可通过封装类如 Integer。</p>
+</li>
+</ul>
+<p><strong>&gt; 构造函数</strong></p>
+<pre><code class="language-java">Vector() //默认大小10
+Vector(int size) //指定大小
+Vector(int size, int inc) //指定大小，指定增量
+</code></pre>
+<p><strong>&gt; 创建向量</strong></p>
+<pre><code class="language-java">Vector&lt;Integer&gt; v = new Vector&lt;Integer&gt;(10); // &lt;&gt; 中的类型不能是基本数据类型。
+</code></pre>
+<p><strong>&gt; 常用方法</strong></p>
+<pre><code class="language-java">v.add(x); //添加元素
+v.removeElementAt(idx);  //删除元素
+v.elementAt(idx); //查下标为 idx 的元素
+v.indexOf(obg); //返回向量中obj的下标，若无，返回-1
+v.setElement(onj,idx); //修改元素
+v.insertElementAt(obj,idx); //在下标为 idx 位置插入元素 obj
+v.contains(obj); //判断有无元素obj
+v.clear(); //清空向量
+System.out.println(v.size()); //实际元素个数
+System.out.println(v.capacity()); //存储容量
+</code></pre>
+<p><strong>- java.io 包 -</strong></p>
+<ul>
+<li><strong>FileInputStream</strong>(文件输入流)</li>
+</ul>
+<pre><code class="language-java">FileInputStream(File file)
+FileInputStream(String path)
+</code></pre>
+<ul>
+<li><strong>FileOutputStream</strong>(文件输出流)</li>
+</ul>
+<pre><code class="language-java">FileOutputStream(File file) //向 File 对象的文件写入数据
+FileOutputStream(File file,boolean append); //向 File 对象的文件追加写入数据
+FileOutputStream(String path) // 向指定文件写入数据
+FileOutputStream(String path, boolean append); //向指定文件追加写入数据
+</code></pre>
+<p><strong>- 重写 equals() 方法 -</strong></p>
+<pre><code class="language-java">class Person {
+    String name;
+    int age;
+    Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+    public boolean equals(Object obj) {
+        if(obj == null) return false; // null 判断不为空
+        if(this == obj) return true; // 是否为同一个对象
+        if(this.getClass() != obj.getClass()) return false; //类名是否相同
+        Person person = (Person)obj; //强制转化为同类
+        return name.equals(person.name) &amp;&amp; age == person.age;
+    }
+}
+public class Test {
+    public static void main(String[] args) {
+        Person aPerson = new Person(&quot;Wang&quot;, 20);
+        Person bPerson = new Person(&quot;Wang&quot;, 20);
+        System.out.println(aPerson == bPerson); // return false
+        System.out.println(aPerson.equals(bPerson)); // return true
+    }
+}
+</code></pre>
+<p>对 <code>equals()</code> 方法的设计要求：</p>
+<ol>
+<li><strong>对称性</strong> 如果 x.equals(y) 返回是 <code>true</code>，那么 y.equals(x) 也应该返回是 <code>true</code>。</li>
+<li><strong>反射性</strong> x.equals(x) 必须返回是 <code>true</code>。</li>
+<li><strong>类推性</strong> 如果 x.equals(y) 返回是 <code>true</code>，而且 y.equals(z) 返回是 <code>true</code>，那么 z.equals(x) 也应该返回是<code>true</code>。</li>
+<li><strong>一致性</strong> 如果 x.equals(y) 返回是 <code>true</code>，只要 x 和 y 内容一直不变，x.equals(y) 返回永远为 <code>true</code>。</li>
+<li><strong>非空性</strong> x.equals(null)，永远返回是 <code>false</code>；x.equals (和 x 不同类型的对象)永远返回是 <code>false</code>。</li>
+</ol>
+<h2 id="c7-图形界面">C7 图形界面</h2>
+<pre><code>1.会编写简单的窗体程序
+2.面板和窗体的默认布局管理器
+3.如何设置窗体和窗体上组建的大小位置背景色前景色
+4.掌握两种布局管理器 flowlayout borderlayout sendlayout
+5.常用组件: 按钮 文本框 标签 标签和文本框的区别
+6.★事件处理 
+事件源 事件监听器 事件处理函数 及绑定
+按钮的动作事件 ActionListener
+7.画图 覆盖 paint 方法 repaint smail-&gt;cry
+</code></pre>
+<p>两个包：</p>
+<pre><code class="language-java">import java.awt.*;
+import javax.swing.*;
+</code></pre>
+<p>最后一定要：</p>
+<pre><code class="language-java">frame.setVisible(true);
+</code></pre>
+<p>为关闭窗体添加事件，使用匿名类，重载 <code>public void windowClosing(WindowEvent e)</code> 方法：</p>
+<pre><code class="language-java">this.addWindowListener(new WindowAdapter(){
+    public void windowClosing(WindowEvent e){
+        System.exit(0);
+    } 
+});
+</code></pre>
+<p>两种布局模式：</p>
+<ul>
+<li>
+<p><code>BorderLayout</code> <strong>边界布局</strong>是一个布置容器的边框布局，它可以对容器组件进行安排，并调整其大小，使其符合下列五个区域：北、南、东、西、中，每个区域最多只能包含一个组件。</p>
+</li>
+<li>
+<p><code>FlowLayout</code> <strong>顺序布局</strong>将组件从左到右依次排列，一行排满就转到下一行继续排列，直到所有的组件都排列完毕。</p>
+</li>
+</ul>
+<h3 id="frame-jframe">Frame / JFrame</h3>
+<p>Frame(JFrame) 类用于创建带有<strong>菜单条的全功能窗口对象</strong>,为窗口、面板等组件提供框架，它可以包含<strong>窗口标题、最大化、最小化和关闭窗口</strong>等按钮,通常是 GUI 应用程序窗口的顶层容器组件。<br>
+Frame 类的对象开始是不可见的，要调用 <code>show()</code> 方法 (或 <code>setVisible(true)</code> 方法) 才能显示出来，也可以调用 <code>hide()</code>方法将其隐藏。框架对象被创建后就可使用 <code>add()</code> 方法将其它组件加入到框架中。两种<strong>构造方法</strong>：</p>
+<pre><code class="language-java">Frame()        创建一个不带标题的框架
+Frame(String)  创建一个带标题的框架
+</code></pre>
+<p><strong>Frame 和 Dialog 是 Window 的子类，它们都是窗口类，默认的布局管理器都是</strong> <code>BorderLayout</code>。</p>
+<p><strong>&gt; 常用方法</strong>:</p>
+<pre><code class="language-java">show() //显示框架
+setVisible(boolean b) //使框架可见/不可见(true/false)
+hide() //隐藏框架
+setTitle() //设置框架的标题
+setSize(int w, int h) //调整框架的尺寸(宽/高为w/h)
+setBounds(int x, int y, int w,int h) //调整框架的位置及尺寸(左上角为(x,y), 宽、高为w、h)
+add(Component ob) //将其它组件 ob 加入到框架的中心位置 
+add(String p, Component ob) //将组件 ob 加入到框架的 p 位置 
+// 框架默认的布局方式是 BorderLayout,  它将容器划分为东 East 西 West 南 South 北 North 中 Center
+setLayout(new FlowLayout()); //设置布局管理器
+</code></pre>
+<p><strong>&gt; FrameDemo3.java</strong></p>
+<pre><code class="language-java">import java.awt.*;
+import javax.swing.*;
+public class  JFrameDemo {
+    public static void main(String args[]) {
+        JFrame f = new  JFrame(&quot;简单框架&quot;); //创建框架
+        Container c = f.getContentPane(); //获取内容面板 
+        c.setLayout(new FlowLayout());
+        JButton btn = new JButton(&quot;Button1&quot;); //创建一个按钮
+        c.add(btn);  //将按钮加入面板中
+        f.setSize(160,100) ; //修改框架尺寸
+        f.show(); //显示框架
+    }
+}
+</code></pre>
+<h3 id="dialog-jdialog">Dialog / JDialog</h3>
+<p>对话框类 Dialog (JDialog) 的对象是<strong>有标题条而无菜单条和最小化按钮图标的容器组件</strong>，它必须依附在某个窗口上(如Frame), 一旦它所依附的窗口关闭了, 对话框也<strong>自动关闭</strong>。</p>
+<p>对话框默认的布局是 <code>BorderLayout</code>。同框架类一样, 要调用 show() 方法显示才可见, 调用 hide() 方法可将其隐藏。</p>
+<p>对话框通常用于在应用程序中弹出一个窗口, 用于提示输入数据、保存文件等。</p>
+<p>有两种模式的对话框:</p>
+<ul>
+<li>响应模式: 对话框出现期间，所依附窗口不接收任何操作。</li>
+<li>非响应模式: 对话框出现时, 与所依附窗口都可同时接收操作。</li>
+</ul>
+<p>构造方法：</p>
+<pre><code class="language-java">Dialog(Frame) //创建依附于 Frame 的无模式对话框
+Dialog(Frame, boolean) //创建对话框, 并由布尔值的真假决定此对话框有无模式
+Dialog(Frame, String) //创建无模式对话框，并给定对话框的标题
+Dialog(Frame, String, boolean) //创建对话框, 指出是否有模式, 并给定对话框的标题 
+</code></pre>
+<p><strong>&gt; DialogDemo.java</strong></p>
+<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-01-07-09-57-34.png" alt="" loading="lazy"></figure>
+<pre><code class="language-java">import java.awt.*;
+public class DialogDemo {
+    public static void main(String args[]) {
+        Frame frm1 = new Frame();
+        Dialog Dialog1 = new Dialog(frm1, &quot;myDialog&quot;);
+        Button b1 = new Button(&quot;按钮1&quot;), b2 = new Button(&quot;按钮2&quot;);
+        Button b3 = new Button(&quot;按钮3&quot;), b4 = new Button(&quot;按钮4&quot;);
+        Button b5 = new Button(&quot;按钮5&quot;);
+        Dialog1.add(b1);
+        Dialog1.add(&quot;North&quot;,b2);  Dialog1.add(&quot;South&quot;,b3);
+        Dialog1.add(&quot;East&quot;,b4);     Dialog1.add(&quot;West&quot;,b5);
+        Dialog1.setVisible(true);    //功能等同于show(),让对话框显示
+    }
+}
+</code></pre>
+<h3 id="panel-jpanel">Panel / Jpanel</h3>
+<p>面板 <code>panel</code>(Jpanel) 是能在屏幕上实际显示的组件，提供了容纳其他组件的功能，但本身必须放在 <strong>Window, Frame, Dialog</strong> 等容器中才能使用。所有面板的默认的布局管理器是 <code>FlowLayout</code>, 即按照<strong>从左至右、从上到下</strong>的方式布局.</p>
+<p>面板提供容纳其他组件的功能，利用面板可以把控件分组，使整个窗口的组件显得有层次，安排合理布局，<code>java.applet.Applet</code> 是 <code>java.awt.panel</code> 的子类。</p>
+<p><strong>&gt; UsePanel.java</strong></p>
+<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-01-07-10-06-30.png" alt="" loading="lazy"></figure>
+<pre><code class="language-java">import java.awt.*;
+public class UsePanel extends Frame {
+    public static void main(String args[]) {
+        UsePanel frm = new UsePanel(); //创建UsePanel类的对象
+        //注：UsePanel 是个框架类，所以创建该类的对象就是创建一个框架对象 
+        frm.setLayout(new FlowLayout()); 
+        Panel  panel1 = new Panel(); // 创建一个面板对象
+        Panel  panel2 = new Panel();
+        frm.add(panel1);  frm.add(panel2);
+        panel1.add(new Button(&quot;left&quot;));
+        panel1.add(new Button(&quot;right&quot;)); 
+        panel1.setBackground(Color.lightGray);   //为能看清面板, 
+        panel2.setBackground(Color.yellow);      //这里修改面板
+        panel2.add(new Button(&quot;Panel2&quot;));        //的背景颜色
+        frm.pack();
+        frm.show();
+    }
+}
+</code></pre>
+<p>设置背景色及前景色：</p>
+<pre><code class="language-java">JPanel b = new JPanel();
+b.setBackground(Color.RED);   //背景色
+b.setForeground(Color.BLUE);  //前景色
+</code></pre>
+<h3 id="常用组件">常用组件</h3>
+<p>常用基本组件：</p>
+<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-01-07-09-36-15.png" alt="" loading="lazy"></figure>
+<p>三个考试中重要的组件:</p>
+<ul>
+<li><strong>JButton</strong>、 <strong>JTextField</strong>、 <strong>JLabel</strong></li>
+</ul>
+<p><strong>&gt; JButton</strong></p>
+<p>构造方法：</p>
+<pre><code class="language-java">JButton()
+JButton(String)
+</code></pre>
+<p>常用方法：</p>
+<pre><code class="language-java">setLable(String t) //设置按钮标志
+setText(&quot;hello&quot;)
+addACtionListener(ActionListener 1) //将1指定为按钮的事件监听者
+</code></pre>
+<p><strong>&gt; ButtonDemo.java</strong></p>
+<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-01-07-10-17-35.png" alt="" loading="lazy"></figure>
+<pre><code class="language-java">import java.awt.*;
+public class ButtonDemo extends Frame {
+    public static void main(String args[]) {
+        ButtonDemo frm = new ButtonDemo();
+        frm.setLayout(new FlowLayout()); 
+        frm.setTitle(&quot;按钮的创建&quot;);
+        Button b1 = new Button(), b2;   //定义二个按钮
+        b2 = new Button(&quot;Button2&quot;);    //实例化按钮对象
+        b1.setLabel(&quot;Button1&quot;);
+        frm.add(b1);                       //将按钮加入窗口中
+        frm.add(b2);
+        b2.setEnabled(false);
+        frm.show();
+    }
+}
+</code></pre>
+<p><strong>&gt; JLabel</strong></p>
+<p>标签(Label)是一种只能用来显示单行文本的组件。</p>
+<p>标签在容器中的对齐方式有三种：左对齐、居中和右对齐, 用 <code>Label.LEFT</code>、<code>Label.CENTER</code>、<code>Label.RIGHT</code> 三个静态常量表示，在程序中可以设置其对齐方式。</p>
+<p>构造方法：</p>
+<ul>
+<li><code>JLabel()</code> 空标签</li>
+<li><code>JLabel(String text)</code> 带有指定文本的标签</li>
+<li><code>JLabel(String text, int alignment)</code> 带有指定文本和在容器中的对齐方式的标签</li>
+</ul>
+<p>常用方法：</p>
+<pre><code class="language-java">getAlignment() //获取对齐方式
+getText() //获取文本
+setAlignment(int aligmnent) //设置对齐方式
+setText(String text) //设置文本 
+</code></pre>
+<p><strong>&gt; JTextField</strong></p>
+<p>文本框(TextField)和多行文本区域(TextArea)是用来显示和输入文本的控件，它们都是 TextComponent 的子类。</p>
+<p>构造方法：</p>
+<pre><code class="language-java">TextField() //创建一个空的文本框
+TextField(Strint text) //创建一个带有初始文本的文本框
+TextField(int Columns) //创建一个指定列数的文本框
+TextField(String text, int Colulmns) //创建一个指定列数和带有初始文本的文本框 
+</code></pre>
+<p>常用方法：</p>
+<pre><code class="language-java">setText(String s) //设置文本框中的字符串
+getText(String s) //获得文本框中的字符串
+addActionListener(ActionListener 1) //指定1为文本框的事件监听者
+setEchoChar(String s) //设置用户输入的回应字符,输入密码时可设置为*
+</code></pre>
+<h3 id="事件处理">★ 事件处理</h3>
+<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-01-07-10-36-38.png" alt="" loading="lazy"></figure>
+<ul>
+<li>
+<p><strong>事件源</strong>是一个事件的产生者。</p>
+</li>
+<li>
+<p><strong>事件对象</strong>是图形组件产生的事件。</p>
+<pre><code class="language-java">ComponentEvent（组件事件：组件尺寸的变化，移动） 
+ContainerEvent（容器事件：组件增加，移动） 
+WindowEvent（窗口事件：关闭窗口，窗口闭合，图标化） 
+FocusEvent（焦点事件：焦点的获得和丢失） 
+KeyEvent（键盘事件：键按下、释放） 
+MouseEvent（鼠标事件：鼠标单击，移动）
+ActionEvent（动作事件：按钮按下，TextField中按Enter键） 
+AdjustmentEvent（调节事件：在滚动条上移动滑块以调节数值） 
+ItemEvent（项目事件：选择项目，不选择&quot;项目改变&quot;） 
+TextEvent（文本事件：文本对象改变）
+</code></pre>
+</li>
+<li>
+<p><strong>事件监听器</strong>就是一个接收事件、解释事件并处理用户交互的方法。</p>
+</li>
+</ul>
+<p>常用事件监听器的添加方法：</p>
+<pre><code class="language-java">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+public class Test extends JFrame {
+    public void paint(Graphics g) {
+        g.setColor(Color.RED);
+        g.drawOval(x,y,w,h);
+        g.drawRect(x,y,w,h)；//矩形
+    }
+    public static void main(String[] args) {
+        Test frame = new Test();
+        Test.setTitle(&quot;Test&quot;);
+        Test.setSize(500, 500);
+        JButton btn = new JButton(&quot;btn1&quot;);
+        btn.addActionListener(new ActionListener(){ //匿名类
+            public void actionPerformed(ActionEvent e) {
+                repaint();
+            }
+        });
+        Test.addWindowListener(new WindowAdapter(){
+            public void windowClosing(WinodwEvent e) {
+                System.exit(0);
+            } 
+        });
+        Test.setVisible(true);
+    }
+}
+</code></pre>
+<h2 id="c9-多线程">C9 多线程★</h2>
+<pre><code>1.创建线程类的两种方法以及创建对象的方法
+继承 Thread 类 / Runerable 接口 / 课件例子
+2. synchronized wait notify
+</code></pre>
+<p>两种方式：</p>
+<ul>
+<li>继承 Thread ，覆盖 <code>run()</code></li>
+<li>实现 Runnable ，实现 <code>run()</code></li>
+</ul>
+<pre><code class="language-java">class myThread extends Thread {
+    public void run() {
+        //code
+    }
+}
+class myThread2 implements Runnable {
+    public void run() {
+        //code
+    }
+}
+</code></pre>
+<p>开始线程用 <code>start()</code> 方法：</p>
+<pre><code class="language-java">MyThread thread = new MyThread();
+thread.start();
+</code></pre>
+<p>实现互斥使用修饰符 <code>synchronized</code>：</p>
+<pre><code class="language-java">public synchronized void methodName(..){}
+</code></pre>
+<p>线程的生命周期：</p>
+<ol>
+<li>创建状态：<code>Thread myThread = new MyThreadClass();</code></li>
+<li>可运行状态：分配资源</li>
+<li>不可运行状态：
+<ul>
+<li>调用<code>sleep()</code>方法   --&gt; 等待</li>
+<li>调用<code>suspend()</code>方法   --&gt;调用<code>resume()</code>方法</li>
+<li>调用<code>wait()</code>方法   --&gt;调用<code>notifyAll()</code>方法</li>
+<li>输入输出流发生阻塞   --&gt;等待</li>
+<li>线程试图调用另一个对象的同步方法   --&gt;等待释放同步锁</li>
+</ul>
+</li>
+<li>死亡状态：
+<ul>
+<li>自然撤销</li>
+<li>调用<code>stop()</code>方法停止当前线程 ，一般不用.</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>wait / notify</li>
+</ul>
+<p><code>wait</code>导致当前线程等待，直到另一个线程调用该对象的 <code>notify()</code> 方法</p>
+<p><code>notify</code>唤醒正在等待对象监视器的单个线程。</p>
+<p><code>wait</code> 和 <code>notify</code> 必须配合 <code>synchronized</code> 使用，<code>wait</code> 在 <code>notify</code> 前用。</p>
+<pre><code class="language-java">import javax.swing.*;
+import java.awt.*;
+import java.util.*;
+public mythread extends Thread {
+   JLabel j1 = new JLabel(&quot;label1&quot;);
+   JLabel j2 = new JLabel(&quot;label2&quot;);
+   mythread(){}
+   public void run(){
+        try{
+            sleep(1000);
+            j1.setLocation(j1.getX() + 10, j1.getY());
+            j2.setLocation(j1.getX(), j1.getY() + 10);
+        } catch(InterruptedException e) {
+          System.out.println(e.toString());
+        }
+   }
+}
+public class Test extends JFrame{
+   public static void main(String[] args){
+      Test f = new Test();
+      f.setTitle(&quot;thread&quot;);
+      f.setVisible(true);
+      JButton b = new JButton(&quot;start&quot;);
+      f.add(b);
+      b.addActionListener(new actionListener(){
+         public void actionPerformed(ActionEvent e){
+            mythread t1 = new mythread();
+            mythread t2 = new mythread();
+            t1.start();
+            t2.start();
+         }
+      });
+   }
+}
+</code></pre>
+<h2 id="c10-网络编程">C10 网络编程</h2>
+<pre><code>1.基于 TCP 的 clinet server 怎么写
+</code></pre>
+<p><strong>- 基于 TCP 的 Socket 通讯实现 -</strong></p>
+<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-01-07-11-06-05.png" alt="" loading="lazy"></figure>
+<ul>
+<li>
+<p><code>Server</code> 一直运行，不断监听客户端的连接</p>
+<ul>
+<li>创建 <code>ServerSocket</code> 对象，指定服务器监听的端口号；</li>
+<li>调用以上建立服务器套接口对象的 <code>accept</code> 方法等待客户的连接；</li>
+<li>一旦有客户送来正确请求，就连接到端口，accept 方法返回一个新的套接口对象（Socket 类对象）；</li>
+<li>获取该返回对象绑定的输入<strong>输出流对象</strong>，实现和客户的<strong>通信</strong></li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-java">import java.io.*;
+import java.net.*;
+public class Tcpserver { 
+    public static void main(String args[]) throws IOException {
+        ServerSocket svrsoc = null;
+        Socket soc = null;
+        BufferedReader in = null;
+        PrintWriter out = null;
+        InetAddress clientIP = null;
+        String str = null;
+        try { 
+            svrsoc=new ServerSocket(8000); //构造ServerSocket对象，端口为8000
+            System.out.println(&quot;Wait for.......&quot;);
+            soc=svrsoc.accept(); //服务端等待一个连接，返回新套接口soc
+            in=new DataInputStream(soc.getInputStream()) //在新套接口soc上构造BufferedReader对象
+            out=new PrintStream(soc.getOutputStream()); //新套接口soc上构造PrintWriter对象
+            clientIP=soc.getInetAddress(); 
+            System.out.println(&quot;Client's IP address:&quot;+clientIP);
+            out.println(&quot;Welcome!...&quot;);
+            str=in.readLine(); //在in上读一行
+            while(!str.equals(&quot;quit&quot;)) { //如读出的不是&quot;quit&quot;,继续读 
+                System.out.println(&quot;Client said:&quot;+str);
+                str=in.readLine(); //out.println(str); 
+            }
+            System.out.println(&quot;Client want to leave.&quot;)
+        } catch(Exception e) {
+            System.out.println(&quot;Error:&quot;+e);
+        } finally {
+            in.close();
+            out.close();
+            soc.close();
+            svrsoc.close();
+       }
+    }
+}
+</code></pre>
+<ul>
+<li><code>Client</code>
+<ul>
+<li>创建一个 Socket 类对象，指定所要连接服务器的 IP 地址和端口（服务器接受连接，该对象就建立）；</li>
+<li>获得该 Socket 对象绑定的输入输出流，实现和服务器的通信。</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-java">import java.net.*;
+import java.io.*;
+public class TcpClient {
+    static void clear(byte[] b) {
+        for(int i = 0; i &lt; b.length; i++)
+            b[i] = 0;
+    }
+    public static void main(String args[])  throws IOException {
+        Socket soc = null;
+        BufferedReader in = null;
+        PrintWriter out = null;
+        String strin = null;
+        String strout = null;
+        try {
+            soc = new Socket(&quot;localhost&quot;, 8000);
+            System.out.println(&quot;Connecting to the Server...&quot;);
+            in = new BufferedReader(new InputStreamReader(soc.getInputStream()));
+            out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
+                    soc.getOutputStream())), true);
+            strin = in.readLine();
+            System.out.println(&quot;Server said:&quot;+strin);
+            byte bmsg[] = new byte[20];
+            System.in.read(bmsg);
+            String msg = new String(bmsg);
+            msg = msg.trim();
+            ouSt.println(msg);
+            while(!msg.equals(&quot;quit&quot;)) {
+                clear(bmsg);
+                System.in.read(bmsg);
+                msg=new String(bmsg);
+                msg=msg.trim();
+                out.println(msg);
+            }
+        } catch (Exception e) { 
+            System.out.println(&quot;Error: &quot; + e);
+        } finally {
+            in.close();
+            out.close();
+            soc.close();
+            System.exit(0);
+        }
+    }
+}
+</code></pre>
+<p><strong>----- 附录代码 -----</strong></p>
+<p><strong>- 简单排序 -</strong></p>
+<pre><code class="language-java">import java.util.*;
+public class Test{
+   public static void main(String[] args){
+      int[] a = new int[10];
+      Scanner scan = new Scanner(System.in);
+      for(int i = 0;i &lt; 10;i++){
+         a[i] = scan.nextInt();
+      }
+      Arrays.sort(a);
+      for(int i = 0;i &lt; 10;i++){
+         System.out.print(a[i]+&quot; &quot;);
+      }
+   }
+}
+</code></pre>
+<p><strong>- 复数类 -</strong></p>
+<pre><code class="language-java">import java.util.*;
+public class Complex{
+   public int realPart;
+   public int maginPart;
+   public Complex(){
+      this.realPart = 0;
+      this.maginPart = 0;
+   }
+   public Complex(int r,int i){
+      this.realPart = r;
+      this.maginPart = i;
+   }
+   public String toString(){
+      return this.realPart+&quot;+&quot;+this.maginPart+&quot;i&quot;;
+   }
+   public static Complex complexAdd(Complex a){
+      return new Complex(this.realPart + a.realPart,this.maginPart + a.maginPart);
+   }
+   public static Complex complexSub(Complex a){
+      return new Complex(this.realPart - a.realPart,this.maginPart - a.maginPart);
+   }
+   public static void main(String[] args){
+      Scanner scan = new Scanner(System.in);
+      Complex a1 = new Complex(scan.nextInt,scan.nextInt);
+      Complex a2 = new Complex(scan.nextInt,scan.nextInt);
+      System.out.println(&quot;a1:&quot;+a1.toString());
+      System.out.println(&quot;a2:&quot;+a2.toString());
+      System.out.println(&quot;a1+a2=&quot;+a1.Add(a2).toString());
+      System.out.println(&quot;a1-a2=&quot;+a1.Sub(a2).toString());
+   }
+}
+</code></pre>
+<p><strong>- 加法器 -</strong></p>
+<pre><code class="language-java">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+public class jiafaqi extends JFrame{
+   public static void main(String[] args){
+      jiafaqi j = new jiafaqi();
+      j.setTitle(&quot;加法器&quot;);
+      JTextField shu1 = new JTextField(5);
+      JTextField shu2 = new JTextField(5);
+      JTextField result = new JTexField(5);
+      JButton jia = new JButton(&quot;+&quot;);
+      JButton jian = new JButton(&quot;-&quot;);
+      j.add(shu1); //添加组件
+      j.add(shu2);
+      j.add(jia);
+      j.add(jian);
+      j.add(result);
+      j.setLocation(300,300);
+      j.setSize(500,100);                             //事件监听器 匿名类
+      jia.addActionListener(new ActionListener(){
+         public void actionPeformed(ActionEvent e){
+            int x = Integer.parseInt(shu1.getText());
+            int y = Integer.parseInt(shu2.getText());
+            int z = x + y;
+            result.setText(Integer.toString(z));
+         }
+      });
+      jian.addActionListener(new ActionListener(){
+         public void actionPeformed(ActionEvent e){
+            int x = Integer.parseInt(shu1.getText());
+            int y = Integer.parseInt(shu2.getText());
+            int z = x - y;
+            result.serText(Integer.toString(z));
+         }
+      });
+      f.setVisible(true); //别忘了这个
+   }
+}
+</code></pre>
+<p><strong>- 变脸 -</strong></p>
+<p>&gt; 利用事件处理程序mouseUp()实现程序运行后出现一张笑脸，鼠标点击一次则变成哭脸，再点击一次又变成笑脸，依次轮换</p>
+<pre><code class="language-java">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+public class Test extends JFrame{
+   static int m = 0;
+   public static void main(String[] args){
+      Test f = new Test();
+      f.setTitle(&quot;变脸&quot;);
+      f.setSize(300,300);
+      f.setVisible(true);
+      f.addMouseListener(new MouseAdapter(){    //鼠标的点击事件
+         public void mouseClicked(MouseEvent e){
+            f.reprint();
+         }
+      });
+   }
+   public void paint(Graphics g){
+      if(m++%2==1){
+         super.paint(g); //消除之前画的
+         g.getColor(Color.blue);
+         g.drawString(&quot;哭！&quot;,80,60);
+         g.drawOval(100,50,120,160);
+         g.drawArc(170,90,30,30,0,-180);
+         g.drawArc(120,90,30,30,0,-180);
+         g.drawArc(120,150,80,80,20,140);
+      }
+      else{
+         super.paint(g); //消除之前画的
+         g.getColor(Color.blue);
+         g.drawString(&quot;笑！&quot;,80,60);
+         g.drawOval(100,50,120,160);
+         g.drawArc(170,90,30,30,0,180);
+         g.drawArc(120,90,30,30,0,180);
+         g.drawArc(120,150,80,80,-20,-140);         
+      }
+   }
+}
+</code></pre>
+<p><strong>- GUI多线程 -</strong></p>
+<p>&gt; 编写一个图形用户界面程序，窗体的宽度300，高度150，布局管理器为null，窗体上有二个标签和二个按钮，标签的位置为（10,30）和（200,60），按钮的位置为（50,100）和（150,100），它们的宽度和高度都是80和20。编写一个线程，该线程可以让标签向右或向左移动10次，每次移动10个单位，间隔1秒，通过按钮的动作事件启动上述线程，“向右走”按钮启动“向右移标签”，“向左走”按钮启动“向左移标签</p>
+<pre><code class="language-java">import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+public class Test extends Thread{
+   JLabel l1,l2;
+   static boolean bool;
+   public Test(JLabel l1,Jlabel l2){
+      this.l1 = l1;
+      this.l2 = l2;
+   }
+   public void run(){
+      if(bool==true){
+         try{
+            for(int i=0;i&lt;10;i++){
+               l1.setBounds(l1.getX()+10,30,80,80);
+               Thread.sleep(1000);
+            }
+         }catch(Exception e){System.out.println(e.toString());}
+      }
+      else{
+         try{
+            for(int i=0;i&lt;10;i++){
+               l1.setBounds(l2.getX()-10,60,80,80);
+               Thread.sleep(1000);
+            }
+         }catch(Exception e){System.out.println(e.toString());}         
+      }
+   }
+   public static void main(String[] args){
+      JFrame f = new JFrame();
+      f.setSize(300,200);
+      f.setVisible(true);
+      f.setLayout(null);
+      JLabel l1 = new JLabel(&quot;右移&quot;);
+      JLabel l2 = new JLabel(&quot;左移&quot;);
+      l1.setBounds(10,30,80,20);
+      l2.setBounds(200,60,80,20);
+      f.add(l1);
+      f.add(l2);
+      JButton b1 = new JButton(&quot;右&quot;);
+      JButton b2 = new JButton(&quot;左&quot;);
+      f.add(b1);
+      f.add(b2);
+      Test t1 = new Test(l1,l2);
+      Test t2 = new Test(l1,l2);
+      b1.addActionListener(new ActionListener(){
+         public void actionPerformed(ActionEvent e){
+            bool = true;
+            t1.start();
+         }
+      });
+      b2.addActionListener(new ActionListener(){
+         public void actionPerformed(ActionEvent e){
+            bool = false;
+            t2.start();
+         }
+      });
+   }
+}
+</code></pre>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#c0-memo">C0 Memo</a></li>
+<li><a href="#c12-env">C1/2 env</a></li>
+<li><a href="#c3-%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80">C3 语言基础</a>
+<ul>
+<li><a href="#%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B">变量类型</a></li>
+<li><a href="#%E8%BF%90%E7%AE%97%E7%AC%A6%E5%8F%8A%E4%BC%98%E5%85%88%E7%BA%A7">运算符及优先级</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2">数据类型转换</a></li>
+<li><a href="#%E7%AE%80%E5%8D%95%E8%AF%AD%E5%8F%A5%E5%92%8C%E5%A4%8D%E5%90%88%E8%AF%AD%E5%8F%A5">简单语句和复合语句</a></li>
+<li><a href="#%E6%95%B0%E7%BB%84%E6%93%8D%E4%BD%9C">数组操作</a></li>
+</ul>
+</li>
+<li><a href="#c4-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1">C4 ★ 面向对象</a></li>
+<li><a href="#c5-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86">C5 异常处理</a></li>
+<li><a href="#c6-%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%BA%93">C6 基本类库</a></li>
+<li><a href="#c7-%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2">C7 图形界面</a>
+<ul>
+<li><a href="#frame-jframe">Frame / JFrame</a></li>
+<li><a href="#dialog-jdialog">Dialog / JDialog</a></li>
+<li><a href="#panel-jpanel">Panel / Jpanel</a></li>
+<li><a href="#%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6">常用组件</a></li>
+<li><a href="#%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86">★ 事件处理</a></li>
+</ul>
+</li>
+<li><a href="#c9-%E5%A4%9A%E7%BA%BF%E7%A8%8B">C9 多线程★</a></li>
+<li><a href="#c10-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B">C10 网络编程</a></li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2020-05-05-De1CTF2020-Partial-Writeup/">
+                <h3 class="post-title" style="text-align: left;">
+                  De1CTF 2020 Partial Writeup
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2020-01-01-Cryptography-review/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  Cryptography Course Review Note
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

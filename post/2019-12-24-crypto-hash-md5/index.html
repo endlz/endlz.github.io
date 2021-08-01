@@ -1,0 +1,627 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Message-Digest Algorithm 5 - MD5 | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Message-Digest Algorithm 5 - MD5 | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="0x01 MD5 概述
+Hash 函数是一个非常重要的密码学组件，在协议中广泛使用。哈希函数计算了一个消息的摘要，而这个摘要是一个非常短的、固定长度的位字符串。对某个特定的消息而言，哈希摘要（或哈希值）可以看做是该消息的指纹，即消息的唯一表..." />
+    <meta name="keywords" content="Crypto,Course" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Message-Digest Algorithm 5 - MD5
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-12-24
+              </span>
+              <span>
+                17 min read
+              </span>
+              <span class="page-view" key="20191224142818" title="Message-Digest Algorithm 5 - MD5">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/crypto/" class="post-tag">
+                  # Crypto
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/course/" class="post-tag">
+                  # Course
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <h2 id="0x01-md5-概述">0x01 MD5 概述</h2>
+<p>Hash 函数是一个非常重要的密码学组件，在协议中广泛使用。哈希函数计算了一个消息的<strong>摘要</strong>，而这个摘要是一个<strong>非常短的、固定长度</strong>的位字符串。对某个特定的消息而言，<strong>哈希摘要</strong>（或哈希值）可以看做是该消息的指纹，即消息的唯一表示。Hash 函数时<strong>数字签名方案</strong>和<strong>消息验证码</strong>的核心部分，在其他密码学应用中也得到广泛使用，比如存储密码的哈希或密钥衍生。</p>
+<p><strong>MD5 消息摘要算法</strong>（MD5 Message-Digest Algorithm），一种被广泛使用的密码散列函数，可以产生出一个 128-bit（16-byte，1-byte = 8-bit，1个16进制位-&gt; 4-bit，通常使用 32 位的十六进制位表示，方便查看。）的散列值（hash value），用于确保信息传输完整一致。MD5 由美国密码学家罗纳德·李维斯特（Ronald Linn Rivest）设计，于 1992 年公开，用以取代 MD4 算法。这套算法的程序在 RFC 1321 中被加以规范。</p>
+<h2 id="0x02-算法流程">0x02 算法流程</h2>
+<p>MD5 是输入不定长度信息，输出固定长度 128-bits 的算法。经过程序流程，生成四个 32 位数据，最后联合起来成为一个 128-bits 散列。基本方式为，求余、取余、调整长度、与链接变量进行循环运算，得出结果。</p>
+<pre><code class="language-py">class MD5(object):
+    _string = None
+    _buffers = {
+        MD5Buffer.A: None,
+        MD5Buffer.B: None,
+        MD5Buffer.C: None,
+        MD5Buffer.D: None,
+    }
+</code></pre>
+<h3 id="附加填充位">附加填充位</h3>
+<p>首先填充 1 个 1 和 若干个 0 使得消息长度（包括<strong>原始消息的长度</strong>和<strong>本次填充的长度</strong>）模 512 与 448 同余。<br>
+* 需要特别注意的是，若原始消息长度刚好满足模 512 与 448 同余，则还需要填充 1 个 1 和 511 个 0 。</p>
+<pre><code class="language-py">@classmethod
+def _step_1(cls):
+    # Convert the string to a bit array.
+    # 将字符串转化为二进制数组(Big-endian)
+    bit_array = bitarray(endian=&quot;big&quot;)
+    bit_array.frombytes(cls._string.encode(&quot;utf-8&quot;))
+    # Pad the string with a 1 bit and as many 0 bits required such that
+    # the length of the bit array becomes congruent to 448 modulo 512.
+    # Note that padding is always performed, even if the string's bit
+    # length is already conguent to 448 modulo 512, which leads to a
+    # new 512-bit message block.
+    bit_array.append(1)
+    while bit_array.length() % 512 != 448:
+        bit_array.append(0)
+    # For the remainder of the MD5 algorithm, all values are in
+    # little endian, so transform the bit array to little endian.
+    return bitarray(bit_array, endian=&quot;little&quot;)
+</code></pre>
+<p>再将<strong>原始长度</strong>以 <code>64-bit</code>（小端序）表示附加在填充结果的后面，从而使得<strong>最终的长度</strong>（包括原始消息的长度、本次填充的长度和 64-bit 的消息长度）是 <code>512-bit</code> 的倍数。</p>
+<pre><code class="language-py">@classmethod
+def _step_2(cls, step_1_result):
+    # Extend the result from step 1 with a 64-bit little endian
+    # representation of the original message length (modulo 2^64).
+    length = (len(cls._string) * 8) % pow(2, 64)
+    length_bit_array = bitarray(endian=&quot;little&quot;)
+    # format:&quot;&lt;Q&quot;; &lt;:Little-endian; Q: unsigned long long;
+    length_bit_array.frombytes(struct.pack(&quot;&lt;Q&quot;, length))
+    result = step_1_result.copy()
+    result.extend(length_bit_array)
+    return result
+</code></pre>
+<h3 id="初始化链接变量">初始化链接变量</h3>
+<pre><code class="language-py">class MD5Buffer(Enum):
+    A = 0x67452301
+    B = 0xEFCDAB89
+    C = 0x98BADCFE
+    D = 0x10325476
+# Class MD5(Object)
+@classmethod
+def _step_3(cls):
+    # Initialize the buffers to their default values.
+    for buffer_type in cls._buffers.keys():
+        cls._buffers[buffer_type] = buffer_type.value
+</code></pre>
+<h3 id="分组处理">分组处理</h3>
+<p>MD5 以 512-bit 为分组长度进行分组。每个分组又被分成 16 * 32-bit 的子分组，分别参与每轮的 16 个步骤。</p>
+<pre><code class="language-py"># Process chunks of 512 bits.
+for chunk_index in range(N // 16):
+    # Break the chunk into 16 words of 32 bits in list X.
+    start = chunk_index * 512
+    X = [step_2_result[start + (x * 32) : start + (x * 32) + 32] for x in range(16)]
+    # Convert the `bitarray` objects to integers.
+    X = [int.from_bytes(word.tobytes(), byteorder=&quot;little&quot;) for word in X]
+</code></pre>
+<h3 id="歩函数">歩函数</h3>
+<p>该算法包括 4 轮，每轮 16 步：</p>
+<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-12-24-16-38-51.png" alt="" loading="lazy"></figure>
+<ol>
+<li>
+<p>上一步的链接变量 D, B, C 直接赋值给下一步的链接变量 A, C, D。即 D -&gt; A、B -&gt; C、C -&gt; D。</p>
+</li>
+<li>
+<p>A 先和非线性函数的结果相加，结果再和 <code>M[j]</code> 相加，结果再和 <code>T[i]</code>相加，结果再循环左移 s 次，得到的结果再和原来的 B 相加，最后的得到新 B。</p>
+</li>
+</ol>
+<pre><code class="language-py">A + func_output + M[j] + T[i] -&gt; &lt;&lt;&lt; s -&gt; + B -&gt; B
+</code></pre>
+<h4 id="非线性函数">非线性函数</h4>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi><mo>(</mo><mi>X</mi><mo separator="true">,</mo><mi>Y</mi><mo separator="true">,</mo><mi>Z</mi><mo>)</mo><mo>=</mo><mo>(</mo><mi>X</mi><mo>∧</mo><mi>Y</mi><mo>)</mo><mo>∨</mo><mo>(</mo><mi mathvariant="normal">¬</mi><mi>X</mi><mo>∧</mo><mi>Z</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">F(X,Y,Z)=(X\wedge {Y})\vee (\neg {X}\wedge {Z})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">Y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">Z</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∧</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">Y</span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∨</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">¬</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">X</span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∧</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">Z</span></span><span class="mclose">)</span></span></span></span></li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>G</mi><mo>(</mo><mi>X</mi><mo separator="true">,</mo><mi>Y</mi><mo separator="true">,</mo><mi>Z</mi><mo>)</mo><mo>=</mo><mo>(</mo><mi>X</mi><mo>∧</mo><mi>Z</mi><mo>)</mo><mo>∨</mo><mo>(</mo><mi>Y</mi><mo>∧</mo><mi mathvariant="normal">¬</mi><mi>Z</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">G(X,Y,Z) = (X\wedge{Z}) \vee (Y \wedge \neg{Z})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">G</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">Y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">Z</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∧</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">Z</span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∨</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.22222em;">Y</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∧</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">¬</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">Z</span></span><span class="mclose">)</span></span></span></span></li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>H</mi><mo>(</mo><mi>X</mi><mo separator="true">,</mo><mi>Y</mi><mo separator="true">,</mo><mi>Z</mi><mo>)</mo><mo>=</mo><mi>X</mi><mo>⊕</mo><mi>Y</mi><mo>⊕</mo><mi>Z</mi></mrow><annotation encoding="application/x-tex">H(X,Y,Z) = X \oplus Y \oplus Z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">Y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">Z</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⊕</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">Y</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⊕</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">Z</span></span></span></span></li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi><mo>(</mo><mi>X</mi><mo separator="true">,</mo><mi>Y</mi><mo separator="true">,</mo><mi>Z</mi><mo>)</mo><mo>=</mo><mi>Y</mi><mo>⊕</mo><mo>(</mo><mi>X</mi><mo>∨</mo><mi mathvariant="normal">¬</mi><mi>Z</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">I(X,Y,Z) = Y \oplus (X \vee \neg{Z})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">Y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">Z</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">Y</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⊕</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∨</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">¬</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">Z</span></span><span class="mclose">)</span></span></span></span></li>
+</ul>
+<p>其中 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>⊕</mo><mi mathvariant="normal">、</mi><mo>∧</mo><mi mathvariant="normal">、</mi><mo>∨</mo><mi mathvariant="normal">、</mi><mi mathvariant="normal">¬</mi></mrow><annotation encoding="application/x-tex">\oplus、 \wedge、 \vee、 \neg</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord">⊕</span><span class="mord cjk_fallback">、</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∧</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.55556em;vertical-align:0em;"></span><span class="mord cjk_fallback">、</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∨</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord cjk_fallback">、</span><span class="mord">¬</span></span></span></span> 分别是 XOR、 AND、 OR、 NOT 的符号。</p>
+<pre><code class="language-py"># Define the four auxiliary functions that produce one 32-bit word.
+F = lambda x, y, z: (x &amp; y) | (~x &amp; z)
+G = lambda x, y, z: (x &amp; z) | (y &amp; ~z)
+H = lambda x, y, z: x ^ y ^ z
+I = lambda x, y, z: y ^ (x | ~z)
+</code></pre>
+<h4 id="mj-ti">M[j]、T[i]</h4>
+<p><code>M[j]</code> 即前面说的消息分组的 32 bit 子分组。第一轮中就是简单的 0, 1, …, 15，后面 3 轮的次序由以下置换确定：</p>
+<ul>
+<li>$P_{2}(i) = (1 + 5i) \ mod \ 16 $</li>
+<li>$P_{3}(i) = (5 + 3i) \ mod \ 16 $</li>
+<li>$P_{4}(i) = 7i \ mod \ 16 $</li>
+</ul>
+<p><code>T[i]</code> 为常数:</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>T</mi><mo>[</mo><mi>i</mi><mo>]</mo><mo>=</mo><mo>[</mo><msup><mn>2</mn><mn>32</mn></msup><mo>×</mo><mi>a</mi><mi>b</mi><mi>s</mi><mo>(</mo><mi>s</mi><mi>i</mi><mi>n</mi><mo>(</mo><mi>i</mi><mo>)</mo><mo>)</mo><mo>]</mo><mo>=</mo><mo>[</mo><mn>4294967296</mn><mo>×</mo><mi>a</mi><mi>b</mi><mi>s</mi><mo>(</mo><mi>s</mi><mi>i</mi><mi>n</mi><mo>(</mo><mi>i</mi><mo>)</mo><mo>)</mo><mo>]</mo></mrow><annotation encoding="application/x-tex">T[i]=[2^{32}×abs(sin(i))]=[4294967296×abs(sin(i))]
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mopen">[</span><span class="mord mathdefault">i</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.1141079999999999em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span><span class="mord mtight">2</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">a</span><span class="mord mathdefault">b</span><span class="mord mathdefault">s</span><span class="mopen">(</span><span class="mord mathdefault">s</span><span class="mord mathdefault">i</span><span class="mord mathdefault">n</span><span class="mopen">(</span><span class="mord mathdefault">i</span><span class="mclose">)</span><span class="mclose">)</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">4</span><span class="mord">2</span><span class="mord">9</span><span class="mord">4</span><span class="mord">9</span><span class="mord">6</span><span class="mord">7</span><span class="mord">2</span><span class="mord">9</span><span class="mord">6</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">a</span><span class="mord mathdefault">b</span><span class="mord mathdefault">s</span><span class="mopen">(</span><span class="mord mathdefault">s</span><span class="mord mathdefault">i</span><span class="mord mathdefault">n</span><span class="mopen">(</span><span class="mord mathdefault">i</span><span class="mclose">)</span><span class="mclose">)</span><span class="mclose">]</span></span></span></span></span></p>
+<p>其中 i 为弧度，方框代表取整。</p>
+<pre><code class="language-py"># Compute the T table from the sine function. Note that the
+# RFC starts at index 1, but we start at index 0.
+T = [floor(pow(2, 32) * abs(sin(i + 1))) for i in range(64)]
+</code></pre>
+<h4 id="循环左移">循环左移</h4>
+<p>4 轮次 16 步中循环左移的位数是根据规定计算的，计算并移位即可，循环移位函数如下：</p>
+<pre><code class="language-py"># Define the left rotation function, which rotates `x` left `n` bits.
+rotate_left = lambda x, n: (x &lt;&lt; n) | (x &gt;&gt; (32 - n))
+</code></pre>
+<p>歩函数 Python 代码实现：</p>
+<pre><code class="language-py">@classmethod
+def _step_4(cls, step_2_result):
+    # Define the four auxiliary functions that produce one 32-bit word.
+    F = lambda x, y, z: (x &amp; y) | (~x &amp; z)
+    G = lambda x, y, z: (x &amp; z) | (y &amp; ~z)
+    H = lambda x, y, z: x ^ y ^ z
+    I = lambda x, y, z: y ^ (x | ~z)
+    # Define the left rotation function, which rotates `x` left `n` bits.
+    rotate_left = lambda x, n: (x &lt;&lt; n) | (x &gt;&gt; (32 - n))
+    # Define a function for modular addition.
+    modular_add = lambda a, b: (a + b) % pow(2, 32)
+    # Compute the T table from the sine function. Note that the
+    # RFC starts at index 1, but we start at index 0.
+    T = [floor(pow(2, 32) * abs(sin(i + 1))) for i in range(64)]
+    # The total number of 32-bit words to process, N, is always a
+    # multiple of 16.
+    N = len(step_2_result) // 32
+    # Process chunks of 512 bits.
+    for chunk_index in range(N // 16):
+        # Break the chunk into 16 words of 32 bits in list X.
+        start = chunk_index * 512
+        X = [step_2_result[start + (x * 32) : start + (x * 32) + 32] for x in range(16)]
+        # Convert the `bitarray` objects to integers.
+        X = [int.from_bytes(word.tobytes(), byteorder=&quot;little&quot;) for word in X]
+        # Make shorthands for the buffers A, B, C and D.
+        A = cls._buffers[MD5Buffer.A]
+        B = cls._buffers[MD5Buffer.B]
+        C = cls._buffers[MD5Buffer.C]
+        D = cls._buffers[MD5Buffer.D]
+        # Execute the four rounds with 16 operations each.
+        for i in range(4 * 16):
+            if 0 &lt;= i &lt;= 15:
+                k = i
+                s = [7, 12, 17, 22]
+                temp = F(B, C, D)
+            elif 16 &lt;= i &lt;= 31:
+                k = ((5 * i) + 1) % 16
+                s = [5, 9, 14, 20]
+                temp = G(B, C, D)
+            elif 32 &lt;= i &lt;= 47:
+                k = ((3 * i) + 5) % 16
+                s = [4, 11, 16, 23]
+                temp = H(B, C, D)
+            elif 48 &lt;= i &lt;= 63:
+                k = (7 * i) % 16
+                s = [6, 10, 15, 21]
+                temp = I(B, C, D)
+            # The MD5 algorithm uses modular addition. Note that we need a
+            # temporary variable here. If we would put the result in `A`, then
+            # the expression `A = D` below would overwrite it. We also cannot
+            # move `A = D` lower because the original `D` would already have
+            # been overwritten by the `D = C` expression.
+            temp = modular_add(temp, X[k])
+            temp = modular_add(temp, T[i])
+            temp = modular_add(temp, A)
+            temp = rotate_left(temp, s[i % 4])
+            temp = modular_add(temp, B)
+            # Swap the registers for the next operation.
+            A = D
+            D = C
+            C = B
+            B = temp
+        # Update the buffers with the results from this chunk.
+        cls._buffers[MD5Buffer.A] = modular_add(cls._buffers[MD5Buffer.A], A)
+        cls._buffers[MD5Buffer.B] = modular_add(cls._buffers[MD5Buffer.B], B)
+        cls._buffers[MD5Buffer.C] = modular_add(cls._buffers[MD5Buffer.C], C)
+        cls._buffers[MD5Buffer.D] = modular_add(cls._buffers[MD5Buffer.D], D)
+</code></pre>
+<p>经过 4×16 次迭代后，我们可以得到最后的链接变量 A, B, C, D，将其分别与初始变量进行下模 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>2</mn><mn>32</mn></msup></mrow><annotation encoding="application/x-tex">2^{32}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span> 加法，转换为十六进制拼接起来，最后分别进行小端序反转即可获得最终 MD5 散列值。</p>
+<pre><code class="language-py">@classmethod
+def _step_5(cls):
+    # Convert the buffers to little-endian.
+    A = struct.unpack(&quot;&lt;I&quot;, struct.pack(&quot;&gt;I&quot;, cls._buffers[MD5Buffer.A]))[0]
+    B = struct.unpack(&quot;&lt;I&quot;, struct.pack(&quot;&gt;I&quot;, cls._buffers[MD5Buffer.B]))[0]
+    C = struct.unpack(&quot;&lt;I&quot;, struct.pack(&quot;&gt;I&quot;, cls._buffers[MD5Buffer.C]))[0]
+    D = struct.unpack(&quot;&lt;I&quot;, struct.pack(&quot;&gt;I&quot;, cls._buffers[MD5Buffer.D]))[0]
+    # Output the buffers in lower-case hexadecimal format.
+    return f&quot;{format(A, '08x')}{format(B, '08x')}{format(C, '08x')}{format(D, '08x')}&quot;
+</code></pre>
+<h3 id="一些问题">一些问题</h3>
+<h4 id="大端序与小端序">大端序与小端序</h4>
+<p>字节存储顺序主要分为大端序（Big-endian）和小端序（Little-endian），区别如下：</p>
+<ul>
+<li>
+<p>Big-endian：<strong>高位</strong>字节存入<strong>低地址</strong>，<strong>低位</strong>字节存入<strong>高地址</strong>；</p>
+</li>
+<li>
+<p>Little-endian：<strong>低位</strong>字节存入<strong>低地址</strong>，<strong>高位</strong>字节存入<strong>高地址</strong>。</p>
+</li>
+</ul>
+<p>例：将 <code>12345678h</code> 写入 <code>1000h</code> 开始的内存中，以<strong>大端序</strong>和<strong>小端序</strong>模式存放结果如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-12-24-16-11-34.png" alt="" loading="lazy"></figure>
+<p>一般来说，x86 系列 CPU 都是 Little-endian 字节序，PowerPC 通常是 Big-endian 字节序，因为网络协议也都是采用 Big-endian 方式传输数据的，所以有时也把Big-endian 方式称为 <strong>网络字节序</strong>。</p>
+<p><strong>-*- 完整 Python 代码：</strong></p>
+<pre><code class="language-py"># -*- coding: utf-8 -*- 
+
+import struct
+from enum import Enum
+from bitarray import bitarray
+from math import (
+    floor,
+    sin,
+)
+
+class MD5Buffer(Enum):
+    A = 0x67452301
+    B = 0xEFCDAB89
+    C = 0x98BADCFE
+    D = 0x10325476
+
+class MD5(object):
+    _string = None
+    _buffers = {
+        MD5Buffer.A: None,
+        MD5Buffer.B: None,
+        MD5Buffer.C: None,
+        MD5Buffer.D: None,
+    }
+
+    @classmethod
+    def hash(cls, string):
+        cls._string = string
+
+        preprocessed_bit_array = cls._step_2(cls._step_1())
+        cls._step_3()
+        cls._step_4(preprocessed_bit_array)
+        return cls._step_5()
+
+    @classmethod
+    def _step_1(cls):
+        # Convert the string to a bit array.
+        # 将字符串转化为二进制数组(Big-endian)
+        bit_array = bitarray(endian=&quot;big&quot;)
+        bit_array.frombytes(cls._string.encode(&quot;utf-8&quot;))
+        # Pad the string with a 1 bit and as many 0 bits required such that
+        # the length of the bit array becomes congruent to 448 modulo 512.
+        # Note that padding is always performed, even if the string's bit
+        # length is already conguent to 448 modulo 512, which leads to a
+        # new 512-bit message block.
+        bit_array.append(1)
+        while bit_array.length() % 512 != 448:
+            bit_array.append(0)
+        # For the remainder of the MD5 algorithm, all values are in
+        # little endian, so transform the bit array to little endian.
+        return bitarray(bit_array, endian=&quot;little&quot;)
+
+    @classmethod
+    def _step_2(cls, step_1_result):
+        # Extend the result from step 1 with a 64-bit little endian
+        # representation of the original message length (modulo 2^64).
+        length = (len(cls._string) * 8) % pow(2, 64)
+        length_bit_array = bitarray(endian=&quot;little&quot;)
+        length_bit_array.frombytes(struct.pack(&quot;&lt;Q&quot;, length))
+
+        result = step_1_result.copy()
+        result.extend(length_bit_array)
+        return result
+
+    @classmethod
+    def _step_3(cls):
+        # Initialize the buffers to their default values.
+        for buffer_type in cls._buffers.keys():
+            cls._buffers[buffer_type] = buffer_type.value
+
+    @classmethod
+    def _step_4(cls, step_2_result):
+        # Define the four auxiliary functions that produce one 32-bit word.
+        F = lambda x, y, z: (x &amp; y) | (~x &amp; z)
+        G = lambda x, y, z: (x &amp; z) | (y &amp; ~z)
+        H = lambda x, y, z: x ^ y ^ z
+        I = lambda x, y, z: y ^ (x | ~z)
+
+        # Define the left rotation function, which rotates `x` left `n` bits.
+        rotate_left = lambda x, n: (x &lt;&lt; n) | (x &gt;&gt; (32 - n))
+
+        # Define a function for modular addition.
+        modular_add = lambda a, b: (a + b) % pow(2, 32)
+
+        # Compute the T table from the sine function. Note that the
+        # RFC starts at index 1, but we start at index 0.
+        T = [floor(pow(2, 32) * abs(sin(i + 1))) for i in range(64)]
+
+        # The total number of 32-bit words to process, N, is always a
+        # multiple of 16.
+        N = len(step_2_result) // 32
+
+        # Process chunks of 512 bits.
+        for chunk_index in range(N // 16):
+            # Break the chunk into 16 words of 32 bits in list X.
+            start = chunk_index * 512
+            X = [step_2_result[start + (x * 32) : start + (x * 32) + 32] for x in range(16)]
+
+            # Convert the `bitarray` objects to integers.
+            X = [int.from_bytes(word.tobytes(), byteorder=&quot;little&quot;) for word in X]
+
+            # Make shorthands for the buffers A, B, C and D.
+            A = cls._buffers[MD5Buffer.A]
+            B = cls._buffers[MD5Buffer.B]
+            C = cls._buffers[MD5Buffer.C]
+            D = cls._buffers[MD5Buffer.D]
+
+            # Execute the four rounds with 16 operations each.
+            for i in range(4 * 16):
+                if 0 &lt;= i &lt;= 15:
+                    k = i
+                    s = [7, 12, 17, 22]
+                    temp = F(B, C, D)
+                elif 16 &lt;= i &lt;= 31:
+                    k = ((5 * i) + 1) % 16
+                    s = [5, 9, 14, 20]
+                    temp = G(B, C, D)
+                elif 32 &lt;= i &lt;= 47:
+                    k = ((3 * i) + 5) % 16
+                    s = [4, 11, 16, 23]
+                    temp = H(B, C, D)
+                elif 48 &lt;= i &lt;= 63:
+                    k = (7 * i) % 16
+                    s = [6, 10, 15, 21]
+                    temp = I(B, C, D)
+
+                # The MD5 algorithm uses modular addition. Note that we need a
+                # temporary variable here. If we would put the result in `A`, then
+                # the expression `A = D` below would overwrite it. We also cannot
+                # move `A = D` lower because the original `D` would already have
+                # been overwritten by the `D = C` expression.
+                temp = modular_add(temp, X[k])
+                temp = modular_add(temp, T[i])
+                temp = modular_add(temp, A)
+                temp = rotate_left(temp, s[i % 4])
+                temp = modular_add(temp, B)
+
+                # Swap the registers for the next operation.
+                A = D
+                D = C
+                C = B
+                B = temp
+
+            # Update the buffers with the results from this chunk.
+            cls._buffers[MD5Buffer.A] = modular_add(cls._buffers[MD5Buffer.A], A)
+            cls._buffers[MD5Buffer.B] = modular_add(cls._buffers[MD5Buffer.B], B)
+            cls._buffers[MD5Buffer.C] = modular_add(cls._buffers[MD5Buffer.C], C)
+            cls._buffers[MD5Buffer.D] = modular_add(cls._buffers[MD5Buffer.D], D)
+
+    @classmethod
+    def _step_5(cls):
+        # Convert the buffers to little-endian.
+        A = struct.unpack(&quot;&lt;I&quot;, struct.pack(&quot;&gt;I&quot;, cls._buffers[MD5Buffer.A]))[0]
+        B = struct.unpack(&quot;&lt;I&quot;, struct.pack(&quot;&gt;I&quot;, cls._buffers[MD5Buffer.B]))[0]
+        C = struct.unpack(&quot;&lt;I&quot;, struct.pack(&quot;&gt;I&quot;, cls._buffers[MD5Buffer.C]))[0]
+        D = struct.unpack(&quot;&lt;I&quot;, struct.pack(&quot;&gt;I&quot;, cls._buffers[MD5Buffer.D]))[0]
+
+        # Output the buffers in lower-case hexadecimal format.
+        return f&quot;{format(A, '08x')}{format(B, '08x')}{format(C, '08x')}{format(D, '08x')}&quot;
+
+if __name__ == &quot;__main__&quot;:
+    while True:
+        msg = input(&quot;Please Input Your Message &gt;&gt; &quot;)
+        cipher = MD5.hash(msg)
+        print(f&quot;&gt; MD5(\&quot;{format(msg)}\&quot;) = {format(cipher)}&quot;)
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-12-24-17-02-54.png" alt="" loading="lazy"></figure>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#0x01-md5-%E6%A6%82%E8%BF%B0">0x01 MD5 概述</a></li>
+<li><a href="#0x02-%E7%AE%97%E6%B3%95%E6%B5%81%E7%A8%8B">0x02 算法流程</a>
+<ul>
+<li><a href="#%E9%99%84%E5%8A%A0%E5%A1%AB%E5%85%85%E4%BD%8D">附加填充位</a></li>
+<li><a href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E9%93%BE%E6%8E%A5%E5%8F%98%E9%87%8F">初始化链接变量</a></li>
+<li><a href="#%E5%88%86%E7%BB%84%E5%A4%84%E7%90%86">分组处理</a></li>
+<li><a href="#%E6%AD%A9%E5%87%BD%E6%95%B0">歩函数</a>
+<ul>
+<li><a href="#%E9%9D%9E%E7%BA%BF%E6%80%A7%E5%87%BD%E6%95%B0">非线性函数</a></li>
+<li><a href="#mj-ti">M[j]、T[i]</a></li>
+<li><a href="#%E5%BE%AA%E7%8E%AF%E5%B7%A6%E7%A7%BB">循环左移</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98">一些问题</a>
+<ul>
+<li><a href="#%E5%A4%A7%E7%AB%AF%E5%BA%8F%E4%B8%8E%E5%B0%8F%E7%AB%AF%E5%BA%8F">大端序与小端序</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-12-25-Classical-code-hill-cipher/">
+                <h3 class="post-title" style="text-align: left;">
+                  Classical Code Hill Cipher
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-12-17-RSA-Crypto-System-Study-Note/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  RSA Crypto System Study Note
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

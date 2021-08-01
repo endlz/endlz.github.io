@@ -1,0 +1,377 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Classical Code Hill Cipher | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Classical Code Hill Cipher | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="Hill Cipher
+希尔密码是运用基本矩阵论原理的替换密码，由 Lester S. Hill 在 1929 年发明。
+每个字母当作 26 进制数字：A=0,B=1,C=2...A=0, B=1, C=2...A=0,B=1,C=2......" />
+    <meta name="keywords" content="Crypto,Course" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Classical Code Hill Cipher
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-12-25
+              </span>
+              <span>
+                5 min read
+              </span>
+              <span class="page-view" key="20191225165532" title="Classical Code Hill Cipher">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/crypto/" class="post-tag">
+                  # Crypto
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/course/" class="post-tag">
+                  # Course
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <h4 id="hill-cipher">Hill Cipher</h4>
+<p>希尔密码是运用<strong>基本矩阵论原理</strong>的<strong>替换密码</strong>，由 Lester S. Hill 在 1929 年发明。</p>
+<p>每个字母当作 26 进制数字：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi><mo>=</mo><mn>0</mn><mo separator="true">,</mo><mi>B</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mi>C</mi><mo>=</mo><mn>2...</mn></mrow><annotation encoding="application/x-tex">A=0, B=1, C=2...</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">A</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span></span></span></span> 一串字母当成 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> 维向量，跟一个 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>×</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">n×n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> 的矩阵相乘，再将得出的结果模 26。</p>
+<p>注意用作加密的矩阵（即<strong>密匙</strong>）在 <span class='katex-error' title='ParseError: KaTeX parse error: Expected &#039;}&#039;, got &#039;EOF&#039; at end of input: …{Z\}\}_{26}^{n}'>{\mathbb  {Z\}\}_{26}^{n}</span> 必须是可逆的，否则就不可能解码。只有矩阵的行列式和 26 互质，才是可逆的。</p>
+<p><strong>*</strong> <strong>编码:</strong></p>
+<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-12-25-17-13-06.png" alt="" loading="lazy"></figure>
+<p><strong>*</strong> <strong>解码:</strong></p>
+<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-12-25-17-14-28.png" alt="" loading="lazy"></figure>
+<h4 id="python-实现">Python 实现</h4>
+<ul>
+<li>字母表、字符串与矩阵的转化</li>
+</ul>
+<pre><code class="language-py">alpha26 = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;
+
+def stringToMatrix(string, alpha, size):
+    rows = [[] for _ in range(size)]
+    for i in range(len(string)-1): # -1 Remove /r
+        rows[i % size].append(alpha.index(string[i]))
+    return sp.Matrix(rows)
+
+def matrixToString(matrix, alpha, size):
+    string = &quot;&quot;
+    for i in range(matrix.cols):
+        for j in matrix.col(i):
+            string += alpha[j % len(alpha)]
+    return string
+</code></pre>
+<ul>
+<li>加密函数</li>
+</ul>
+<p>矩阵模逆运算采用 <code>Sympy</code> 库进行，SymPy 是一个符号计算的 Python 库。它的目标是成为一个全功能的计算机代数系统，同时保持代码简洁、易于理解和扩展。它完全由Python 写成，不依赖于外部库。 SymPy 支持符号计算、高精度计算、模式匹配、绘图、解方程、微积分、组合数学、离散数学、几何学、概率与统计、物理学等方面的功能。</p>
+<p>将明文字符串转化为矩阵后与 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>∗</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">n*n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.46528em;vertical-align:0em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> 密钥矩阵进行码表内的模乘，得到的加密矩阵转化为密文字符串即可。</p>
+<pre><code class="language-py">import sympy as sp
+
+def encrypt(plain, key_enc, alpha):
+    key_enc = sp.Matrix(key_enc)
+    # Calculate the Determinant and Check if there is a solution
+    D = key_enc.det()
+    if sp.gcd(D, 26) != 1:
+        print &quot;Not relatively prime. No solution!&quot;
+        exit()
+    # Convert plain text to Matrix to Encrypt
+    mat_plain = stringToMatrix(plain, alpha, key_enc.shape[0])
+    # Calculate the Cipher Matrix
+    mat_cipher = key_enc * mat_plain
+    # Calculate the Cipher
+    cipher = matrixToString(mat_cipher, alpha, key_enc.shape[0])
+    return cipher
+</code></pre>
+<ul>
+<li>解密函数</li>
+</ul>
+<p>根据密钥求解密钥矩阵的模逆作为解密矩阵与密文矩阵相乘即可获取明文矩阵。</p>
+<pre><code class="language-py">def crack(cipher, key_enc, alpha):
+    # Konw Cipher and Key_Enc to Crack Plain
+    key_enc = sp.Matrix(key_enc)
+    # Calculate the Key_Dec 
+    key_dec = key_enc.inv_mod(len(alpha))
+    key_dec = key_dec.applyfunc(lambda x: x % len(alpha))
+    return encrypt(cipher, key_dec, alpha)
+</code></pre>
+<ul>
+<li>完整代码</li>
+</ul>
+<pre><code class="language-py">#-*- coding: utf-8 -*-
+# Hill Cipher By 3ND
+import sympy as sp
+
+alpha26 = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;
+
+def stringToMatrix(string, alpha, size):
+    rows = [[] for _ in range(size)]
+    for i in range(len(string)-1): # -1 Remove /r
+        rows[i % size].append(alpha.index(string[i]))
+    return sp.Matrix(rows)
+
+def matrixToString(matrix, alpha, size):
+    string = &quot;&quot;
+    for i in range(matrix.cols):
+        for j in matrix.col(i):
+            string += alpha[j % len(alpha)]
+    return string
+
+def encrypt(plain, key_enc, alpha):
+    key_enc = sp.Matrix(key_enc)
+    # Calculate the Determinant and Check if there is a solution
+    D = key_enc.det()
+    if sp.gcd(D, 26) != 1:
+        print &quot;Not relatively prime. No solution!&quot;
+        exit()
+    # Convert plain text to Matrix to Encrypt
+    mat_plain = stringToMatrix(plain, alpha, key_enc.shape[0])
+    # Calculate the Cipher Matrix
+    mat_cipher = key_enc * mat_plain
+    # Calculate the Cipher
+    cipher = matrixToString(mat_cipher, alpha, key_enc.shape[0])
+    return cipher
+
+def decrypt(cipher, key_dec, alpha):
+    key_dec = sp.Matrix(key_dec)
+    mat_cipher = stringToMatrix(cipher, alpha, key_dec.shape[0])
+    mat_plain = key_dec * mat_cipher
+    plain = matrixToString(mat_plain, alpha, key_dec.shape[0])
+    return plain
+
+def crack(cipher, key_enc, alpha):
+    # Konw Cipher and Key_Enc to Crack Plain
+    key_enc = sp.Matrix(key_enc)
+    # Calculate the Key_Dec 
+    key_dec = key_enc.inv_mod(len(alpha))
+    key_dec = key_dec.applyfunc(lambda x: x % len(alpha))
+    return encrypt(cipher, key_dec, alpha)
+
+if __name__==&quot;__main__&quot;:
+    # Input Plain Text
+    plain = raw_input(&quot;Input Plain Text &gt;&gt; &quot;)
+    # plian = 'ACT'
+    # Input Key to Encrypt
+    key_enc = input(&quot;Input Your Key Matrix &gt;&gt; &quot;)
+    key_enc = [[6, 24, 1], [13, 16, 10], [20, 17, 15]]
+    # Encrypt
+    print encrypt(plain, key_enc, alpha26)
+    # POH
+    # Input Cipher Text
+    cipher = raw_input(&quot;Input Cipher Text &gt;&gt; &quot;)
+    # cipher = POH
+    key_dec = input(&quot;Input Your Key Matrix &gt;&gt; &quot;)
+    key_dec = [[8, 5, 10], [21, 8, 21], [21, 12, 8]]
+    print decrypt(cipher, key_dec, alpha26)
+    # ACT
+    # Input Cipher to Crack
+    cipher = raw_input(&quot;Input Cipher Text (Crack)&gt;&gt; &quot;)
+    # Input the Key_Enc Matrix
+    key_enc = input(&quot;Input Your Key_Enc Matrix &gt;&gt; &quot;)
+    key_enc = [[6, 24, 1], [13, 16, 10], [20, 17, 15]]
+    print crack(cipher, key_enc, alpha26)
+</code></pre>
+<p>运行测试：</p>
+<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-12-25-17-28-18.png" alt="" loading="lazy"></figure>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#hill-cipher">Hill Cipher</a></li>
+<li><a href="#python-%E5%AE%9E%E7%8E%B0">Python 实现</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-12-25-Linear-feedback-shift-register/">
+                <h3 class="post-title" style="text-align: left;">
+                  Linear Feedback Shift Register
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-12-24-crypto-hash-md5/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  Message-Digest Algorithm 5 - MD5
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

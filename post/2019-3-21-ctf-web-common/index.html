@@ -1,0 +1,449 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CTF 中常见的 Web 解题思路 | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="CTF 中常见的 Web 解题思路 | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+Reference: 360 网络安全大学 3CTF 赛前培训总结
+
+
+0x00 信息探测
+
+
+探明 Web 系统的语言、框架，首先满足能访问其正常功能。
+
+
+查看有没有数据库功能，存在数据库都会有数据库的考点。
+
+
+接着扫描目录，查看有..." />
+    <meta name="keywords" content="CTF" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              CTF 中常见的 Web 解题思路
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-03-21
+              </span>
+              <span>
+                4 min read
+              </span>
+              <span class="page-view" key="20190321094733" title="CTF 中常见的 Web 解题思路">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                  # CTF
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <blockquote>
+<p>Reference: 360 网络安全大学 3CTF 赛前培训总结</p>
+</blockquote>
+<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-06-00-47-22.png" alt="" loading="lazy"></figure>
+<h3 id="0x00-信息探测">0x00 信息探测</h3>
+<ol>
+<li>
+<p>探明 Web 系统的语言、框架，首先满足能访问其正常功能。</p>
+</li>
+<li>
+<p>查看有没有数据库功能，存在数据库都会有数据库的考点。</p>
+</li>
+<li>
+<p>接着扫描目录，查看有没有源码或者其他提示性文件。</p>
+</li>
+<li>
+<p>寻找输入点（包括输入框、文件上传、XSS点等），根据语言特性，进行 Payload 测试，挖掘语言上的漏洞。</p>
+</li>
+<li>
+<p>最后再考虑是否是操作系统或者 Web 服务器的漏洞，这块基本都会涉及到 Web Pwn 方面的知识。</p>
+</li>
+</ol>
+<h3 id="0x01-语言">0x01 语言</h3>
+<p><strong>&gt; 前端语言：</strong></p>
+<ol>
+<li>
+<p><code>html</code> 和 <code>css</code> 一般不会单独作为考点，但是依然要掌握快速读懂他们的技巧。</p>
+</li>
+<li>
+<p><code>JavaScript</code>：</p>
+</li>
+</ol>
+<ul>
+<li>
+<p>信息获取：Js 加解密、XSS 攻击、CSP 防御机制绕过、CSRF 等。</p>
+</li>
+<li>
+<p>权限获取：NodeJs 代码审计、Vue、跨域。</p>
+</li>
+</ul>
+<p><strong>&gt; 后端语言：</strong></p>
+<ol>
+<li><code>PHP：</code></li>
+</ol>
+<ul>
+<li>
+<p>Bypass、PHP黑魔法。</p>
+</li>
+<li>
+<p>条件竞争：多个客户端同时访问一个服务器的功能所带来的的非预期结果。</p>
+</li>
+<li>
+<p>反序列化：寻找可控点，构造POP链，执行危险操作。</p>
+</li>
+<li>
+<p>文件包含：大部分考点在LFI，本地文件包含，在实战中，这个也是可以直接拿到 shell 的利用点。</p>
+</li>
+<li>
+<p>SSRF：服务端请求伪造，可以结合很多其他协议进行利用，达到攻击内网的目的。</p>
+</li>
+<li>
+<p>phar利用： 经常和 LFI 结合，同时也经常结合反序列化等考点。</p>
+</li>
+<li>
+<p>文件上传绕过</p>
+</li>
+<li>
+<p>框架考点：著名的框架一定要了解，例如 — ThinkPHP、Laravel、各种 CMS。</p>
+</li>
+</ul>
+<ol start="2">
+<li><code>Python：</code></li>
+</ol>
+<ul>
+<li>
+<p>SSTI 服务端模板注入</p>
+</li>
+<li>
+<p>yml 反序列化，PyYAML在解析数据的时候遇到特定格式的时间数据会将其自动转化为 Python 时间对象。</p>
+</li>
+<li>
+<p>JWT 认证绕过</p>
+</li>
+<li>
+<p>secret key 泄露导致命令执行</p>
+</li>
+<li>
+<p>Django、Flask、Tornado 等框架的漏洞</p>
+</li>
+</ul>
+<ol start="3">
+<li><code>Java：</code></li>
+</ol>
+<ul>
+<li>
+<p>Spring 框架漏洞，这是近年特别火的一个考点，预计未来的 CTF 赛事中的 Web 题目只要涉及 Java，就逃不开这个考点。</p>
+</li>
+<li>
+<p>Java 反序列化</p>
+</li>
+<li>
+<p>代码审计</p>
+</li>
+</ul>
+<h3 id="0x02-数据库">0x02 数据库</h3>
+<ol>
+<li>SQL注入</li>
+</ol>
+<ul>
+<li>
+<p>union select 常规注入</p>
+</li>
+<li>
+<p>bool 盲注暴力猜解</p>
+</li>
+<li>
+<p>时间盲注</p>
+</li>
+<li>
+<p>堆叠注入：针对预处理防御以及 select 等关键字被过滤后的注入方法</p>
+</li>
+<li>
+<p>宽字节注入</p>
+</li>
+</ul>
+<ol start="2">
+<li>权限获取</li>
+</ol>
+<ul>
+<li>Redis 4.0 RCE</li>
+</ul>
+<h3 id="0x03-web服务器">0x03 Web服务器</h3>
+<ol>
+<li>Linux：Apache/Nginx</li>
+</ol>
+<ul>
+<li>
+<p>服务器解析漏洞</p>
+</li>
+<li>
+<p>LD_PRELOAD</p>
+</li>
+<li>
+<p>Nginx配置漏洞</p>
+</li>
+<li>
+<p>Apache栈溢出漏洞</p>
+</li>
+</ul>
+<ol start="2">
+<li>Windows：IIS</li>
+</ol>
+<ul>
+<li>
+<p>PUT 发包上传漏洞</p>
+</li>
+<li>
+<p>IIS 远程溢出漏洞等</p>
+</li>
+</ul>
+<ol start="3">
+<li>服务器组件漏洞</li>
+</ol>
+<ul>
+<li>
+<p>Apache组件提权漏洞</p>
+</li>
+<li>
+<p>CGI 漏洞（公共网关接口，配合 Nginx 解析漏洞）</p>
+</li>
+</ul>
+<h3 id="0x04-操作系统">0x04 操作系统</h3>
+<ol>
+<li>
+<p>操作系统中的<strong>目录遍历</strong></p>
+</li>
+<li>
+<p>so 文件逆向分析</p>
+</li>
+<li>
+<p>结合 TensorFlow 进行机器学习考察</p>
+</li>
+<li>
+<p>区块链考点</p>
+</li>
+<li>
+<p>结合密码学：CBC 翻转攻击、Hash 拓展攻击、 Padding Oracle 填充攻击</p>
+</li>
+</ol>
+<h3 id="0x05-展望">0x05 展望</h3>
+<ol>
+<li>CTF 的赛事等级不同，题目也不同，省赛未来还是主要以纯 Web 的形式进行考察，重点依然在 PHP 、 SQL 注入、XSS 这三大项。</li>
+</ol>
+<ul>
+<li>
+<p>语言主要为 PHP 和 Python，西南地区的省赛可能多为 Js 方向</p>
+</li>
+<li>
+<p>数据库主要为 MySQL，重点多为盲注、延迟注入</p>
+</li>
+<li>
+<p>框架主要考察 Laravel、ThinkPHP 以及常见 CMS</p>
+</li>
+</ul>
+<ol start="2">
+<li>国家比赛以及国际比赛基本为多元化 Web 题目，结合包括密码学知识、Pwn 知识、甚至机器学习等。</li>
+</ol>
+<ul>
+<li>
+<p>语言不只局限于 PHP 甚至基本看不到 PHP，多为 Java、Go、Ruby、Python，前端考点多为 NodeJs</p>
+</li>
+<li>
+<p>数据库方面多为 Redis</p>
+</li>
+<li>
+<p>框架考点多为 Spring</p>
+</li>
+<li>
+<p>大多数比赛有区块链题目</p>
+</li>
+</ul>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#0x00-%E4%BF%A1%E6%81%AF%E6%8E%A2%E6%B5%8B">0x00 信息探测</a></li>
+<li><a href="#0x01-%E8%AF%AD%E8%A8%80">0x01 语言</a></li>
+<li><a href="#0x02-%E6%95%B0%E6%8D%AE%E5%BA%93">0x02 数据库</a></li>
+<li><a href="#0x03-web%E6%9C%8D%E5%8A%A1%E5%99%A8">0x03 Web服务器</a></li>
+<li><a href="#0x04-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F">0x04 操作系统</a></li>
+<li><a href="#0x05-%E5%B1%95%E6%9C%9B">0x05 展望</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+            <div class="next-post">
+              <div class="next">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-03-25-sqlmap-csrf-token/">
+                <h3 class="post-title">
+                  sqlmap CSRF-token 绕过姿势
+                </h3>
+              </a>
+            </div>
+            
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

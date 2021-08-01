@@ -1,0 +1,355 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CTF 中常见的内存取证工具使用方法 | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="CTF 中常见的内存取证工具使用方法 | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="Volatility
+volatility 是一款内存取证和分析工具，可以对 Procdump 等工具 dump 出来的内存进行分析，并提取内存中的文件。该工具支持 Windows 和 Linux，Kali 下面默认已经安装。volatil..." />
+    <meta name="keywords" content="Msic,CTF" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              CTF 中常见的内存取证工具使用方法
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-11-23
+              </span>
+              <span>
+                5 min read
+              </span>
+              <span class="page-view" key="20191123203918" title="CTF 中常见的内存取证工具使用方法">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/msic/" class="post-tag">
+                  # Msic
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                  # CTF
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <h2 id="volatility">Volatility</h2>
+<p>volatility 是一款内存取证和分析工具，可以对 Procdump 等工具 dump 出来的内存进行分析，并提取内存中的文件。该工具支持 Windows 和 Linux，Kali 下面默认已经安装。volatility 的许多功能由其内置的各种插件来实现，例如查看当前的网络连接，命令行中的命令，记事本中的内容等等。</p>
+<ul>
+<li><a href="https://github.com/volatilityfoundation/volatility/wiki/Command-Reference">Volatility / Command Reference</a></li>
+</ul>
+<pre><code class="language-bash">volatility -f &lt;文件名&gt; -–profile=&lt;配置文件&gt; &lt;插件&gt; [插件参数] 
+</code></pre>
+<h3 id="image-identification">Image Identification</h3>
+<h4 id="imageinfo">imageinfo</h4>
+<p><code>imageingo</code> 标识操作系统，Service Pack和硬件体系结构（32位或64位），其输出用于在使用其他插件时将参数传递给 <code>-profile = PROFILE</code> 的建议配置文件。</p>
+<pre><code class="language-bash">volatility -f 1.raw imageinfo
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-23-20-50-03.png" alt="" loading="lazy"></figure>
+<h3 id="processes-and-dlls">Processes and DLLs</h3>
+<h4 id="pslist">pslist</h4>
+<p><code>pslist</code> 将遍历由PsActiveProcessHead指向的双向链接列表，并显示偏移量，进程名称，进程ID，父进程ID，线程数，句柄数以及进程启动和退出时的日期/时间。 从2.1版本开始，它还显示会话ID，以及进程是否为Wow64进程（它在64位内核上使用32位地址空间）。</p>
+<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-23-21-02-53.png" alt="" loading="lazy"></figure>
+<h4 id="pstree">pstree</h4>
+<p><code>pstree</code> 命令用于以树形形式查看进程列表。它使用与 pslist 相同的技术枚举进程，因此也不会显示隐藏或未链接的进程。子进程使用缩进和句点表示。</p>
+<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-23-21-06-00.png" alt="" loading="lazy"></figure>
+<h4 id="cmdscan">cmdscan</h4>
+<p><code>cmdscan</code> 插件在 XP / 2003 / Vista / 2008 上的 csrss.exe 和 Windows 7 上的 conhost.exe 的内存中搜索攻击者通过控制台外壳（cmd.exe）输入的命令。 这是最强大的命令之一，无论他们是通过 RDP 会话打开 cmd.exe 还是通过网络后门代理到命令 Shell 的代理输入/输出，您都可以使用它们来获取对受害者系统上攻击者操作的了解。</p>
+<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-23-21-10-45.png" alt="" loading="lazy"></figure>
+<h3 id="process-memory">Process Memory</h3>
+<h4 id="memdump">memdump</h4>
+<p><code>memdump</code> 插件用于将进程中的所有内存驻留页面提取到单个文件中，指定输出目录 <code>-D</code> 或 <code>--dump-dir = DIR</code>。</p>
+<pre><code class="language-bash">volatility -f 1.raw --profile=WinXPSP2x86 memdump -p 4 -D dump/
+</code></pre>
+<h4 id="iehistory">iehistory</h4>
+<p><code>iehistory</code> 插件可恢复 IE 历史记录 index.dat 缓存文件的片段。 它可以找到基本访问的链接（通过 FTP 或 HTTP），重定向的链接（--REDR）和已删除的条目（--LEAK）。 它适用于加载和使用 wininet.dll 库的任何进程，而不仅仅是 Internet Explorer。 通常包括 Windows 资源管理器，甚至包括恶意软件样本。</p>
+<h3 id="kernel-memory-and-objects">Kernel Memory and Objects</h3>
+<h4 id="filescan">filescan</h4>
+<p><code>filescan</code> 插件使用 pool tag 在物理内存中查找 FILE_OBJECT，即使 rootkit 正在将文件隐藏在磁盘上，或 rootkit 挂钩了一些 API 函数以隐藏实时系统上的打开句柄，也可以找到打开的文件。 输出显示 FILE_OBJECT 的物理偏移量，文件名，指向对象的指针数量，指向对象的句柄数量以及授予对象的有效权限。</p>
+<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-23-21-24-36.png" alt="" loading="lazy"></figure>
+<h4 id="dumpfiles">dumpfiles</h4>
+<p>在访问和使用文件时，OS 将文件缓存在内存中以提高系统性能。<code>dumpfiles</code> 插件可从内存中提取出这些文件。</p>
+<pre><code class="language-bash">  -r REGEX, --regex=REGEX
+                        Dump files matching REGEX
+  -i, --ignore-case     Ignore case in pattern match
+  -o OFFSET, --offset=OFFSET
+                        Dump files for Process with physical address OFFSET
+  -Q PHYSOFFSET, --physoffset=PHYSOFFSET
+                        Dump File Object at physical address PHYSOFFSET
+  -D DUMP_DIR, --dump-dir=DUMP_DIR
+                        Directory in which to dump extracted files
+  -S SUMMARY_FILE, --summary-file=SUMMARY_FILE
+                        File where to store summary information
+  -p PID, --pid=PID     Operate on these Process IDs (comma-separated)
+  -n, --name            Include extracted filename in output file path
+  -u, --unsafe          Relax safety constraints for more data
+  -F FILTER, --filter=FILTER
+                        Filters to apply (comma-separated)
+</code></pre>
+<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-23-21-29-48.png" alt="" loading="lazy"></figure>
+<h3 id="something-else">Something else</h3>
+<h4 id="netscan">netscan</h4>
+<p><code>netscan</code> 用于扫描建立的连接和套接字，类似于 netstat，打印 TCP端点、TCP侦听器、UDP端点和UDP侦听器。它区分IPv4和IPv6，打印本地和远程 IP 、本地和远程端口、套接字绑定或建立连接的时间以及当前状态。</p>
+<h4 id="hashdump">hashdump</h4>
+<p><code>hashdump</code> 插件用于提取和解密存储在注册表中的缓存域凭据。</p>
+<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-23-20-57-03.png" alt="" loading="lazy"></figure>
+<h4 id="screenshot">screenshot</h4>
+<p><code>screenshot</code> 显示GDI样式的截屏。</p>
+<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-23-20-52-01.png" alt="" loading="lazy"></figure>
+<h2 id="foremost">Foremost</h2>
+<p>Foremost 是基于文件开始格式，文件结束标志和内部数据结构进行恢复文件的程序。</p>
+<pre><code class="language-bash">foremost [-v|-V|-h|-T|-Q|-q|-a|-w-d] [-t] [-s] [-k] [-b] [-c] [-o] [-i &lt;file]
+</code></pre>
+<pre><code class="language-bash">-V - 显示版权信息并退出
+-t - 指定文件类型. (-t jpeg,pdf ...)
+-d - 打开间接块检测 (针对UNIX文件系统)
+-i - 指定输入文件 (默认为标准输入)
+-a - 写入所有的文件头部, 不执行错误检测(损坏文件)
+-w - 向磁盘写入审计文件，不写入任何检测到的文件
+-o - 设置输出目录 (默认为为输出)
+-c - 设置配置文件 (默认为 foremost.conf)
+-q - 启用快速模式. 在512字节边界执行搜索.
+-Q - 启用安静模式. 禁用输出消息.
+-v - 详细模式. 向屏幕上记录所有消息。
+</code></pre>
+<h3 id="扫描误删文件">扫描误删文件</h3>
+<pre><code class="language-bash">foremost -t png -i 1.raw
+</code></pre>
+<h3 id="恢复内存中dump文件">恢复内存中dump文件</h3>
+<pre><code>foremost pid.dump
+</code></pre>
+<p>- <strong>参考</strong> -</p>
+<p>[1] <a href="http://shaobaobaoer.cn/archives/693/memory-forensics-tool-volatility-usage-and-practice">内存取证工具volatility用法与实战 - ShaoBaoBaoR</a></p>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#volatility">Volatility</a>
+<ul>
+<li><a href="#image-identification">Image Identification</a>
+<ul>
+<li><a href="#imageinfo">imageinfo</a></li>
+</ul>
+</li>
+<li><a href="#processes-and-dlls">Processes and DLLs</a>
+<ul>
+<li><a href="#pslist">pslist</a></li>
+<li><a href="#pstree">pstree</a></li>
+<li><a href="#cmdscan">cmdscan</a></li>
+</ul>
+</li>
+<li><a href="#process-memory">Process Memory</a>
+<ul>
+<li><a href="#memdump">memdump</a></li>
+<li><a href="#iehistory">iehistory</a></li>
+</ul>
+</li>
+<li><a href="#kernel-memory-and-objects">Kernel Memory and Objects</a>
+<ul>
+<li><a href="#filescan">filescan</a></li>
+<li><a href="#dumpfiles">dumpfiles</a></li>
+</ul>
+</li>
+<li><a href="#something-else">Something else</a>
+<ul>
+<li><a href="#netscan">netscan</a></li>
+<li><a href="#hashdump">hashdump</a></li>
+<li><a href="#screenshot">screenshot</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#foremost">Foremost</a>
+<ul>
+<li><a href="#%E6%89%AB%E6%8F%8F%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6">扫描误删文件</a></li>
+<li><a href="#%E6%81%A2%E5%A4%8D%E5%86%85%E5%AD%98%E4%B8%ADdump%E6%96%87%E4%BB%B6">恢复内存中dump文件</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-11-25-PHP无参数实现RCE/">
+                <h3 class="post-title" style="text-align: left;">
+                  PHP 无参数实现 RCE - boring_code
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-11-13-phpinfo-memo/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  Just something about phpinfo
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

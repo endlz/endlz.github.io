@@ -1,0 +1,1098 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>操作系统安全课程复习笔记 | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="操作系统安全课程复习笔记 | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="课程体系：
+
+0x01 相关概念
+信息安全评估标准
+TCSEC（Trusted Computer System Evaluation Criteria，可信计算机系统评价标准）
+
+A 级：校验级保护，提供低级别手段
+B3 级：安全域，数据隐..." />
+    <meta name="keywords" content="Course" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              操作系统安全课程复习笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-06-05
+              </span>
+              <span>
+                35 min read
+              </span>
+              <span class="page-view" key="20200605094645" title="操作系统安全课程复习笔记">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/course/" class="post-tag">
+                  # Course
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <p>课程体系：</p>
+<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-06-04-21-19-07.png" alt="" loading="lazy"></figure>
+<h2 id="0x01-相关概念">0x01 相关概念</h2>
+<h3 id="信息安全评估标准">信息安全评估标准</h3>
+<p><strong>TCSEC</strong>（Trusted Computer System Evaluation Criteria，可信计算机系统评价标准）</p>
+<ul>
+<li>A 级：校验级保护，提供低级别手段</li>
+<li>B3 级：安全域，数据隐藏与分层、屏蔽</li>
+<li>B2 级：结构化内容保护，支持硬件保护</li>
+<li>B1 级：<strong>标记安全保护</strong>，如 system V</li>
+<li><strong>C2 级：有自主的访问安全性，区分用户</strong></li>
+<li>C1 级：不区分用户，基本的访问控制</li>
+<li>D 级：没有安全性可言，例如 MS DOS</li>
+</ul>
+<p>Windows 属于 <code>C2</code> 级，安全策略如下：</p>
+<ul>
+<li><strong>强制的用户标识和认证</strong>：所有的用户都必须以唯一的登陆标识和密码来鉴别自身。</li>
+<li><strong>自主访问控制</strong>：文件的属主可以制定对对象的保护策略。</li>
+<li><strong>可记账性和审核性</strong>：能够审计所有安全相关事件和个人活动。</li>
+<li><strong>对象的重用</strong>：能够保护对象在完成其使命后，不再被其他对象所利用。</li>
+</ul>
+<h3 id="windows-安全体系结构-组件">Windows 安全体系结构、组件</h3>
+<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-06-04-21-40-48.png" alt="" loading="lazy"></figure>
+<p>Windows NT 体系结构分为内核模式和用户模式。</p>
+<h4 id="内核模式kernel-mode">内核模式（Kernel Mode）</h4>
+<p>内核模式中的代码具有极高的权限，可以直接对硬件进行操作和直接访问所有的内存空间（ring0 级）。</p>
+<ul>
+<li>组成内核模式的整套服务被称为执行服务。
+<ul>
+<li>对象管理器（<code>OM</code>: Object Manager）</li>
+<li>安全引用监控器（<code>SRM</code>: Security Reference Monitor）</li>
+</ul>
+</li>
+</ul>
+<h4 id="用户模式user-mode">用户模式（User Mode）</h4>
+<p>用户模式中的代码具有较低的权限，不能直接访问硬件，内存访问受限（ring3 级）。</p>
+<ul>
+<li>本地安全子系统：支持 Windows 的身份验证、审核。
+<ul>
+<li>核心为本地安全授权 <code>LSA</code>（Local Security Authentication）</li>
+<li>需和 Win32 子系统通信</li>
+</ul>
+</li>
+</ul>
+<h4 id="om-srm-lsa">OM SRM LSA</h4>
+<p><code>OM</code>：对象管理器负责对象的命名、保护、分配和处理。</p>
+<p><code>SRM</code>：安全引用监控器与对象管理器 <code>OM</code> 联合起来，实施<strong>访问控制策略和审核策略</strong>。在对象句柄创建时进行安全检查，而不是在每次访问都进行。</p>
+<p><code>LSA</code>：负责使所有本地和远程的用户登陆生效，生成访问令牌（访问令牌是一个二进制的数据包，它描述了用户的访问权限以及用户所属地组）。管理本地安全策略，负责记录安全引用监视器 <code>SRM</code> 的任何审核消息所产生的事件日志。</p>
+<h3 id="windows-的用户和组">Windows 的用户和组</h3>
+<ul>
+<li>
+<p>用户账户</p>
+<ul>
+<li>使用用户名和密码进行标识</li>
+<li><code>SID</code>（Security Indentifies，SID 安全标识符）：账户的关键标识符，所有的内部进程都是用 SID 识别用户账号。</li>
+</ul>
+</li>
+<li>
+<p>用户组账户</p>
+<ul>
+<li>具有相似工作或资源要求的用户可组成一个用户组。</li>
+<li>对资源的存取权限许可分配给一用户组，就是同时分配给该组中的所有成员。</li>
+</ul>
+</li>
+</ul>
+<h3 id="域及信任关系">域及信任关系</h3>
+<p><strong>工作组</strong>：为小型办公系统提供了共享资源的功能，使用户可共享其他计算机的本地资源；但是不共享任何用户账户和组账户的信息，每个系统使用自身的安全账号管理器 <code>SAM</code>（Security Account Manager）数据库独立验证。</p>
+<p><strong>域</strong>：域是一批具有集中安全授权机构和若干台工作站和成员服务器得计算机集合；一个域中的所有用户共享域用户账户数据库和普通的安全策略，不需要提供自己的认证服务。</p>
+<p>域和工作组对比：</p>
+<ul>
+<li>
+<p>域可定义安全管理边界，工作组无集中管理，相互独立。</p>
+<p>域中所有用户共享普通的用户账户数据库和安全策略，工作组中计算机使用本地账户和本地策略。</p>
+</li>
+<li>
+<p>验证</p>
+<ul>
+<li>
+<p>安全账户数据库<br>
+工作组中计算机上的用户账户在登录本机时使用的是系统自身的 SAM 数据库独立验证。当登录到域时用的是域上的用户账户数据库。</p>
+</li>
+<li>
+<p>验证服务</p>
+<p>域验证时，每台计算机不需要提供自己的验证服务，工作组中登录验证用的是本机的验证服务。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>登陆成功访问范围</p>
+<p>域在整个受信任域中访问许可的资源，工作组为本机资源。</p>
+</li>
+</ul>
+<p><strong>信任关系</strong>：一个域可以信任另一个域的账户访问自己的资源，又不必须要本域的用户账户和口令。（A -&gt; B: A 信任 B，B 中的用户允许访问 A 中的资源）</p>
+<ul>
+<li>
+<p>好处</p>
+<ul>
+<li>实现跨域的集中安全验证</li>
+<li>支持用户的单一登录</li>
+</ul>
+</li>
+<li>
+<p>种类</p>
+<ul>
+<li>单向信任</li>
+<li>双向信任</li>
+<li>Windows NT 的信任关系是单向且不具有传递性，Win2000 之后默认信任关系是双向且可传递。</li>
+</ul>
+</li>
+</ul>
+<h2 id="0x02-活动目录">0x02 活动目录</h2>
+<p>活动目录提供了完全集成的在 Windows 中的一个安全、分布式、可扩展以及重复的分层目录服务。</p>
+<p>WinServer AD 域服务的核心价值是提供一套完整的用户身份验证系统，这是一个基础身份验证平台，用户实现单点登录。在此基础上再实现对共享资源和服务的管理及访问。</p>
+<p>活动目录中所支持的一些最重要的 Internet 标准：</p>
+<ul>
+<li><code>LDAP</code>：对活动目录的访问通过 LDAP 进行</li>
+<li><code>X.500</code>：活动目录信息模型源自 X.500 模型</li>
+<li><code>Kerberos</code>：活动目录的认证协议</li>
+<li><code>DNS</code>：作为内在的地址定位服务</li>
+</ul>
+<h3 id="活动目录功能的机制">活动目录功能的机制</h3>
+<ul>
+<li><strong>单点登录</strong>（Kerberos）</li>
+</ul>
+<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-06-04-22-22-15.png" alt="" loading="lazy"></figure>
+<ul>
+<li>
+<p><strong>全局目录（GC，Global Catalog）</strong><br>
+全局目录是一个域树或者域森林中的所有对象信息的中心仓库。它记录 AD 中所有域对象的部分信息、架构信息和配置信息的完整副本。<br>
+执行<strong>登陆和查询</strong>任务，用户登陆时向域控制器提供通用组成员信息，在查询目录信息时，首先会送到最近的 GC，当查询对象不在 GC 时才会转至对象所在域。</p>
+</li>
+<li>
+<p><strong>多主复制</strong>：通过安装域控制器，可在整个网络环境中创建目录的多份副本；网络任何地方发生变化都会在整个网络中自动复制，保证数据一致性。</p>
+</li>
+<li>
+<p><strong>组策略</strong>：在不同层次上定义控制规则。</p>
+</li>
+</ul>
+<h3 id="活动目录保存的信息">活动目录保存的信息</h3>
+<ul>
+<li><strong>域数据</strong>：包含域内的所有对象信息，域内的每个域控都复制了这个信息（不超过该域的范围）。</li>
+<li><strong>架构数据</strong>：定义了可在 AD 中存储哪些对象、属性和操作规则，在森林中的每个域控都存储。</li>
+<li><strong>配置数据</strong>：定义了复制拓扑和 AD 配置有关的其他数据，复制到森林中的所有域控。</li>
+<li><strong>如果是 GC 服务器</strong>，还为所有域保存 “域数据” 的部分副本（包含那些在操作中最常用的属性）。</li>
+</ul>
+<h3 id="活动目录对象">活动目录对象</h3>
+<ul>
+<li>
+<p>容器对象<br>
+可存储其他对象，如域，组织单元，文件夹等。</p>
+</li>
+<li>
+<p>叶对象<br>
+不能存储其他对象，如计算机，用户，文件等。</p>
+</li>
+</ul>
+<p>AD 中常见对象：</p>
+<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-06-04-22-34-09.png" alt="" loading="lazy"></figure>
+<p>对象的标准属性：</p>
+<ul>
+<li>
+<p><code>DN</code>(Distinguished Name，<strong>识别名称</strong>)定义了 LDAP 中到对象的完整路径。</p>
+<p>完整路径包括对象名称以及直到域根节点的所有父对象名称，DN 标识了域层次中的唯一对象。</p>
+</li>
+<li>
+<p><code>RDN</code>(Relative Distinguished Name相对识别名称)是 DN 中属于对象完整路径属性的一部分。</p>
+</li>
+<li>
+<p>全局唯一标识符(<code>GUID</code>)</p>
+<p>GUID 是对象创建时由活动目录分配的 128 位数字。每一位对象都具有唯一标示。GUID 不能被修改和删除。</p>
+</li>
+<li>
+<p>主体属性：安全主体名称</p>
+<ul>
+<li>安全主体分三类：用户，组，计算机。</li>
+<li>在单个域内用来唯一标识用户，计算机或组的名称。</li>
+<li>域内必须唯一，域间无需唯一。</li>
+</ul>
+</li>
+<li>
+<p>安全标识符(<code>SID</code>)</p>
+<p>SID 是 Windows 系统安全子系统为安全主体对象创建的唯一数字，属于主体属性。<br>
+Win 系统内部进程引用的是账户的 SID，而不是账户的用户或者组名。</p>
+</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li>
+<p>标准属性：DN/RDN、GUID、安全主体名称、安全标识符（SID）</p>
+</li>
+<li>
+<p>不同环境下对象的名称</p>
+<ul>
+<li>在单个域内，SID/GUID/DN 都可以唯一标识到域中的每个安全主体</li>
+<li>对象被重新命名，或移动到另一个域时，DN、RDN 和 SID 会换，GUID 不变</li>
+</ul>
+</li>
+</ul>
+<h3 id="活动目录组件">活动目录组件</h3>
+<p><strong>能够为企业网建立相应的逻辑结构</strong></p>
+<ul>
+<li>逻辑结构
+<ul>
+<li><strong>组织单位</strong>（Organizational Unit，<code>OU</code>）<br>
+主要用来委派对用户、组及资源集合的管理权限。组织单位是委派管理权限的最小分组，其特殊在于可连接组策略。功能如下：
+<ul>
+<li>分类组织对象</li>
+<li>委派管理控制权</li>
+<li>配置组策略</li>
+</ul>
+</li>
+<li><strong>域（Domain）</strong><br>
+同一个域中的计算机共享配置，架构和全局目录，域是网络中复制和安全管理的<strong>基本单元</strong>。</li>
+<li><strong>域树（Tree）</strong><br>
+具有<strong>连续命名空间</strong>的多个域成为树。目录树中所有域共享相同的配置，架构和全局目录。</li>
+<li><strong>域森林（Forest）</strong><br>
+不构成连续命名空间的域树的集合，目录树通过双向可传递的信任关系链接在一起。<br>
+AD 中建立的第一个域成为林的根域。</li>
+</ul>
+</li>
+<li>物理结构
+<ul>
+<li><strong>站点（Site）</strong><br>
+由高速连接所形成的较快通信速率网络（一般指局域网 LAN），用于确定复制拓扑，以便进行有效而快速的复制。站点是独立于域的，是对网络上计算机的实际物理分布的客观反映。
+<ul>
+<li>站点映射网络的物理结构，域映射组织的逻辑结构。</li>
+<li>网络的物理结构和域结构之间没有必然联系。</li>
+<li>活动目录允许在一个站点出现多个域，与允许一个域出现在多个站点中。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="0x03-组策略-配置">0x03 组策略、配置</h2>
+<p>组策略是管理员针对网络中的<strong>用户和计算机</strong>所作的一系列设置，以控制程序、网络资源和操作系统行为。</p>
+<p>计算机和用户是仅有的接受组策略的活动目录对象类型。组策略使管理员可以集中控制用户环境，减轻管理负担。</p>
+<p><strong>组策略对象</strong>（<code>GPO</code>，Group Policy Object）存储了组策略的具体配置，每一个 GPO 都链接到一个具体的活动目录容器，包括站点、域、组织单元。</p>
+<p>组策略与活动目录的结合：</p>
+<ul>
+<li>联合使用，则可实现策略的集中与分散管理，适应从小到大的各种规模。</li>
+<li>组策略管理单元提供了管理组策略的集成工具，并提供了 MMC 管理工具的扩展。</li>
+</ul>
+<h3 id="组策略的设置对象">组策略的设置对象</h3>
+<ul>
+<li>针对站点、域、OU 设置组策略。</li>
+<li>不在域内的可以利用本地组策略管理计算机。</li>
+</ul>
+<p>OU/域/站点分别有不同的目的，大概记一下表格：</p>
+<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-06-04-23-03-13.png" alt="" loading="lazy"></figure>
+<h3 id="组策略的应用顺序">组策略的应用顺序</h3>
+<ul>
+<li>
+<p>组策略具备<strong>继承</strong>规则</p>
+</li>
+<li>
+<p>组策略有<strong>累加性和相应优先级</strong><br>
+<strong>OU &gt; Domain &gt; Site &gt; 本地</strong>（即应用顺序是先应用本地，再应用站点，再应用域，再应用OU，最后应用的优先级最高）<br>
+<img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-06-04-23-12-55.png" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>操作系统<strong>先处理计算机配置，然后处理用户配置</strong><br>
+在环回设置中，如果设定为 “替代”，则计算机的策略设置完全替代用户的，用户的不生效；如果为 “合并”，则计算机的叠加在用户的后面，发生冲突时计算机的生效。</p>
+</li>
+</ul>
+<p>组策略的<strong>冲突解决机制</strong>：</p>
+<ul>
+<li><strong>先处理计算机配置，后处理用户配置</strong><br>
+在环回设置中，如果设定为“替代”，则计算机的策略设置完全替代用户的，用户的不生效；如果为“合并”，则计算机的叠加在用户的后面，发生冲突时计算机的生效。</li>
+<li><strong>OU &gt; Domain &gt; Site &gt; 本地</strong>（即应用顺序是先应用本地，再应用站点，再应用域，再应用 OU，最后应用的优先级最高）</li>
+<li><strong>禁止替代</strong>发生冲突时，采用层次较高的那个。</li>
+<li><strong>禁止继承</strong>：将某个容器配成禁止继承后，将不会从这个容器的各种父容器中继承下来组策略，但是无法阻止那些禁止替代的组策略继承到自己上面。</li>
+</ul>
+<p>总结：</p>
+<ul>
+<li>组策略能够从站点，域和最后的组织单元继承而来</li>
+<li>应用组策略对象的顺序和级别决定了用户和计算机实际能收到的组策略设置</li>
+<li>组策略能够在站点、域、组织单元上被阻塞</li>
+<li>组策略本身还能够以非覆盖的方式来强制实施</li>
+<li>组策略可以有条件的实施和执行</li>
+</ul>
+<h3 id="组策略的实现">组策略的实现</h3>
+<ul>
+<li>
+<p>企业框架的组织</p>
+</li>
+<li>
+<p>根据相应组织框架设计管理策略</p>
+</li>
+<li>
+<p>与安全相关的配置</p>
+<ul>
+<li>账户策略（密码策略、账户锁定策略）</li>
+<li>限制软件策略</li>
+<li>IPSec 策略、公钥策略、访问控制策略</li>
+<li>远程安装服务、审计策略、磁盘阵列</li>
+</ul>
+</li>
+<li>
+<p>管理相关的设置</p>
+</li>
+<li>
+<p>可对不同层次安全单元进行策略设置</p>
+</li>
+</ul>
+<h2 id="0x04-公钥基础结构-pki">0x04 公钥基础结构 PKI</h2>
+<p><code>PKI</code>（Public Key Infrastructure） 是一组组件和规程，用非对称密码算法原理和技术实现的安全基础设施。</p>
+<h3 id="pki-的组件">PKI 的组件</h3>
+<p>组成 PKI 的核心块：</p>
+<ul>
+<li>证书 Certificates</li>
+<li>证书吊销列表 Certificate revocation lists(CRL)</li>
+<li>认证机构 Certificate authorities(CAs)</li>
+</ul>
+<p>PKI 的组件：</p>
+<ul>
+<li>证书签发机构（CA）：是 PKI 中受信任的第三方实体，向主体颁发证书、续借和更新证书，是信任的起点。</li>
+<li>证书注册机构（RA）：用于在证书登记过程中核实申请者的身份。</li>
+<li>证书库：用于存储，分发证书和证书吊销列表。</li>
+<li>档案库：用来解决未来争端的信息库，为 CA 承担长期存储文档信息的责任，以便未来决定在一份旧的文档中数字签名是可信任的。</li>
+<li>用户：申请者/验证者。</li>
+<li>密钥备份及恢复系统：只能针对解密私钥，不能备份签名私钥。</li>
+<li>证书废除处理系统：将证书放入 CRL 中，然后对吊销列表中证书的数据结构进行数字签名。</li>
+<li>应用系统接口：建立良好的应用接口，方便各种用户和服务能够和 PKI 交互。</li>
+</ul>
+<h3 id="ca-的功能">CA 的功能</h3>
+<p>证书签发机构 <code>CA</code> 是 PKI 中受信任的第三方实体，向主体颁发证书、续借和更新证书，是信任的起点。</p>
+<p>工作过程：</p>
+<ul>
+<li>
+<p>证书生成：用户生成公钥/私钥对，发出证书请求到 CA 中。CA 在验证申请者身份后，把用户信息和公钥绑定起来，用自己的私钥对它签名，形成证书并返回给用户。</p>
+</li>
+<li>
+<p>证书吊销：CA 将证书放入 CRL 内，并对其数据结构进行数字签名。发布吊销的方法：周期发布机制/在线查询机制（数据包 OCSP）。CA 将 CRL 放入一个公共存储库内，终端收到证书时首要任务就是对 CRL 进行检索。</p>
+</li>
+</ul>
+<h3 id="证书的使用及验证">证书的使用及验证</h3>
+<p>使用：WEB 安全/ EFS /EMAIL 安全/...</p>
+<p>验证：</p>
+<p>（1）真实性：基于证书链验证机制，验证该证书是否由可信的 CA 机构颁发<br>
+（2）有效性：证书是否在有效使用期内<br>
+（3）可用性：证书是否遭到废除<br>
+（4）验证证书的用途。</p>
+<h2 id="0x05-文件系统">0x05 文件系统</h2>
+<h3 id="ntfs-权限及在文件系统中的实现">NTFS 权限及在文件系统中的实现</h3>
+<p>NTFS 权限即文件夹与文件的访问权限。</p>
+<p><strong>权限原则</strong>：<strong>权限会继承，以文件夹为权限的设置对象，拒绝权限优于其他权限。</strong></p>
+<p><strong>实现机制</strong>：在 $Secure 里面包含两个索引表 $SDH 和 $SII（常驻），和一个非常驻的<strong>存储安全描述符内容</strong>的 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi><mi>D</mi><mi>S</mi><mi mathvariant="normal">。</mi></mrow><annotation encoding="application/x-tex">SDS。
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mord cjk_fallback">。</span></span></span></span>SDH 保存安全描述符的 hash 值和对应在 SDS 中的偏移量。<br>
+$SII 保存 NTFS 安全 ID（这个安全 ID 也在文件的属性中保存）和 SDS 的偏移量。</p>
+<p>工作过程：</p>
+<ol>
+<li><strong>SDH 可以快速查找安全描述符是否已在 SDS 中保存。</strong><br>
+计算安全描述符的 hash 值，并在 SDH 中查找。<br>
+如果找到 hash 值的匹配项，则对应到 SDS 中找到安全描述符。<br>
+如果安全描述符不匹配，则继续查找。<br>
+如果最终找到，则查询其对应的安全 ID，并记录在文件的 $STANDARD_INFORMATION 属性中。<br>
+若不存在，则为其生成安全 ID，内容存储在 SDS 当中，然后把相应的偏移量存储在 SII 和 SDH 中.<br>
+（上述过程可以想象为创建一个新文件，或者变更一个文件的权限时，写入这个文件新的权限的过程）</li>
+<li><strong>SII 可以在 Secure 中快速查找安全描述符。</strong><br>
+打开文件时，从文件属性中找到内部的安全 ID。然后查找 SII 记录，找到对应的 SDS 偏移量；然后转到相应 SDS 偏移处，找到文件安全描述符。</li>
+</ol>
+<h3 id="加密文件系统efs">加密文件系统（EFS）</h3>
+<h4 id="加解密过程">加解密过程</h4>
+<p>加密：</p>
+<ol>
+<li>文件被一个随机的 Key(文件加密密钥 FEK) 加密。</li>
+<li>用用户公钥加密 FEK，产生文件解密区域 DDF。</li>
+<li>用恢复代理的公钥加密 FEK，产生文件恢复区域 DRF。</li>
+<li>将加密后的内容，DDF，DRF 写入磁盘。完成。</li>
+</ol>
+<p>解密：</p>
+<ol>
+<li>使用用户私钥解密 DDF，得到 FEK。</li>
+<li>使用 FEK 解密文件。</li>
+</ol>
+<p>优势：</p>
+<ul>
+<li>基于公钥与文件系统紧密结合的加密技术</li>
+<li>操作上完全透明</li>
+<li>支持对单个文件或文件夹加解密</li>
+<li>提供数据恢复</li>
+</ul>
+<p>局限性：</p>
+<ul>
+<li>增加花费，降低性能</li>
+<li>无法检测到病毒</li>
+<li>恢复代理影响性能</li>
+<li>EFS 对一切进程，系统中如有泄密者可将文件传出。</li>
+</ul>
+<h4 id="密钥管理">密钥管理</h4>
+<p>DDF 和 DRF（即加密的 FEK）保存在 MFT 的属性当中。用户的私钥保存在用户配置文件目录下，并用用户的主密钥来加密该目录。而用户的主密钥又存放在另一个用户配置文件中，用用户的口令来加密这个配置文件。因此，当用户更改口令时，需要解密用户配置文件的主密钥，并使用新的口令来加密这个主密钥。</p>
+<p>解密链条：用户口令 -&gt; 主密钥 -&gt; 私钥 -&gt; FEK -&gt; EFS 加密文件.</p>
+<h3 id="磁盘配额">磁盘配额</h3>
+<p><strong>* 磁盘配额的实现及文件系统相关的实现机制</strong></p>
+<p><strong>作用</strong>：避免由于磁盘空间使用的失控可能造成的系统崩溃。</p>
+<ul>
+<li>
+<p>配额是<strong>以文件所有权为基础的</strong>，不受位置限制。</p>
+</li>
+<li>
+<p><strong>只适用于卷，且不受卷的文件夹结构以物理磁盘影响。</strong></p>
+</li>
+</ul>
+<p><strong>实现机制：</strong></p>
+<p>保存在 $Extend$Quota 下，包含两个索引项 <code>$O</code> 和 <code>$Q</code>。</p>
+<p>O 索引包含 SID 和用户 ID 的对应关系，而 Q 索引包含用户 ID 和配额项的对应关系。文件属性中存储的是用户 ID。</p>
+<p>在创建文件时，从应用程序处获取 SID（SID 是在进程中表示安全主体的），通过查找 O 找到用户 ID，并通过用户 ID 查找 Q 获取配额项，再进行验证。</p>
+<h3 id="数据备份的策略及-raid-机制的几种备份机制">数据备份的策略及 RAID 机制的几种备份机制</h3>
+<p><strong>备份策略：</strong></p>
+<ul>
+<li><strong>完全备份</strong>：对数据进行完全拷贝。清除存档属性。<br>
+对某一个时间点上所有的数据或应用进行一个完全的拷贝。</li>
+<li><strong>差异备份</strong>：仅备份增加或修改的数据。<strong>不清除存档属性</strong>。<br>
+在一次<strong>全备份</strong>后到进行差异备份的这段时间内，对那些增加或者修改的文件进行备份。在进行恢复时，只需对上次全备份和最后一次差异备份进行恢复。</li>
+<li><strong>增量备份</strong>：备份有变化的数据。清除存档属性。<br>
+备份上一次备份（完全备份、差异备份、增加量备份）之后有变化的数据。</li>
+</ul>
+<p><strong>RAID 机制：</strong></p>
+<p><strong>独立磁盘冗余阵列 RAID</strong> （Redundant Array of Independent Disk）将多块磁盘通过一定的技术手段组成一块虚拟磁盘使用。利用数组的方式制作磁盘组，配合数据分散排列的设计，提升数据存储速度和可靠性。</p>
+<ul>
+<li>RAID0：条带 RAID。数据分割到多块磁盘上存储。速度明显提升，不浪费空间，但是无冗余，无校验。</li>
+<li>RAID1：镜像 RAID。同时将数据写入两块 RAID。读取速度快，存储安全。写入速率低，成本高。</li>
+<li>RAID0+1：四块磁盘实现，两块来 RAID0，再找两块镜像前面的两个 RAID0。读写快速，安全，成本高。</li>
+<li>RAID5：奇偶校验。交叉存取数据和奇偶校验到三块磁盘上，如果一块挂掉，可以用另外两块结合奇偶校验来恢复。数据安全，读取效率高，磁盘利用率高，写入速率低。</li>
+</ul>
+<h3 id="数据恢复机制基于备份-非备份">数据恢复机制（基于备份、非备份）</h3>
+<p>误删恢复：</p>
+<p>删除过程：</p>
+<ol>
+<li>找到文件对应的 MFT，将标志位改为 0.</li>
+<li>从根路径开始，一级一级找到文件所在的父目录，以确定被删除文件的簇号，并将父目录所包含文件的记录项删除。</li>
+<li>在 Bitmap 中把文件所占用簇相应位置清零，以方便将该簇分配给其他文件。</li>
+</ol>
+<p>恢复条件：如果之前所占用簇没有分配给其他文件使用，即文件所存储的位置没有被其他文件占用，则可以恢复。</p>
+<h2 id="0x06-身份验证">0x06 身份验证</h2>
+<h3 id="针对字典-穷举攻击的防范策略">针对字典、穷举攻击的防范策略</h3>
+<ul>
+<li>启动口令复杂化机制</li>
+<li>设置账户锁定阈值</li>
+<li>记录登陆失败事件日志</li>
+<li>禁用无人使用的账户</li>
+<li>锁定真正的 Administrator 账户并创建一个诱饵管理员账户</li>
+</ul>
+<h3 id="交互式本地登录-域登录各组件作用">交互式本地登录、域登录各组件作用</h3>
+<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-06-05-08-26-50.png" alt="" loading="lazy"></figure>
+<ul>
+<li><strong>Winlogon</strong>: 加载<strong>两个组件</strong>（GINA 和身份验证程序包），维护<strong>三个状态</strong>（Winlogon 桌面——已注销状态；应用程序桌面——已登录状态；屏保桌面——已锁定状态）<br>
+<strong>四个动作</strong>: 注册 SAS（Ctrl+Alt+Del）；加载其余两个组件（GINA 和 身份验证程序包）；生成三个桌面，维护三种状态；向 GINA 发送事件通知消息，提供 GINA 调用的接口函数，<strong>保证其操作对其他进程不可见</strong>。</li>
+<li><strong>GINA</strong>（图形识别和认证接口，Graphical Identification and Authentication）：提供 Winlogon <strong>用户标识和验证用户的输出函数</strong>。</li>
+<li><strong>网络提供程序的动态链接库</strong>：提供通过标准协议到其他类型网络的辅助身份验证功能。</li>
+</ul>
+<p>具体认证过程：</p>
+<p>Winlogon -&gt; GINA -&gt; LSA -&gt; 身份验证程序包 -&gt; LSA -&gt; Winlogon</p>
+<ol>
+<li>
+<p>Winlogon 切换到 Winlogon 桌面，并调用 GINA 来显示登录对话框，等待用户输入用户名和口令。</p>
+</li>
+<li>
+<p>当用户输入信息之后，GINA 将它传送给 LSA 进行验证。LSA 调用适当的验证程序包（MSV1_0），并将口令使用单向散列函数。</p>
+</li>
+<li>
+<p>若 SAM 找到用户信息，转向身份验证程序返回用户的 SID 和用户所在组的 SID。</p>
+</li>
+<li>
+<p>身份验证程序包向 LSA 返回这些 SID。</p>
+</li>
+<li>
+<p>LSA 使用这些 SID 创建安全访问令牌，并将令牌句柄和登录确认信息返回给 Winlogon，用户进入 Windows 桌面。</p>
+</li>
+</ol>
+<h3 id="kerberos">Kerberos</h3>
+<p><strong>Kerberos 用户身份验证服务和票据授予服务过程及 Kerberos 策略</strong></p>
+<p>Kerberos: 基于可信第三方(Trusted Third Party, TTP)的认证协议；基于<strong>对称加密技术</strong>。</p>
+<p>Kerberos 目标是把 Unix 认证、授权、审计的功能拓展到网络环境，实现<strong>集中的身份认证和密钥分配</strong>，用户只需输入一次身份验证信息，就可以访问多个服务。</p>
+<p>基本思想（假设）：能正确对信息进行解密的用户即为合法用户。</p>
+<p>用户在访问应用服务器之前，必须从第三方 (Kerberos 服务器) 获取该应用服务器的授权票据 (Ticket)。</p>
+<p>Kerberos 认证协议包含 3 个子协议，称之为<strong>交换</strong>：</p>
+<ol>
+<li>
+<p>认证服务器交换(AS 交换)</p>
+</li>
+<li>
+<p>票据许可服务器交换(TGS 交换)</p>
+</li>
+<li>
+<p>客户/服务器认证应用交换(AP 交换)</p>
+</li>
+</ol>
+<p><strong>整体流程</strong>：</p>
+<ol>
+<li>
+<p><strong>登录</strong>：客户端<code>用户 A</code> 输入用户名、密码</p>
+</li>
+<li>
+<p><strong>认证</strong>：系统验证客户端<code>用户 A</code>身份</p>
+</li>
+<li>
+<p><strong>授权</strong>：系统授权客户端<code>用户 A</code>访问<code>服务 S</code></p>
+</li>
+<li>
+<p><strong>请求服务</strong>：客户端<code>用户 A</code>往<code>服务 S</code>发送请求</p>
+</li>
+</ol>
+<p><strong>参与的角色</strong>：</p>
+<ul>
+<li>
+<p><code>Client</code>: Application Client 应用客户端</p>
+</li>
+<li>
+<p><code>AS</code>（身份验证服务，Authentication Server）对用户身份进行验证，并发行用户访问票据授予服务 TGS 的票据 <code>TGT</code>：Ticket_tgs（票据授予票据 TGT）</p>
+</li>
+<li>
+<p><code>TGS</code>（票据授予服务，Ticket-Granting Service） 用来授权服务访问，给客户发行使用网络服务的会话票据 <code>ST</code>：Ticket_s。</p>
+</li>
+<li>
+<p><code>SS</code>: Service Server 用户所请求的服务</p>
+</li>
+</ul>
+<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-12-10-14-59-52.png" alt="" loading="lazy"></figure>
+<p>* KDC：密钥分发中心。</p>
+<p>* 票据(Tikcet)：一种临时的证书，用 TGS 或应用服务器的密钥加密，分别为 TGS 票据 TGT 和服务票据 ST。</p>
+<p><strong>详细流程</strong>：</p>
+<ol>
+<li>用户登录</li>
+</ol>
+<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-12-10-15-17-15.png" alt="" loading="lazy"></figure>
+<ul>
+<li>用户登录阶段，通常由用户输入<code>用户名</code>和<code>密码</code>信息。</li>
+<li>在客户端侧，用户输入的<code>密码</code>信息被通过一个单向 Hash 函数生成一个<code>Client密钥</code>。</li>
+</ul>
+<ol start="2">
+<li>请求身份认证</li>
+</ol>
+<p>2.1 客户端向AS发送认证请求</p>
+<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-12-10-15-18-19.png" alt="" loading="lazy"></figure>
+<ul>
+<li>客户端为执行登录操作的用户向 <strong>AS</strong> 发送<strong>认证请求</strong>。</li>
+<li>请求中带有<code>用户名</code>信息，用户名以明文形式发送到客户端。</li>
+</ul>
+<blockquote>
+<p>Client 往 AS 发送认证请求时并未发送<code>密码</code>或<code>密钥</code>信息。</p>
+</blockquote>
+<p>2.2 AS 确认 Client 端登录者用户身份<br>
+<img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-12-10-15-23-07.png" alt="" loading="lazy"></p>
+<ul>
+<li>AS收到用户认证请求之后，根据请求中的<code>用户名</code>信息，从数据库中查找该用户名是否存在。</li>
+<li>如果<code>用户名</code>存在，则对应的<code>密码</code>也可以从数据库中获取到。AS 利用相同的单向 Hash 函数为<code>密码</code>生成一个秘钥，如果第1步中用户提供的<code>密码</code>信息正确，该秘钥与用户登录章节中的<code>Client密钥</code>相同。</li>
+<li>AS 为 Client 响应如下消息：
+<ul>
+<li><strong>Msg A</strong>  使用<code>Client密钥</code>加密的<code>Client/TGS SessionKey</code></li>
+<li><strong>Msg B</strong> 使用<code>TGS密钥</code>加密的<code>TGT(Ticket-Granting-Ticket)</code>，因此该消息 Client 不可解析。<br>
+TGT中包含如下信息：
+<ul>
+<li>Client/TGS SessionKey</li>
+<li>Client ID</li>
+<li>Ticket有效时间</li>
+<li>Client网络地址</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Client 收到 AS 的响应消息以后，利用自身的 <code>Client密钥</code> 可以对 Msg A 进行解密，这样可以获取到<code>Client/TGS SessionKey</code>。但由于 Msg B 是使用 <code>TGS密钥</code> 加密的，Client 无法对其解密。</li>
+</ul>
+<blockquote>
+<ol>
+<li>AS 响应的消息中有一条是属于 Client 的，但另外一条却属于 TGS。<br>
+2. Client/TGS SessionKey 出现了两个 Copy，一个给 Client 端，一个给 TGS 端。<br>
+3. 本文中提及的加密，如无特殊说明，均采用的是<strong>对称加密算法</strong>。</li>
+</ol>
+</blockquote>
+<ol start="3">
+<li>请求服务授权</li>
+</ol>
+<p>3.1 客户端向 TGS 发送请求服务授权请求<br>
+<img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-12-10-15-30-15.png" alt="" loading="lazy"><br>
+客户端发送的请求中包含如下两个消息：</p>
+<ul>
+<li><strong>Msg C</strong>
+<ul>
+<li>要请求的服务 ID, 即 <code>Service ID</code>；</li>
+<li>上一步 2.2 中由 AS 为 Client 提供的 <code>TGT</code>。</li>
+</ul>
+</li>
+<li><strong>Msg D</strong>
+<ul>
+<li>使用 <code>Client/TGS SessionKey</code> 加密的 Authenticator 1 {Client ID, Timestamp}。</li>
+</ul>
+</li>
+</ul>
+<p>3.2 TGS 为 Client 响应服务授权票据<br>
+<img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-12-10-15-32-28.png" alt="" loading="lazy"><br>
+TGS 为 Client 响应的消息包括：</p>
+<ul>
+<li><strong>Msg E</strong> 使用 <strong>Service密钥</strong> 加密的 Client-To-Server Ticket, 该 Ticket 中包含了如下信息:
+<ul>
+<li><code>Client/Server SessionKey</code></li>
+<li>Client网络地址</li>
+<li>Ticket有效时间</li>
+<li>Client ID</li>
+</ul>
+</li>
+<li><strong>Msg F</strong> 使用 <code>Client/TGS SessionKey</code> 加密的 <code>Client/Server SessionKey</code>。</li>
+</ul>
+<p>Msg F使用了<code>Client/TGS SessionKey</code>加密，因此，该消息对 Client 可见。Client 对其解密以后可获取到 <code>Client/Server SessionKey</code>。<br>
+而 Msg E 使用了<code>Service密钥</code> 加密，该消息可视作是 TGS 给 Service Server 的消息，只不过由 Client 一起携带。</p>
+<ol start="4">
+<li>发送服务请求</li>
+</ol>
+<p>4.1 Client 向 SS(Service Server) 发送服务请求<br>
+<img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-12-10-15-35-30.png" alt="" loading="lazy"><br>
+发送的消息中包括：</p>
+<ul>
+<li>Msg E 上一步 3.2 中，TGS 为 Client 响应的消息 Msg E。该消息可以理解为由 Client 为 SS 携带的消息。</li>
+<li>Msg G 由 <code>Client/Server SessionKey</code> 加密的 <code>Authenticator 2</code>，包含 <code>{Client ID, Timestamp}</code> 信息。<br>
+这里的 Authenticator 2 区别于前面 3.1 步骤中的 Authenticator 1。</li>
+</ul>
+<p>4.2 SS 响应 Client<br>
+<img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-12-10-15-37-28.png" alt="" loading="lazy"><br>
+SS 收到客户端的服务请求之后，先利用自身的 <code>Service密钥</code> 对 <code>Msg E</code> 进行解密，提取出 <code>Client-To-Server Ticket</code>, 在 3.2 步骤中，提到了该 Ticket 中包含了 <code>Client/Server SessionKey</code> 以及 <code>Client ID</code> 信息。<br>
+SS 使用 <code>Client/Server SessionKey</code> 解密 <code>Msg G</code>，提取 Client ID 信息，而后将该 Client ID 与 Client-To-Server Ticket 中的 Client ID 进行比对，如果匹配则说明 Client 拥有正确的<code>Client/Server SessionKey</code>。<br>
+而后，SS 向 Client 响应 <code>Msg H</code>(包含使用<code>Client/Server SessionKey</code>加密的 Timestamp 信息)。<br>
+Client 收到 SS 的响应消息 Msg H 之后，再使用<code>Client/Server SessionKey</code>对其解密，提取 Timestamp 信息，然后确认该信息与 Client 发送的 Authenticator 2 中的 Timestamp 信息一致。<br>
+如上信息可以看出来，该交互过程起到了<code>Client</code>与<code>SS</code>之间的<strong>双向认证</strong>作用。</p>
+<p><strong>分成两个 AS 和 TGS 的原因：减少输入认证信息的次数，服务器可能分属不同的网络域，由不同的 TGS 管理，采用同一个 AS 可以保证单点登录。</strong></p>
+<h2 id="0x07-访问控制">0x07 访问控制</h2>
+<p>限制访问主体对访问客体的访问权限，从而使计算机系统在合法范围内使用。</p>
+<h3 id="windows-访问控制模型及组件">Windows 访问控制模型及组件</h3>
+<p>自主访问控制模型：允许客体属主制定对象的保护策略，通常通过访问控制列表实现。</p>
+<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-06-05-14-19-04.png" alt="" loading="lazy"></figure>
+<p>用户登陆认证通过后，系统为其创建访问令牌。运行程序时，线程将取得令牌的拷贝。</p>
+<p>程序请求访问客体时，提交令牌，SRM 使用该令牌，通过 OM 读取客体的安全描述符，并与令牌中的相应信息做比较来执行访问检查和控制。若通过，则授权程序访问客体；否则则拒绝。</p>
+<p>组件：SRM / OM / 令牌</p>
+<ul>
+<li>
+<p><code>OM</code>：<strong>对象管理器</strong>负责对象的命名、保护、分配和处理。</p>
+</li>
+<li>
+<p><code>SRM</code>：<strong>安全引用监控器</strong>与对象管理器 <code>OM</code> 联合起来，实施<strong>访问控制策略和审核策略</strong>。在对象句柄创建时进行安全检查，而不是在每次访问都进行。</p>
+</li>
+</ul>
+<h3 id="主体和客体的安全描述">主体和客体的安全描述</h3>
+<ul>
+<li>
+<p>主体：<strong>访问令牌</strong><br>
+由安全标识符创建。包含用户 SID /组 SID /特权信息/其他访问信息。<br>
+用户认证通过后，系统为其创建访问令牌，线程获取令牌的拷贝。<br>
+程序请求访问客体时，提交令牌，SRM 使用令牌与客体的安全描述进行比较来执行访问检查和控制。</p>
+<ul>
+<li>令牌模拟：<br>
+正常情况下，服务进程在自己的安全上下文中运行，使用主令牌；当用户请求时，服务进程创建执行线程来相应请求，使用客户安全环境相关联的临时模拟令牌。<br>
+模拟级别：
+<ul>
+<li>匿名：可以模拟用户，但不包含用户的任何信息</li>
+<li>标识：允许服务获得客户的身份信息供自己使用，但不允许服务模拟该用户</li>
+<li>模拟：无论客户和服务器是否在一台计算机上，允许服务器在访问服务器上资源时，可模拟客户来访问，但不能在远程系统上模拟客户。</li>
+<li>委派：允许服务在访问服务器资源和其他计算机资源时，都可模拟用户。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>客体：<strong>安全描述符</strong></p>
+<p>每一个安全性对象都有一个安全性描述符。</p>
+<ul>
+<li>
+<p>对象所有者的 SID</p>
+</li>
+<li>
+<p>基本所有组的 SID</p>
+</li>
+<li>
+<p>自定义的访问控制列表 DACL</p>
+<ul>
+<li>DACL 来源：（1）直接分配（2）继承自父对象（3）由 OM 默认分配</li>
+<li>空 DACL /无 DACL：前者是谁都不能访问，后者是谁都可以访问</li>
+</ul>
+</li>
+<li>
+<p>系统访问控制列表 SACL</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="客体中策略的冲突解决办法">客体中策略的冲突解决办法</h3>
+<ul>
+<li>拒绝 &gt; 允许</li>
+<li>直接 &gt; 继承
+<ol>
+<li>直接把访问及控制信息分配给对象。</li>
+<li>从父对象中检查可继承的访问控制信息。</li>
+<li>OM 所提供的默认访问控制信息，并分配给对象。</li>
+</ol>
+</li>
+<li>继承中，级数越接近自己优先级越高。(下级的优先权更高)</li>
+</ul>
+<h3 id="分布式访问控制实现">分布式访问控制实现</h3>
+<p><strong>用户和域组（全局组、域本地组、通用组）</strong></p>
+<p><strong>域本地组</strong>：用于<strong>分配权限</strong>，用通用组或全局组加入。域本地组的成员可以来自所有域的用户和组，但其作用域只能是当前域。-&gt; <strong>来自于全林，作用于本域。</strong><br>
+<strong>通用组</strong>：用于<strong>组织多域的用户</strong>，将多个域的用户加入到通用组。通用组的成员可以来自所有域的用户和组，可在林中任何域中指派权限。-&gt; <strong>来自于全林，作用于全林。</strong><br>
+<strong>全局组</strong>：用于<strong>组织一个域内的用户</strong>，将同一域内的用户加入全局组。全局组的成员只能来自当前域的用户和组，而作用域可以是所有的域。-&gt; <strong>来自于本域，作用于全林。</strong></p>
+<p>A-G-DL-P 策略是指将用户账号添加到全局组中，将全局组添加到域本地组中，然后为域本地分配资源权限。按照 A-G-DL-P 策略对用户进行组织和管理会更容易。</p>
+<p>A-G-U-DL-P（使用通用组的例子）:</p>
+<figure data-type="image" tabindex="11"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-06-05-14-44-00.png" alt="" loading="lazy"></figure>
+<h2 id="0x08-传输安全">0x08 传输安全</h2>
+<h3 id="ipsec">IPSec</h3>
+<p>IPSec 是一种网络层保护协议，通过对传输之前的每个 IP 数据包进行保护来保障网络传输。</p>
+<p>作用：</p>
+<ul>
+<li>提供了身份验证、机密性、完整性（包括数据源发认证和完整性校验）三个安全服务。</li>
+<li>并可以防止重放攻击。</li>
+</ul>
+<h4 id="封装模式">封装模式</h4>
+<p><strong>传输模式</strong>：实现端到端的保护，适合于两台主机间的数据加密（点到点）。源和目的终端必须支持 IPSEC，中间的节点不必支持。</p>
+<p><strong>隧道模式</strong>：两个不同网段（站点到站点）所传送的数据内容的加密或者两个私有 IP 网段穿越 Internet 连接。是网关到网关的，源和目的终端不必支持 IPSEC。</p>
+<p><strong>两者区别</strong>：数据包在传输过程中是否需要更改 IP 报头。</p>
+<h4 id="封装协议">封装协议</h4>
+<ul>
+<li>
+<p>负载安全封装<code>ESP</code>（Encapsulating Security Payload）：提供加密、认证和完整性保护</p>
+<ul>
+<li>保证数据的机密性</li>
+<li>数据的完整性校验和源验证</li>
+<li>一定的抗重放能力</li>
+</ul>
+</li>
+<li>
+<p>认证报头协议<code>AH</code>（Authentication Header）：提供认证和完整性保护</p>
+<ul>
+<li>数据的完整性校验和源验证</li>
+<li>有限的抗重放能力</li>
+<li>不能提供数据加密功能</li>
+</ul>
+</li>
+</ul>
+<h3 id="直接访问主机对主机">直接访问（主机对主机）</h3>
+<h4 id="默认策略">默认策略</h4>
+<ul>
+<li>客户端：只响应</li>
+<li>服务器：请求安全性</li>
+<li>安全服务器：需要安全性</li>
+</ul>
+<h4 id="建立自定义安全策略">建立自定义安全策略</h4>
+<p><strong>安全策略的定义（筛选器列表、操作、身份验证方法）</strong></p>
+<p>大的来说，安全策略包含两个方面的内容：</p>
+<ul>
+<li>通信特征的描述：源IP/目的IP/传输层协议/源端口/目的端口、</li>
+<li>保护方法的描述：丢弃/绕过/IPSEC（安全协议/模式/算法/密钥等）</li>
+</ul>
+<p>在 Windows 中，IPSEC 策略的规则包含：</p>
+<ul>
+<li>IP 筛选器列表</li>
+<li>IP 筛选器规则</li>
+<li>身份验证方法</li>
+</ul>
+<h3 id="vpn-访问">VPN 访问</h3>
+<p><strong>协议 以 L2TP/IPSec 为主</strong></p>
+<p>虚拟专用网 VPN （Virtual Private Network）是在公共网络上传输私有通信的方法。VPN 常使用隧道技术、加密技术、密钥管理和身份认证技术将两个或多个专用网络连接起来。</p>
+<figure data-type="image" tabindex="12"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-06-05-15-21-55.png" alt="" loading="lazy"></figure>
+<ul>
+<li>加密的 VPN
+<ul>
+<li><strong>IPSec</strong>（提供了完整的安全解决方案，但不支持组播，无法穿越 NAT）</li>
+<li><strong>PPTP</strong>（提供认证和加密功能，但安全强度低）</li>
+<li><strong>SSL</strong>（提供认证、加密、完整性验证，多用于 Web）</li>
+</ul>
+</li>
+<li>非加密的 VPN
+<ul>
+<li><strong>L2TP</strong>（提供认证和控制报文加密方式，但不对数据中的数据加密）</li>
+</ul>
+</li>
+</ul>
+<p><strong>- 安全和管理需求 -</strong></p>
+<ul>
+<li>组策略和活动目录结合<br>
+组策略与活动目录结合使用，方便实现策略的集中与分散管理，适应大小不同的各种规模。通过组策略可以设置域和网络的安全，配置系统和用户环境，集中管理软件，软件安装与维护选项。</li>
+<li>证书颁发与安装<br>
+通过安装合适的数字证书对传输的信息进行加密、解密、数字签名与认证，并作为文件故障恢复的凭证等。具体应用方面包括 Web 服务的安全，E-mail 的安全，IPSec 证书等。</li>
+<li>分布式访问控制<br>
+在公司中可以将隶属于同一部门的用户组织成全局组，然后再将全局组加入某本地域组中，以此来实现域资源和权限的分配。</li>
+<li>文件系统安全<br>
+我们可通过部署设置 EFS 加解密，及配置故障代理设置，实现利用备份密钥进行数据恢复。</li>
+<li>配置端到端的 IPSec<br>
+通过配置端到端的 IPSec，可以实现通过指定的端口进行数据的加密传输，同时可实现身份验证，完整性验证，指定或禁用特定通信协议。</li>
+<li>VPN 的部署<br>
+VPN的建立可实现在公共网络上传输私有通信，降低了企业的成本，同时方便出差的员工可以随时以VPN访问内网，共享与在总部相同的资源、服务，传输过程通过加密保证了通信的安全</li>
+</ul>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#0x01-%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5">0x01 相关概念</a>
+<ul>
+<li><a href="#%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E8%AF%84%E4%BC%B0%E6%A0%87%E5%87%86">信息安全评估标准</a></li>
+<li><a href="#windows-%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84-%E7%BB%84%E4%BB%B6">Windows 安全体系结构、组件</a>
+<ul>
+<li><a href="#%E5%86%85%E6%A0%B8%E6%A8%A1%E5%BC%8Fkernel-mode">内核模式（Kernel Mode）</a></li>
+<li><a href="#%E7%94%A8%E6%88%B7%E6%A8%A1%E5%BC%8Fuser-mode">用户模式（User Mode）</a></li>
+<li><a href="#om-srm-lsa">OM SRM LSA</a></li>
+</ul>
+</li>
+<li><a href="#windows-%E7%9A%84%E7%94%A8%E6%88%B7%E5%92%8C%E7%BB%84">Windows 的用户和组</a></li>
+<li><a href="#%E5%9F%9F%E5%8F%8A%E4%BF%A1%E4%BB%BB%E5%85%B3%E7%B3%BB">域及信任关系</a></li>
+</ul>
+</li>
+<li><a href="#0x02-%E6%B4%BB%E5%8A%A8%E7%9B%AE%E5%BD%95">0x02 活动目录</a>
+<ul>
+<li><a href="#%E6%B4%BB%E5%8A%A8%E7%9B%AE%E5%BD%95%E5%8A%9F%E8%83%BD%E7%9A%84%E6%9C%BA%E5%88%B6">活动目录功能的机制</a></li>
+<li><a href="#%E6%B4%BB%E5%8A%A8%E7%9B%AE%E5%BD%95%E4%BF%9D%E5%AD%98%E7%9A%84%E4%BF%A1%E6%81%AF">活动目录保存的信息</a></li>
+<li><a href="#%E6%B4%BB%E5%8A%A8%E7%9B%AE%E5%BD%95%E5%AF%B9%E8%B1%A1">活动目录对象</a></li>
+<li><a href="#%E6%B4%BB%E5%8A%A8%E7%9B%AE%E5%BD%95%E7%BB%84%E4%BB%B6">活动目录组件</a></li>
+</ul>
+</li>
+<li><a href="#0x03-%E7%BB%84%E7%AD%96%E7%95%A5-%E9%85%8D%E7%BD%AE">0x03 组策略、配置</a>
+<ul>
+<li><a href="#%E7%BB%84%E7%AD%96%E7%95%A5%E7%9A%84%E8%AE%BE%E7%BD%AE%E5%AF%B9%E8%B1%A1">组策略的设置对象</a></li>
+<li><a href="#%E7%BB%84%E7%AD%96%E7%95%A5%E7%9A%84%E5%BA%94%E7%94%A8%E9%A1%BA%E5%BA%8F">组策略的应用顺序</a></li>
+<li><a href="#%E7%BB%84%E7%AD%96%E7%95%A5%E7%9A%84%E5%AE%9E%E7%8E%B0">组策略的实现</a></li>
+</ul>
+</li>
+<li><a href="#0x04-%E5%85%AC%E9%92%A5%E5%9F%BA%E7%A1%80%E7%BB%93%E6%9E%84-pki">0x04 公钥基础结构 PKI</a>
+<ul>
+<li><a href="#pki-%E7%9A%84%E7%BB%84%E4%BB%B6">PKI 的组件</a></li>
+<li><a href="#ca-%E7%9A%84%E5%8A%9F%E8%83%BD">CA 的功能</a></li>
+<li><a href="#%E8%AF%81%E4%B9%A6%E7%9A%84%E4%BD%BF%E7%94%A8%E5%8F%8A%E9%AA%8C%E8%AF%81">证书的使用及验证</a></li>
+</ul>
+</li>
+<li><a href="#0x05-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F">0x05 文件系统</a>
+<ul>
+<li><a href="#ntfs-%E6%9D%83%E9%99%90%E5%8F%8A%E5%9C%A8%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E5%AE%9E%E7%8E%B0">NTFS 权限及在文件系统中的实现</a></li>
+<li><a href="#%E5%8A%A0%E5%AF%86%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9Fefs">加密文件系统（EFS）</a>
+<ul>
+<li><a href="#%E5%8A%A0%E8%A7%A3%E5%AF%86%E8%BF%87%E7%A8%8B">加解密过程</a></li>
+<li><a href="#%E5%AF%86%E9%92%A5%E7%AE%A1%E7%90%86">密钥管理</a></li>
+</ul>
+</li>
+<li><a href="#%E7%A3%81%E7%9B%98%E9%85%8D%E9%A2%9D">磁盘配额</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E7%9A%84%E7%AD%96%E7%95%A5%E5%8F%8A-raid-%E6%9C%BA%E5%88%B6%E7%9A%84%E5%87%A0%E7%A7%8D%E5%A4%87%E4%BB%BD%E6%9C%BA%E5%88%B6">数据备份的策略及 RAID 机制的几种备份机制</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E6%9C%BA%E5%88%B6%E5%9F%BA%E4%BA%8E%E5%A4%87%E4%BB%BD-%E9%9D%9E%E5%A4%87%E4%BB%BD">数据恢复机制（基于备份、非备份）</a></li>
+</ul>
+</li>
+<li><a href="#0x06-%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81">0x06 身份验证</a>
+<ul>
+<li><a href="#%E9%92%88%E5%AF%B9%E5%AD%97%E5%85%B8-%E7%A9%B7%E4%B8%BE%E6%94%BB%E5%87%BB%E7%9A%84%E9%98%B2%E8%8C%83%E7%AD%96%E7%95%A5">针对字典、穷举攻击的防范策略</a></li>
+<li><a href="#%E4%BA%A4%E4%BA%92%E5%BC%8F%E6%9C%AC%E5%9C%B0%E7%99%BB%E5%BD%95-%E5%9F%9F%E7%99%BB%E5%BD%95%E5%90%84%E7%BB%84%E4%BB%B6%E4%BD%9C%E7%94%A8">交互式本地登录、域登录各组件作用</a></li>
+<li><a href="#kerberos">Kerberos</a></li>
+</ul>
+</li>
+<li><a href="#0x07-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6">0x07 访问控制</a>
+<ul>
+<li><a href="#windows-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%A8%A1%E5%9E%8B%E5%8F%8A%E7%BB%84%E4%BB%B6">Windows 访问控制模型及组件</a></li>
+<li><a href="#%E4%B8%BB%E4%BD%93%E5%92%8C%E5%AE%A2%E4%BD%93%E7%9A%84%E5%AE%89%E5%85%A8%E6%8F%8F%E8%BF%B0">主体和客体的安全描述</a></li>
+<li><a href="#%E5%AE%A2%E4%BD%93%E4%B8%AD%E7%AD%96%E7%95%A5%E7%9A%84%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95">客体中策略的冲突解决办法</a></li>
+<li><a href="#%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E5%AE%9E%E7%8E%B0">分布式访问控制实现</a></li>
+</ul>
+</li>
+<li><a href="#0x08-%E4%BC%A0%E8%BE%93%E5%AE%89%E5%85%A8">0x08 传输安全</a>
+<ul>
+<li><a href="#ipsec">IPSec</a>
+<ul>
+<li><a href="#%E5%B0%81%E8%A3%85%E6%A8%A1%E5%BC%8F">封装模式</a></li>
+<li><a href="#%E5%B0%81%E8%A3%85%E5%8D%8F%E8%AE%AE">封装协议</a></li>
+</ul>
+</li>
+<li><a href="#%E7%9B%B4%E6%8E%A5%E8%AE%BF%E9%97%AE%E4%B8%BB%E6%9C%BA%E5%AF%B9%E4%B8%BB%E6%9C%BA">直接访问（主机对主机）</a>
+<ul>
+<li><a href="#%E9%BB%98%E8%AE%A4%E7%AD%96%E7%95%A5">默认策略</a></li>
+<li><a href="#%E5%BB%BA%E7%AB%8B%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%89%E5%85%A8%E7%AD%96%E7%95%A5">建立自定义安全策略</a></li>
+</ul>
+</li>
+<li><a href="#vpn-%E8%AE%BF%E9%97%AE">VPN 访问</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2020-06-10-Cyber-Attack-and-Denfense-Memo/">
+                <h3 class="post-title" style="text-align: left;">
+                  网络攻击与防御课程复习笔记
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2020-05-25-AD-Pentest-Hidden-Tunnel/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  内网渗透测试 &lt;3&gt; 隧道技术
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

