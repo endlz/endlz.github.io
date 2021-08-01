@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CTF 中常见的内存取证工具使用方法 | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="CTF 中常见的内存取证工具使用方法 | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="CTF 中常见的内存取证工具使用方法 | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -24,8 +24,8 @@ volatility 是一款内存取证和分析工具，可以对 Procdump 等工具 d
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -94,11 +94,11 @@ volatility 是一款内存取证和分析工具，可以对 Procdump 等工具 d
               <span class="page-view" key="20191123203918" title="CTF 中常见的内存取证工具使用方法">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/msic/" class="post-tag">
+                <a href="https://3nd.xyz/tag/msic/" class="post-tag">
                   # Msic
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                <a href="https://3nd.xyz/tag/ctf/" class="post-tag">
                   # CTF
                 </a>
                 
@@ -118,17 +118,17 @@ volatility 是一款内存取证和分析工具，可以对 Procdump 等工具 d
 <p><code>imageingo</code> 标识操作系统，Service Pack和硬件体系结构（32位或64位），其输出用于在使用其他插件时将参数传递给 <code>-profile = PROFILE</code> 的建议配置文件。</p>
 <pre><code class="language-bash">volatility -f 1.raw imageinfo
 </code></pre>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-23-20-50-03.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/2019-11-23-20-50-03.png" alt="" loading="lazy"></figure>
 <h3 id="processes-and-dlls">Processes and DLLs</h3>
 <h4 id="pslist">pslist</h4>
 <p><code>pslist</code> 将遍历由PsActiveProcessHead指向的双向链接列表，并显示偏移量，进程名称，进程ID，父进程ID，线程数，句柄数以及进程启动和退出时的日期/时间。 从2.1版本开始，它还显示会话ID，以及进程是否为Wow64进程（它在64位内核上使用32位地址空间）。</p>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-23-21-02-53.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/2019-11-23-21-02-53.png" alt="" loading="lazy"></figure>
 <h4 id="pstree">pstree</h4>
 <p><code>pstree</code> 命令用于以树形形式查看进程列表。它使用与 pslist 相同的技术枚举进程，因此也不会显示隐藏或未链接的进程。子进程使用缩进和句点表示。</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-23-21-06-00.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/2019-11-23-21-06-00.png" alt="" loading="lazy"></figure>
 <h4 id="cmdscan">cmdscan</h4>
 <p><code>cmdscan</code> 插件在 XP / 2003 / Vista / 2008 上的 csrss.exe 和 Windows 7 上的 conhost.exe 的内存中搜索攻击者通过控制台外壳（cmd.exe）输入的命令。 这是最强大的命令之一，无论他们是通过 RDP 会话打开 cmd.exe 还是通过网络后门代理到命令 Shell 的代理输入/输出，您都可以使用它们来获取对受害者系统上攻击者操作的了解。</p>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-23-21-10-45.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/2019-11-23-21-10-45.png" alt="" loading="lazy"></figure>
 <h3 id="process-memory">Process Memory</h3>
 <h4 id="memdump">memdump</h4>
 <p><code>memdump</code> 插件用于将进程中的所有内存驻留页面提取到单个文件中，指定输出目录 <code>-D</code> 或 <code>--dump-dir = DIR</code>。</p>
@@ -139,7 +139,7 @@ volatility 是一款内存取证和分析工具，可以对 Procdump 等工具 d
 <h3 id="kernel-memory-and-objects">Kernel Memory and Objects</h3>
 <h4 id="filescan">filescan</h4>
 <p><code>filescan</code> 插件使用 pool tag 在物理内存中查找 FILE_OBJECT，即使 rootkit 正在将文件隐藏在磁盘上，或 rootkit 挂钩了一些 API 函数以隐藏实时系统上的打开句柄，也可以找到打开的文件。 输出显示 FILE_OBJECT 的物理偏移量，文件名，指向对象的指针数量，指向对象的句柄数量以及授予对象的有效权限。</p>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-23-21-24-36.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/2019-11-23-21-24-36.png" alt="" loading="lazy"></figure>
 <h4 id="dumpfiles">dumpfiles</h4>
 <p>在访问和使用文件时，OS 将文件缓存在内存中以提高系统性能。<code>dumpfiles</code> 插件可从内存中提取出这些文件。</p>
 <pre><code class="language-bash">  -r REGEX, --regex=REGEX
@@ -159,16 +159,16 @@ volatility 是一款内存取证和分析工具，可以对 Procdump 等工具 d
   -F FILTER, --filter=FILTER
                         Filters to apply (comma-separated)
 </code></pre>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-23-21-29-48.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/2019-11-23-21-29-48.png" alt="" loading="lazy"></figure>
 <h3 id="something-else">Something else</h3>
 <h4 id="netscan">netscan</h4>
 <p><code>netscan</code> 用于扫描建立的连接和套接字，类似于 netstat，打印 TCP端点、TCP侦听器、UDP端点和UDP侦听器。它区分IPv4和IPv6，打印本地和远程 IP 、本地和远程端口、套接字绑定或建立连接的时间以及当前状态。</p>
 <h4 id="hashdump">hashdump</h4>
 <p><code>hashdump</code> 插件用于提取和解密存储在注册表中的缓存域凭据。</p>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-23-20-57-03.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/2019-11-23-20-57-03.png" alt="" loading="lazy"></figure>
 <h4 id="screenshot">screenshot</h4>
 <p><code>screenshot</code> 显示GDI样式的截屏。</p>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-23-20-52-01.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/2019-11-23-20-52-01.png" alt="" loading="lazy"></figure>
 <h2 id="foremost">Foremost</h2>
 <p>Foremost 是基于文件开始格式，文件结束标志和内部数据结构进行恢复文件的程序。</p>
 <pre><code class="language-bash">foremost [-v|-V|-h|-T|-Q|-q|-a|-w-d] [-t] [-s] [-k] [-b] [-c] [-o] [-i &lt;file]
@@ -259,7 +259,7 @@ volatility 是一款内存取证和分析工具，可以对 Procdump 等工具 d
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-11-25-PHP无参数实现RCE/">
+              <a href="https://3nd.xyz/post/2019-11-25-PHP无参数实现RCE/">
                 <h3 class="post-title" style="text-align: left;">
                   PHP 无参数实现 RCE - boring_code
                 </h3>
@@ -270,7 +270,7 @@ volatility 是一款内存取证和分析工具，可以对 Procdump 等工具 d
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-11-13-phpinfo-memo/">
+              <a href="https://3nd.xyz/post/2019-11-13-phpinfo-memo/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   Just something about phpinfo
@@ -284,7 +284,7 @@ volatility 是一款内存取证和分析工具，可以对 Procdump 等工具 d
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

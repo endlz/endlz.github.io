@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>PHP Bypass Disable_functions | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="PHP Bypass Disable_functions | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="PHP Bypass Disable_functions | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -24,8 +24,8 @@
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -94,7 +94,7 @@
               <span class="page-view" key="20191106222351" title="PHP Bypass Disable_functions">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/php/" class="post-tag">
+                <a href="https://3nd.xyz/tag/php/" class="post-tag">
                   # PHP
                 </a>
                 
@@ -123,7 +123,7 @@
 <pre><code class="language-php">assert,system,passthru,exec,pcntl_exec,shell_exec,popen,proc_open,``
 </code></pre>
 <p>eg: pctnl_exec(): <code>--enable-pcntl</code></p>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-20-08-39-44.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/2019-11-20-08-39-44.png" alt="" loading="lazy"></figure>
 <pre><code class="language-php">&lt;?php pcntl_exec(&quot;/bin/cat&quot;, array(&quot;/flag&quot;));?&gt;
 </code></pre>
 <h2 id="0x02-windows-com">0x02 Windows COM</h2>
@@ -152,7 +152,7 @@ echo $stroutput;
 <p>* 当 <code>error_log</code>的第二个参数 <code>message_type</code> 的值为 1 的时候，会调用 mail 函数的同一个内置函数 sendmail：</p>
 <pre><code class="language-php">error_log ( string $message [, int $message_type = 0 [, string $destination [, string $extra_headers ]]] ) : bool
 </code></pre>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-20-09-27-50.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/2019-11-20-09-27-50.png" alt="" loading="lazy"></figure>
 <pre><code class="language-php">PHP mail() -&gt; /usr/sbin/sendmail -&gt; getuid() -&gt; exec()
 </code></pre>
 <p><strong>攻击思路:</strong></p>
@@ -169,15 +169,15 @@ echo $stroutput;
 </ol>
 <p><strong>调用过程分析：</strong></p>
 <p>查看 sendmail 可能调用的系统 API 明细；</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-18-11-02-07.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/2019-11-18-11-02-07.png" alt="" loading="lazy"></figure>
 <p><code>man 2 getuid</code> 查看 getuid 函数原型：</p>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-18-11-04-19.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/2019-11-18-11-04-19.png" alt="" loading="lazy"></figure>
 <p>查看 PHP mail() 是否启动新进程:</p>
 <pre><code class="language-php">&lt;?php mail('a','b','c','d'); ?&gt;
 </code></pre>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-18-11-15-59.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/2019-11-18-11-15-59.png" alt="" loading="lazy"></figure>
 <p>* 留意到 <code>/bin/bash</code> 启动时同样调用了 <code>getuid</code>（那么如果别的环境和上述情况一致，在 mail() 中存在启动 execve 调用了 /bin/sh 程序来间接调用 sendmail 的这种情况，即使目标系统未安装或未开启 sendmail 程序，我仍然可以通过 PHP 的 mail() 函数来触发调用了 /bin/sh 程序的 execve，从而调用 getuid() 达到执行劫持函数的目的。）</p>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-18-11-18-23.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/2019-11-18-11-18-23.png" alt="" loading="lazy"></figure>
 <p><strong>攻击利用:</strong></p>
 <p>编写 evil.c，劫持 getuid()，获取 LD_PRELOAD 环境变量并预加载恶意的共享库，再删除环境变量 LD_PRELOAD，最后执行由 EVIL_CMDLINE 环境变量获取的系统命令：</p>
 <pre><code class="language-c++">#include &lt;stdlib.h&gt;
@@ -317,7 +317,7 @@ echo(serialize(new A()));
 <h2 id="0x05-bash-shellshock">0x05 Bash ShellShock</h2>
 <p>这种利用方法的前提是目标 OS 存在 Bash破壳（CVE-2014-6271）漏洞，该漏洞的具体介绍可参考: <a href="https://www.freebuf.com/news/48331.html">破壳漏洞（CVE-2014-6271）综合分析：“破壳”漏洞系列分析之一</a></p>
 <p><strong>Bash 破壳漏洞成因</strong>：目前的 Bash 使用的环境变量是通过函数名称来调用的，导致漏洞出问题是以 <code>(){</code> 开头定义的环境变量在命令 ENV 中解析成函数后，Bash 执行并未退出，而是继续解析并执行 shell 命令。而其核心的原因在于在输入的过滤中没有严格限制边界，也没有做出合法化的参数判断。</p>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-20-08-11-20.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/2019-11-20-08-11-20.png" alt="" loading="lazy"></figure>
 <p>mail.c 中 mail() 函数的第五个参数 extra_cmd:</p>
 <pre><code class="language-c++">if (extra_cmd != NULL) {
 	spprintf(&amp;sendmail_cmd, 0,&quot;%s %s&quot;, sendmail_path, extra_cmd);
@@ -390,7 +390,7 @@ flag
 <p><strong>imap_open()</strong>:</p>
 <pre><code class="language-php">resource imap_open ( string $mailbox , string $username , string $password [, int $options = 0 [, int $n_retries = 0 [, array $params = NULL ]]] )
 </code></pre>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-20-08-22-02.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/2019-11-20-08-22-02.png" alt="" loading="lazy"></figure>
 <p>mailbox 参数的值由服务器名和服务器上的 mailbox 文件路径所组成，INBOX 代表的是当前用户的个人邮箱。比如，我们可以通过如下方式来设置 mailbox 参数：</p>
 <pre><code class="language-php">$mbox = imap_open (&quot;{localhost:993/PROTOCOL/FLAG}INBOX&quot;, &quot;user_id&quot;, &quot;password&quot;);
 </code></pre>
@@ -498,7 +498,7 @@ echo file_get_contents($data_file);
 strace -f php image.php 2&gt;&amp;1 | grep -C2 execve
 </code></pre>
 <p>查看 <code>/usr/bin/gs</code> 看一下这个程序都有哪些符号：</p>
-<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-20-10-02-15.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://3nd.xyz/post-images/move/2019-11-20-10-02-15.png" alt="" loading="lazy"></figure>
 <p>从符号中可以看出他调用的库函数，选择 <code>fflush</code> 这个函数来进行劫持：</p>
 <pre><code class="language-c++">#include &lt;string.h&gt;
 void payload() {
@@ -592,7 +592,7 @@ $img = new Imagick('/tmp/3accb9900a8be5421641fb31e6861f33/1.ept');
 <p>.htaccess Allowed &amp; Writeable</p>
 </li>
 </ol>
-<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-20-10-49-54.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://3nd.xyz/post-images/move/2019-11-20-10-49-54.png" alt="" loading="lazy"></figure>
 <blockquote>
 <p>任何具有mime类型application/x-httpd-cgi或者被 cgi-script处理器(Apache 1.1或以后版本)处理的文件将被作为CGI脚本对待并由服务器运行, 它的输出将被返回给客户端。通过两种途径使文件成为CGI脚本，或者文件具有已由 AddType指令定义的扩展名，或者文件位于 ScriptAlias目录中。</p>
 </blockquote>
@@ -687,7 +687,7 @@ else
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-11-12-2019-RedHat-CTF-md/">
+              <a href="https://3nd.xyz/post/2019-11-12-2019-RedHat-CTF-md/">
                 <h3 class="post-title" style="text-align: left;">
                   第三届红帽杯线上赛 RedHat 2019 Writeup
                 </h3>
@@ -698,7 +698,7 @@ else
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-10-26-2019-anhengbei-first/">
+              <a href="https://3nd.xyz/post/2019-10-26-2019-anhengbei-first/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   2019 全国大学生软件测试大赛预选赛
@@ -712,7 +712,7 @@ else
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

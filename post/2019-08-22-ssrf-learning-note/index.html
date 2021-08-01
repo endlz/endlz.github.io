@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SSRF 服务端请求伪造漏洞与利用学习 | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="SSRF 服务端请求伪造漏洞与利用学习 | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="SSRF 服务端请求伪造漏洞与利用学习 | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -25,8 +25,8 @@ SSRF(Server-Side Request Forgery)服务端请求伪造，是一种由攻击者�
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -95,11 +95,11 @@ SSRF(Server-Side Request Forgery)服务端请求伪造，是一种由攻击者�
               <span class="page-view" key="20190822214748" title="SSRF 服务端请求伪造漏洞与利用学习">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/summary/" class="post-tag">
+                <a href="https://3nd.xyz/tag/summary/" class="post-tag">
                   # Summary
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ssrf/" class="post-tag">
+                <a href="https://3nd.xyz/tag/ssrf/" class="post-tag">
                   # SSRF
                 </a>
                 
@@ -110,7 +110,7 @@ SSRF(Server-Side Request Forgery)服务端请求伪造，是一种由攻击者�
                     <h2 id="0x01-原理与危害">0X01 原理与危害</h2>
 <h3 id="原理">原理</h3>
 <p>SSRF(Server-Side Request Forgery)服务端请求伪造，是一种由攻击者构造<code>形成由服务端发起请求</code>的一个安全漏洞，目标是从外网无法访问的内部系统，利用漏洞伪造服务端发起请求，从而突破客户端获取不到的数据限制。<strong>对外发起网络请求</strong>的地方都可能存在SSRF漏洞。</p>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-22-19-21-11.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/2019-08-22-19-21-11.png" alt="" loading="lazy"></figure>
 <h3 id="危害">危害</h3>
 <p>1.可以对外网、服务器所在内网，本地进行端口扫描，获取一些服务的Banner信息；</p>
 <p>2.攻击运行在内网或本地的应用程序，向内部任意主机的任意端口发送精心构造的数据包；</p>
@@ -232,7 +232,7 @@ $url = $_GET['url'];
 curl($url); 
 </code></pre>
 <p>cURL请求兼容多种协议，其中包含了dict、file、gopher等协议，可用于文件读取，且支持URL编码自解码，可进行绕过。</p>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-22-19-55-13.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/2019-08-22-19-55-13.png" alt="" loading="lazy"></figure>
 <h3 id="bypass-tricks">bypass tricks</h3>
 <p>1.添加端口</p>
 <p>2.短网址302跳转，但是会有跳转的限制:<a href="http://suo.im/">suo.im</a></p>
@@ -309,7 +309,7 @@ if(isset($_GET['url'])){
 <p>1.<code>substr($_GET['url'], strlen('http://'), strlen('baidu.com')) === 'baidu.com')</code>:判断url[7:15] == <code>baidu.com</code>.</p>
 <p>2.<code>$url['host']== 'baidu'</code>:<code>parse_url</code>处理后的host为<code>baidu.com</code>.</p>
 <p>==&gt; url[7:15]!=baidu.com &amp;&amp; url['host']==baidu.com(parse_url)</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-22-20-47-09.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/2019-08-22-20-47-09.png" alt="" loading="lazy"></figure>
 <p>Payload:</p>
 <pre><code class="language-php">file://@baidu.com/flag.txt
 </code></pre>
@@ -467,7 +467,7 @@ cript:alert(1)&quot;&gt;中换行符&lt;/a&gt;&lt;br&gt;
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-08-23-2019-De1taCTF/">
+              <a href="https://3nd.xyz/post/2019-08-23-2019-De1taCTF/">
                 <h3 class="post-title" style="text-align: left;">
                   De1ta CTF 2019 Web Writeup
                 </h3>
@@ -478,7 +478,7 @@ cript:alert(1)&quot;&gt;中换行符&lt;/a&gt;&lt;br&gt;
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-08-22-zhongguanchun-ctf/">
+              <a href="https://3nd.xyz/post/2019-08-22-zhongguanchun-ctf/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   中关村网络与信息安全领域专项赛 Web&amp;Misc
@@ -492,7 +492,7 @@ cript:alert(1)&quot;&gt;中换行符&lt;/a&gt;&lt;br&gt;
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

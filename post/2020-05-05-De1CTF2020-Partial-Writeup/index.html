@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>De1CTF 2020 Partial Writeup | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="De1CTF 2020 Partial Writeup | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="De1CTF 2020 Partial Writeup | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -27,8 +27,8 @@ perl|..." />
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -97,11 +97,11 @@ perl|..." />
               <span class="page-view" key="20200505170254" title="De1CTF 2020 Partial Writeup">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                <a href="https://3nd.xyz/tag/writeup/" class="post-tag">
                   # Writeup
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                <a href="https://3nd.xyz/tag/ctf/" class="post-tag">
                   # CTF
                 </a>
                 
@@ -159,7 +159,7 @@ hp .asp
 <p>下载得到 readme.zip，解压获取 readme.docx，binwalk -e readme.docx 获取 You_found_me_Orz.zip。</p>
 <p>根据密码长度为 6 位，前两位为 <code>DE</code> 使用 APCHPR 进行暴力破解，得到解压密码 <code>DE34Q1</code>，得到 You_found_me_Orz.jpg，进一步 binwalk 分离出压缩文件.</p>
 <p>通过 <code>7zip</code> 发现交替数据流，系 NTFS 隐写（可参考<a href="https://www.qingsword.com/qing/812.html">利用NTFS交换数据流隐藏文件</a>）.</p>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-05-05-17-39-43.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/2020-05-05-17-39-43.png" alt="" loading="lazy"></figure>
 <p>获取到 flag: De1CTF{E4Sy_M1sc_By_Jaivy_31b229908cb9bb}.</p>
 <h3 id="mc_joinin">mc_joinin</h3>
 <p>Hurry up and join in the game.<br>
@@ -170,31 +170,31 @@ We are waiting for you.</p>
 Headless: Client isn't necessary. 
 </code></pre>
 <p>首先尝试通过 HMCL 启动器安装 Java 1.12 版本的游戏资源，尝试离线模式加入多人游戏。</p>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-05-05-17-46-26.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/2020-05-05-17-46-26.png" alt="" loading="lazy"></figure>
 <p>提示版本不兼容，无法连接至服务器。</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-05-05-17-46-37.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/2020-05-05-17-46-37.png" alt="" loading="lazy"></figure>
 <p>在 Github 上检索 Minecraft client 找到仓库 <a href="https://github.com/ammaraskar/pyCraft">pyCraft</a>：</p>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-05-05-17-46-49.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/2020-05-05-17-46-49.png" alt="" loading="lazy"></figure>
 <p>运行 pyCraft start.py 尝试连接服务器时提示：</p>
 <pre><code>VersionMismatch: Server's protocol version of 997 (MC2020) is not supported.
 </code></pre>
 <p>在 <code>./minecraft/__init__.py</code> 中 229 行添加：<code>'MC2020': 997,</code>，再次尝试：</p>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-05-05-17-47-30.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/2020-05-05-17-47-30.png" alt="" loading="lazy"></figure>
 <p>成功连接到服务器， Wireshark 捕获流量进行分析：</p>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-05-05-17-47-50.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/2020-05-05-17-47-50.png" alt="" loading="lazy"></figure>
 <p>HIDE FLAG ONE imgur.com/a/ZOrErVM，进而获取到图片：</p>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-05-05-17-48-00.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/2020-05-05-17-48-00.png" alt="" loading="lazy"></figure>
 <p>StegSolve 检查时在 Red plane 1 通道获取到隐写信息：</p>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-05-05-17-48-08.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/2020-05-05-17-48-08.png" alt="" loading="lazy"></figure>
 <p>对图片进行旋转反向变换后获取到 De1CTF{MC2020_Pr0to3l_Is_Funny-ISn't_It?}.</p>
-<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-05-05-17-48-23.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://3nd.xyz/post-images/move/2020-05-05-17-48-23.png" alt="" loading="lazy"></figure>
 <p>最终 flag: De1CTF{33426ff09d87c2c988f1c3ff250bcd72}.</p>
 <h3 id="life">Life</h3>
 <p>No Game No Life!</p>
-<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-05-05-17-50-03.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://3nd.xyz/post-images/move/2020-05-05-17-50-03.png" alt="" loading="lazy"></figure>
 <p>binwalk 检查 game.jpg 发现有附件文件，<code>-e</code> 进行分离：</p>
 <p>获取到加密压缩包 flag.zip （内含 txt.pilf.txt）及 passphare.png，需要从 png 中获取 key 解压 flag.zip，passphare.png（27 * 27） 如下：</p>
-<figure data-type="image" tabindex="11"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-05-05-17-50-15.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://3nd.xyz/post-images/move/2020-05-05-17-50-15.png" alt="" loading="lazy"></figure>
 <p>尝试作为 QR 、DataMatrix 进行修复识别无果，后通过 Google 搜索 &quot;CTF&quot; &quot;life&quot; &quot;game&quot; 时发现该图很可能出自 <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">Conway's Game of Life</a>（一款模拟细胞演变状态的细胞自动机）。</p>
 <p>参考 <a href="https://medium.com/ctf-writeups/sunshine-ctf-2019-write-up-c7174c0fb56">Sunshine CTF 2019 Golly Gee Willikers</a> , 首先将 passphare.png 转换为 01 矩阵如下：</p>
 <pre><code>000000000000010000000000000
@@ -270,7 +270,7 @@ print(header + content)
 13bo13b$27b$2bo10bo13b$5bobo2bobo4bo2bob2o3b$3b2obob2o2bob4ob2o2bo3b$3bobobobobo5bob2obo4b$bobo5bo5b2o7bo2b$3b2obob2ob2o2bobobo2bo4b$3bobobobobob2o2b2ob2o2bo2b$4bobobo4bo3bo2b2obo3b$3bo5bob2o2b2o7b3o$7b4o3bob2o2b2ob2obo$2bobo2bo6bo3b2o5bob$5b3o2bob2o3bo2b2obob2o$2bobo2b2ob2o3bo6bo2b2o$3bob4o3b2obo2b4o3bob$5b2o6b2o2bobobobob2o$4bo2b2o2b3o2bobobob2ob2o$2b2o4b2o2bobo4bo3bo2bo$6bo2bobo3bob2o6b2o$3o2b2o2bo2b2o3bo2b4ob2o$b3o2bo3bob3obo3bobo2bob$o7bo3bo4b2obo2bob2o$o2bo6bo2bo4b2o4b2ob$obob4obo2b7o2b2o2bob$o3b7ob2ob2o2b7ob$2bo2bo4b4o2b3obobo2b2o$
 </code></pre>
 <p>观察下一个 Step 发现 QR Code，获取到 key: AJTC8ADEVRA13AR.</p>
-<figure data-type="image" tabindex="12"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-05-05-17-51-19.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://3nd.xyz/post-images/move/2020-05-05-17-51-19.png" alt="" loading="lazy"></figure>
 <p>进而解压获取到 txt.pilf.txt , 对其内容 flip 反转后 Base64 解码，再次反转后 Base16 解码获取到 flag.</p>
 <pre><code class="language-sh">txt.pilf.txt &gt; 0QjN1MTM0MTN0QjN3ImNjNzM3QTNmdTN3MTNmdzMzcjNxcjM3QTNmdDN2gzMzUjZ2czM0YDZzMjMxcDZ
 flip &gt; ZDcxMjMzZDY0Mzc2ZjUzMzg2NDdmNTQ3MjcxNjczMzdmNTM3NTdmNTQ3MzNjNmI3NjQ0NTM0MTM1NjQ0
@@ -323,7 +323,7 @@ b16_decode &gt; De1CTF{l3t_us_s7art_th3_g4m3!}
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2020-05-11-2020-wdbctf-qlz-writeup/">
+              <a href="https://3nd.xyz/post/2020-05-11-2020-wdbctf-qlz-writeup/">
                 <h3 class="post-title" style="text-align: left;">
                   2020 网鼎杯青龙组部分题解
                 </h3>
@@ -334,7 +334,7 @@ b16_decode &gt; De1CTF{l3t_us_s7art_th3_g4m3!}
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2020-01-05-Java-Course-Review/">
+              <a href="https://3nd.xyz/post/2020-01-05-Java-Course-Review/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   Java Course Review Note
@@ -348,7 +348,7 @@ b16_decode &gt; De1CTF{l3t_us_s7art_th3_g4m3!}
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

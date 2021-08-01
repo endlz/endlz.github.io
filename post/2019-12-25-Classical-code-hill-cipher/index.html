@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Classical Code Hill Cipher | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Classical Code Hill Cipher | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Classical Code Hill Cipher | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -25,8 +25,8 @@
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -95,11 +95,11 @@
               <span class="page-view" key="20191225165532" title="Classical Code Hill Cipher">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/crypto/" class="post-tag">
+                <a href="https://3nd.xyz/tag/crypto/" class="post-tag">
                   # Crypto
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/course/" class="post-tag">
+                <a href="https://3nd.xyz/tag/course/" class="post-tag">
                   # Course
                 </a>
                 
@@ -112,9 +112,9 @@
 <p>每个字母当作 26 进制数字：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi><mo>=</mo><mn>0</mn><mo separator="true">,</mo><mi>B</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mi>C</mi><mo>=</mo><mn>2...</mn></mrow><annotation encoding="application/x-tex">A=0, B=1, C=2...</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">A</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span></span></span></span> 一串字母当成 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> 维向量，跟一个 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>×</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">n×n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> 的矩阵相乘，再将得出的结果模 26。</p>
 <p>注意用作加密的矩阵（即<strong>密匙</strong>）在 <span class='katex-error' title='ParseError: KaTeX parse error: Expected &#039;}&#039;, got &#039;EOF&#039; at end of input: …{Z\}\}_{26}^{n}'>{\mathbb  {Z\}\}_{26}^{n}</span> 必须是可逆的，否则就不可能解码。只有矩阵的行列式和 26 互质，才是可逆的。</p>
 <p><strong>*</strong> <strong>编码:</strong></p>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-12-25-17-13-06.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/2019-12-25-17-13-06.png" alt="" loading="lazy"></figure>
 <p><strong>*</strong> <strong>解码:</strong></p>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-12-25-17-14-28.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/2019-12-25-17-14-28.png" alt="" loading="lazy"></figure>
 <h4 id="python-实现">Python 实现</h4>
 <ul>
 <li>字母表、字符串与矩阵的转化</li>
@@ -245,7 +245,7 @@ if __name__==&quot;__main__&quot;:
     print crack(cipher, key_enc, alpha26)
 </code></pre>
 <p>运行测试：</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-12-25-17-28-18.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/2019-12-25-17-28-18.png" alt="" loading="lazy"></figure>
 
                   </div>
                   <div class="toc-container">
@@ -281,7 +281,7 @@ if __name__==&quot;__main__&quot;:
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-12-25-Linear-feedback-shift-register/">
+              <a href="https://3nd.xyz/post/2019-12-25-Linear-feedback-shift-register/">
                 <h3 class="post-title" style="text-align: left;">
                   Linear Feedback Shift Register
                 </h3>
@@ -292,7 +292,7 @@ if __name__==&quot;__main__&quot;:
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-12-24-crypto-hash-md5/">
+              <a href="https://3nd.xyz/post/2019-12-24-crypto-hash-md5/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   Message-Digest Algorithm 5 - MD5
@@ -306,7 +306,7 @@ if __name__==&quot;__main__&quot;:
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

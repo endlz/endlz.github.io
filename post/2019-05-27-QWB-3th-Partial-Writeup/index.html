@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>QWB 3th Partial Writeup | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="QWB 3th Partial Writeup | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="QWB 3th Partial Writeup | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -28,8 +28,8 @@ upload
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -98,11 +98,11 @@ upload
               <span class="page-view" key="20190527171100" title="QWB 3th Partial Writeup">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                <a href="https://3nd.xyz/tag/writeup/" class="post-tag">
                   # Writeup
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                <a href="https://3nd.xyz/tag/ctf/" class="post-tag">
                   # CTF
                 </a>
                 
@@ -112,19 +112,19 @@ upload
                   <div class="post-content">
                     <h2 id="web">Web</h2>
 <h3 id="upload">upload</h3>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1558948442888-657f6dce-0927-484d-9b39-5a6923ab1e5e.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/1558948442888-657f6dce-0927-484d-9b39-5a6923ab1e5e.png" alt="" loading="lazy"></figure>
 <p>首先进行<strong>信息搜集</strong>，<code>dirsearch</code>探测发现存在<code>robots.txt</code>、<code>/upload/</code>、<code>www.tar.gz</code>，下载源代码进行审计。</p>
 <p>网站主要包含注册、登录、上传图片三个功能点，<code>/upload/</code>目录可查看已上传图片。</p>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-13-21-40-39.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/2019-08-13-21-40-39.png" alt="" loading="lazy"></figure>
 <p>Cookie中<code>user</code>字段经过URL和Base64解码后发现如下序列化内容：</p>
 <pre><code class="language-php">a:5:{s:2:&quot;ID&quot;;i:3;s:8:&quot;username&quot;;s:3:&quot;3nd&quot;;s:5:&quot;email&quot;;s:11:&quot;3nd@3nd.xyz&quot;;s:8:&quot;password&quot;;s:32:&quot;9ee7098eadd66450d552896a0685ea09&quot;;s:3:&quot;img&quot;;N;}
 </code></pre>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-13-21-49-54.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/2019-08-13-21-49-54.png" alt="" loading="lazy"></figure>
 <p>上传图片后Cookie user字段解码如下:</p>
 <pre><code class="language-php">a:5:{s:2:&quot;ID&quot;;i:3;s:8:&quot;username&quot;;s:3:&quot;3nd&quot;;s:5:&quot;email&quot;;s:11:&quot;3nd@3nd.xyz&quot;;s:8:&quot;password&quot;;s:32:&quot;9ee7098eadd66450d552896a0685ea09&quot;;s:3:&quot;img&quot;;s:79:&quot;../upload/0411907e87757c2a5825a731923b7f93/5dce9218e9bcd30e209e6a6685489808.png&quot;;}
 </code></pre>
 <p>至此猜测可能存在<strong>反序列化</strong>的利用点，下面对源代码进行审计。</p>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-13-21-53-07.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/2019-08-13-21-53-07.png" alt="" loading="lazy"></figure>
 <p>定位到<code>\application\web\controller\</code>中以下文件:</p>
 <pre><code class="language-bash">Index.php
 Profile.php
@@ -268,8 +268,8 @@ $x-&gt;checker = new Profile();
 echo base64_encode(serialize($x));
 </code></pre>
 <p>攻击流程流程：上传含恶意代码的图片文件-&gt;复制图片地址，根据exp生成序列化数据-&gt;访问首页替换Cookie中的user字段触发函数生成3nd.php-&gt;访问3nd.php，getshell执行命令获取flag。</p>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-13-22-58-21.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-13-22-58-47.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/2019-08-13-22-58-21.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/2019-08-13-22-58-47.png" alt="" loading="lazy"></figure>
 <h3 id="高明的黑客">高明的黑客</h3>
 <blockquote>
 <p>雁过留声，人过留名，此网站已被黑</p>
@@ -447,7 +447,7 @@ sql语句查询的，也就可以使⽤ 预处理：</p>
 [DIR]   vendor/         2019-04-02 20:58    -	 
 Apache/2.4.18 (Ubuntu) Server at 117.78.28.89 Port 30910
 </code></pre>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1558953551013-2005b272-8437-410f-b11c-2ad1e97816f0.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/1558953551013-2005b272-8437-410f-b11c-2ad1e97816f0.png" alt="" loading="lazy"></figure>
 <ul>
 <li>参考: <a href="https://www.kingkk.com/2018/12/ThinkPHP5-x-%E5%89%8D%E5%8F%B0getshell%E5%88%86%E6%9E%90/#%E6%9C%80%E5%90%8E">ThinkPHP5.x 前台getshell分析</a></li>
 </ul>
@@ -467,7 +467,7 @@ Apache/2.4.18 (Ubuntu) Server at 117.78.28.89 Port 30910
 </code></pre>
 <h2 id="misc">Misc</h2>
 <h3 id="强网先锋-打野">强网先锋-打野</h3>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1559055148609-b5e24fa0-49b0-409c-8d7f-cf72519f351c.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/1559055148609-b5e24fa0-49b0-409c-8d7f-cf72519f351c.png" alt="" loading="lazy"></figure>
 <blockquote>
 <p><a href="https://github.com/zed-0xff/zsteg">zsteg</a>是俄罗斯黑客开发的一款开源工具，专用于检测 PNG 与 BMP 格式图片中的隐写信息，用 Ruby 语言开发，gem install zsteg即可安装使用。</p>
 </blockquote>
@@ -544,7 +544,7 @@ b4,b,lsb,xY         .. text: &quot;gfffffvwgwfgwwfw&quot;
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-08-22-zhongguanchun-ctf/">
+              <a href="https://3nd.xyz/post/2019-08-22-zhongguanchun-ctf/">
                 <h3 class="post-title" style="text-align: left;">
                   中关村网络与信息安全领域专项赛 Web&amp;Misc
                 </h3>
@@ -555,7 +555,7 @@ b4,b,lsb,xY         .. text: &quot;gfffffvwgwfgwwfw&quot;
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-05-26-SQLi-labs-Challenges/">
+              <a href="https://3nd.xyz/post/2019-05-26-SQLi-labs-Challenges/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   SQLi-labs Challenges
@@ -569,7 +569,7 @@ b4,b,lsb,xY         .. text: &quot;gfffffvwgwfgwwfw&quot;
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

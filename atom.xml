@@ -1,82 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://github.com/inspiringz/inspiringz.github.io</id>
+    <id>https://3nd.xyz</id>
     <title>3ND</title>
-    <updated>2021-08-01T12:37:59.159Z</updated>
+    <updated>2021-08-01T12:41:40.632Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://github.com/inspiringz/inspiringz.github.io"/>
-    <link rel="self" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml"/>
+    <link rel="alternate" href="https://3nd.xyz"/>
+    <link rel="self" href="https://3nd.xyz/atom.xml"/>
     <subtitle>夏が終わった</subtitle>
-    <logo>https://github.com/inspiringz/inspiringz.github.io/images/avatar.png</logo>
-    <icon>https://github.com/inspiringz/inspiringz.github.io/favicon.ico</icon>
+    <logo>https://3nd.xyz/images/avatar.png</logo>
+    <icon>https://3nd.xyz/favicon.ico</icon>
     <rights>All rights reserved 2021, 3ND</rights>
     <entry>
         <title type="html"><![CDATA[Java Security Study Notes (Basic)]]></title>
-        <id>https://github.com/inspiringz/inspiringz.github.io/post/2021-02-08-java-security-learning/</id>
-        <link href="https://github.com/inspiringz/inspiringz.github.io/post/2021-02-08-java-security-learning/">
+        <id>https://3nd.xyz/post/2021-02-08-java-security-learning/</id>
+        <link href="https://3nd.xyz/post/2021-02-08-java-security-learning/">
         </link>
         <updated>2021-02-08T11:49:07.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[域渗透中的 Kerberos 委派攻击]]></title>
-        <id>https://github.com/inspiringz/inspiringz.github.io/post/2021-01-18-ad-kerberos-delegation-md/</id>
-        <link href="https://github.com/inspiringz/inspiringz.github.io/post/2021-01-18-ad-kerberos-delegation-md/">
+        <id>https://3nd.xyz/post/2021-01-18-ad-kerberos-delegation-md/</id>
+        <link href="https://3nd.xyz/post/2021-01-18-ad-kerberos-delegation-md/">
         </link>
         <updated>2021-01-18T06:10:19.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[Fluent Python Study Notes]]></title>
-        <id>https://github.com/inspiringz/inspiringz.github.io/post/2020-9-30-fluent-py-study-notes/</id>
-        <link href="https://github.com/inspiringz/inspiringz.github.io/post/2020-9-30-fluent-py-study-notes/">
+        <id>https://3nd.xyz/post/2020-9-30-fluent-py-study-notes/</id>
+        <link href="https://3nd.xyz/post/2020-9-30-fluent-py-study-notes/">
         </link>
         <updated>2020-09-30T02:44:48.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[Nim Manual Study Notes]]></title>
-        <id>https://github.com/inspiringz/inspiringz.github.io/post/2020-09-10-nim-study-notes/</id>
-        <link href="https://github.com/inspiringz/inspiringz.github.io/post/2020-09-10-nim-study-notes/">
+        <id>https://3nd.xyz/post/2020-09-10-nim-study-notes/</id>
+        <link href="https://3nd.xyz/post/2020-09-10-nim-study-notes/">
         </link>
         <updated>2020-09-10T11:39:13.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[Oracle 操作语句及注入总结]]></title>
-        <id>https://github.com/inspiringz/inspiringz.github.io/post/2020-07-08-oracle-injection-learn-note/</id>
-        <link href="https://github.com/inspiringz/inspiringz.github.io/post/2020-07-08-oracle-injection-learn-note/">
+        <id>https://3nd.xyz/post/2020-07-08-oracle-injection-learn-note/</id>
+        <link href="https://3nd.xyz/post/2020-07-08-oracle-injection-learn-note/">
         </link>
         <updated>2020-07-08T02:26:18.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[内网渗透测试 <5> 横向移动]]></title>
-        <id>https://github.com/inspiringz/inspiringz.github.io/post/2020-07-03-AD-Pentest-lateral-movement/</id>
-        <link href="https://github.com/inspiringz/inspiringz.github.io/post/2020-07-03-AD-Pentest-lateral-movement/">
+        <id>https://3nd.xyz/post/2020-07-03-AD-Pentest-lateral-movement/</id>
+        <link href="https://3nd.xyz/post/2020-07-03-AD-Pentest-lateral-movement/">
         </link>
         <updated>2020-07-03T07:50:09.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[《计算机网络》(7) 复习笔记]]></title>
-        <id>https://github.com/inspiringz/inspiringz.github.io/post/2020-06-15-network-x-review-md/</id>
-        <link href="https://github.com/inspiringz/inspiringz.github.io/post/2020-06-15-network-x-review-md/">
+        <id>https://3nd.xyz/post/2020-06-15-network-x-review-md/</id>
+        <link href="https://3nd.xyz/post/2020-06-15-network-x-review-md/">
         </link>
         <updated>2020-06-15T09:31:01.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[网络攻击与防御课程复习笔记]]></title>
-        <id>https://github.com/inspiringz/inspiringz.github.io/post/2020-06-10-Cyber-Attack-and-Denfense-Memo/</id>
-        <link href="https://github.com/inspiringz/inspiringz.github.io/post/2020-06-10-Cyber-Attack-and-Denfense-Memo/">
+        <id>https://3nd.xyz/post/2020-06-10-Cyber-Attack-and-Denfense-Memo/</id>
+        <link href="https://3nd.xyz/post/2020-06-10-Cyber-Attack-and-Denfense-Memo/">
         </link>
         <updated>2020-06-10T11:53:34.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[操作系统安全课程复习笔记]]></title>
-        <id>https://github.com/inspiringz/inspiringz.github.io/post/2020-06-05-os-security-review/</id>
-        <link href="https://github.com/inspiringz/inspiringz.github.io/post/2020-06-05-os-security-review/">
+        <id>https://3nd.xyz/post/2020-06-05-os-security-review/</id>
+        <link href="https://3nd.xyz/post/2020-06-05-os-security-review/">
         </link>
         <updated>2020-06-05T01:46:45.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[内网渗透测试 <3> 隧道技术]]></title>
-        <id>https://github.com/inspiringz/inspiringz.github.io/post/2020-05-25-AD-Pentest-Hidden-Tunnel/</id>
-        <link href="https://github.com/inspiringz/inspiringz.github.io/post/2020-05-25-AD-Pentest-Hidden-Tunnel/">
+        <id>https://3nd.xyz/post/2020-05-25-AD-Pentest-Hidden-Tunnel/</id>
+        <link href="https://3nd.xyz/post/2020-05-25-AD-Pentest-Hidden-Tunnel/">
         </link>
         <updated>2020-05-25T01:55:14.000Z</updated>
     </entry>

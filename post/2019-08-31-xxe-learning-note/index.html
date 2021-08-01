@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>XML外部实体注入漏洞与利用学习 | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="XML外部实体注入漏洞与利用学习 | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="XML外部实体注入漏洞与利用学习 | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -25,8 +25,8 @@ XML外部实体注入(XML External Entity Injection)，即攻击者通过干扰�
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -95,19 +95,19 @@ XML外部实体注入(XML External Entity Injection)，即攻击者通过干扰�
               <span class="page-view" key="20190831003743" title="XML外部实体注入漏洞与利用学习">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/summary/" class="post-tag">
+                <a href="https://3nd.xyz/tag/summary/" class="post-tag">
                   # Summary
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/xxe/" class="post-tag">
+                <a href="https://3nd.xyz/tag/xxe/" class="post-tag">
                   # XXE
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                <a href="https://3nd.xyz/tag/writeup/" class="post-tag">
                   # Writeup
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                <a href="https://3nd.xyz/tag/ctf/" class="post-tag">
                   # CTF
                 </a>
                 
@@ -115,7 +115,7 @@ XML外部实体注入(XML External Entity Injection)，即攻击者通过干扰�
             
                 <div class="post-content-wrapper">
                   <div class="post-content">
-                    <figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-31-09-12-49.png" alt="" loading="lazy"></figure>
+                    <figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/2019-08-31-09-12-49.png" alt="" loading="lazy"></figure>
 <h2 id="什么是xxe">什么是XXE</h2>
 <p>XML外部实体注入(<strong>X</strong>ML E<strong>x</strong>ternal <strong>E</strong>ntity Injection)，即攻击者通过干扰应用程序对XML数据的处理，从而实现读取应用程序服务器文件系统中的文件，并与应用程序本身可以访问到的任何后端或外部系统进行交互的一种Web安全漏洞。</p>
 <p>在XML1.0标准里,XML文档结构里定义了实体(entity)这个概念.实体可以通过预定义在文档中调用,实体的标识符可访问本地或远程内容.如果在这个过程中引入了”污染”源,在对XML文档处理后则可能导致信息泄漏等安全问题。</p>
@@ -209,7 +209,7 @@ XML外部实体注入(XML External Entity Injection)，即攻击者通过干扰�
 ]&gt;
 &lt;message&gt;1234&lt;/message&gt;
 </code></pre>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-31-11-02-11.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/2019-08-31-11-02-11.png" alt="" loading="lazy"></figure>
 <blockquote>
 <p>External DTD allows us to include one entity inside the second, but it is prohibited in the internal DTD.</p>
 </blockquote>
@@ -244,9 +244,9 @@ XML外部实体注入(XML External Entity Injection)，即攻击者通过干扰�
 &lt;c&gt;&amp;b;&lt;/c&gt;
 </code></pre>
 <p>另外不同应用程序支持的协议不同:</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-31-10-32-27.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/2019-08-31-10-32-27.png" alt="" loading="lazy"></figure>
 <p>上图是默认支持协议，还可以支持其他，如PHP支持的扩展协议有:</p>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-31-10-34-54.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/2019-08-31-10-34-54.png" alt="" loading="lazy"></figure>
 <h2 id="xxe攻击方式">XXE攻击方式</h2>
 <ul>
 <li>读取任意文件</li>
@@ -291,19 +291,19 @@ XML外部实体注入(XML External Entity Injection)，即攻击者通过干扰�
 <ul>
 <li>Error Based</li>
 </ul>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-31-11-49-37.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/2019-08-31-11-49-37.png" alt="" loading="lazy"></figure>
 <p>这里我们可以看见此利用方式正在使用外部服务器进行有效负载传递。 如果我们和目标服务器之间有防火墙，我们可以做什么？上面的利用方式将会失效。</p>
 <p>如果我们只将外部DTD内容直接放入DOCTYPE怎么办？ 总会出现一些错误：</p>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-31-11-53-15.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/2019-08-31-11-53-15.png" alt="" loading="lazy"></figure>
 <p>外部的DTD允许我们在一个实体中包含引用另外一个实体，但是在内部DTD子集中这种行为是被禁止的。</p>
 <p>而由于防火墙的存在，我们又无法远程引用自定义的DTD文档类型说明进行利用，这时我们就把目光放到了服务器本地所存在的DTD文件。</p>
 <p>我们可以对本地的DTD文件做些什么呢？要在内部DTD子集中使用外部DTD语法，我们可以在目标主机上强制执行本地dtd文件，并在其中重新定义一些参数实体引用：</p>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-31-12-01-03.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/2019-08-31-12-01-03.png" alt="" loading="lazy"></figure>
 <p>这种方式起作用是因为所有XML实体都是常量，如果定义两个具有相同名称的实体，则仅使用第一个实体。</p>
 <ul>
 <li><strong>OGeek CTF Web LookAround</strong></li>
 </ul>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-25-22-07-44.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/2019-08-25-22-07-44.png" alt="" loading="lazy"></figure>
 <p>F12查看网页源代码，在<code>./js/xxx.js</code>中存在以下关键代码：</p>
 <pre><code class="language-js">var data = &quot;&lt;?xml version=\&quot;1.0\&quot; ?&gt;\n&lt;request&gt;\n    &lt;status&gt;1&lt;/status&gt;\n&lt;/request&gt;&quot;;
 
@@ -334,7 +334,7 @@ setInterval(function(){
 ]&gt;
 &lt;message&gt;any text&lt;/message&gt;
 </code></pre>
-<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-25-22-11-57.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://3nd.xyz/post-images/move/2019-08-25-22-11-57.png" alt="" loading="lazy"></figure>
 <h2 id="一些绕过技巧">一些绕过技巧</h2>
 <ul>
 <li>利用<strong>php://filter</strong>规避字符混乱</li>
@@ -349,7 +349,7 @@ setInterval(function(){
 <li>文档中的额外空格</li>
 </ul>
 <p>由于XXE通常在XML文档的开头，所以比较省事儿的WAF可以避免处理整个文档，而只解析它的开头。但是，XML格式允许在格式化标记属性时使用任意数量的空格，因此攻击者可以在<?xml?>或&lt;!DOCTYPE&gt;中插入额外的空格，从而绕过此类WAF。</p>
-<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-31-12-36-45.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://3nd.xyz/post-images/move/2019-08-31-12-36-45.png" alt="" loading="lazy"></figure>
 <ul>
 <li>外来编码(Exotic encodings)</li>
 </ul>
@@ -423,7 +423,7 @@ setInterval(function(){
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-09-01-php-unserialize-learning-note/">
+              <a href="https://3nd.xyz/post/2019-09-01-php-unserialize-learning-note/">
                 <h3 class="post-title" style="text-align: left;">
                   PHP 反序列化漏洞利用与学习
                 </h3>
@@ -434,7 +434,7 @@ setInterval(function(){
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-08-30-500th-zone-ctf-web/">
+              <a href="https://3nd.xyz/post/2019-08-30-500th-zone-ctf-web/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   第五空间网络安全大赛Web Writeup
@@ -448,7 +448,7 @@ setInterval(function(){
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Java Security Study Notes (Basic) | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Java Security Study Notes (Basic) | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Java Security Study Notes (Basic) | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -24,8 +24,8 @@ ClassLoader 是 Java 运行时环境 JRE 的一部分，用于动态加载 Class
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -94,11 +94,11 @@ ClassLoader 是 Java 运行时环境 JRE 的一部分，用于动态加载 Class
               <span class="page-view" key="20210208194907" title="Java Security Study Notes (Basic)">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/java/" class="post-tag">
+                <a href="https://3nd.xyz/tag/java/" class="post-tag">
                   # Java
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/summary/" class="post-tag">
+                <a href="https://3nd.xyz/tag/summary/" class="post-tag">
                   # Summary
                 </a>
                 
@@ -108,7 +108,7 @@ ClassLoader 是 Java 运行时环境 JRE 的一部分，用于动态加载 Class
                   <div class="post-content">
                     <h2 id="0x01-classloader">0x01 ClassLoader</h2>
 <p><code>ClassLoader</code> 是 Java 运行时环境 JRE 的一部分，用于动态加载 Class 到 JVM 内存空间，Java 源代码(<code>.java</code>) 经 <code>javac</code> 编译后生成类文件(<code>.class</code>)，再由 JVM 来解析执行类文件字节码(<code>ByteCode</code>)。</p>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-08-20-09-51.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/2021-02-08-20-09-51.png" alt="" loading="lazy"></figure>
 <h3 id="classloader-类型">ClassLoader 类型</h3>
 <p>JVM ClassLoader 子系统根据类的类型及路径来决定加载该类的 ClassLoader，ClassLoader 有三种默认类型：</p>
 <ol>
@@ -146,7 +146,7 @@ ClassLoader 是 Java 运行时环境 JRE 的一部分，用于动态加载 Class
 </li>
 </ul>
 <p>ClassLoader <strong>双亲委派机制</strong>始终按照 Application ClassLoader -&gt; Extension ClassLoader -&gt; Bootstrap ClassLoader 顺序，BootStrap ClassLoader 优先级最高，以此类推。当 ClassLoader 接收到类加载请求时，首先将任务委托给其父类加载器来加载，如果父类加载器无法完成该请求，将由子类加载器来进行加载。双亲委派机制使得类有了层次划分，防止重复加载类以及保证核心类不被篡改。</p>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-08-20-38-51.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/2021-02-08-20-38-51.png" alt="" loading="lazy"></figure>
 <p>2. <code>Visibility Principle</code> 可见性原则：父 ClassLoader 加载的类对子 ClassLoader 可见，但子 ClassLoader 加载的类对父 ClassLoader 不可见。</p>
 <p>3. <code>Uniqueness Property</code> 唯一性：类是唯一的，没有重复的类，确保由父类加载器加载的类不会由子类加载器加载，如果父类加载器无法找到该类，则由当前实例自行尝试。</p>
 <h3 id="javalangclassloader-方法">Java.lang.ClassLoader 方法</h3>
@@ -288,7 +288,7 @@ public class TestClassLoader extends ClassLoader {
 }
 </code></pre>
 <p>运行结果：</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-09-18-34-10.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/2021-02-09-18-34-10.png" alt="" loading="lazy"></figure>
 <blockquote>
 <p>利用自定义类加载器我们可以在 Webshell 中实现加载并调用自己编译的类对象，比如本地命令执行漏洞调用自定义类字节码的 native 方法绕过 RASP 检测，也可以用于加密重要的 Java 类字节码(只能算弱加密了)。</p>
 </blockquote>
@@ -342,7 +342,7 @@ public class TestURLClassLoader {
     }
 }
 </code></pre>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-10-19-06-02.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/2021-02-10-19-06-02.png" alt="" loading="lazy"></figure>
 <h2 id="0x02-reflection">0x02 Reflection</h2>
 <p>Java Reflection 是 Java 非常重要的动态特性，通过反射我们可以动态地获取和修改类(class)、接口(interface)、字段(field)和方法(method)，以及实例化新对象、调用任意类方法和获取/修改类成员变量值等，利用反射机制可以轻松的实现 Java 类的动态调用。</p>
 <h3 id="javalangclass">java.lang.Class</h3>
@@ -427,7 +427,7 @@ field.set(类实例对象, 修改后的值);
 </code></pre>
 <h2 id="0x03-unsafe">0x03 Unsafe</h2>
 <p><code>sun.misc.Unsafe</code> 是 Java 底层 API 提供的一个神奇的 Java 类（仅限 Java 内部使用，外部只能通过反射调用），提供了一些用于执行低级别、不安全操作的方法，如直接访问系统内存资源、自主管理内存资源等，这些方法在提升 Java 运行效率、增强 Java 语言底层资源操作能力方面起到了很大的作用。</p>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-11-14-38-16.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/2021-02-11-14-38-16.png" alt="" loading="lazy"></figure>
 <pre><code class="language-java">// Reflect -&gt; Field
 Field f = Unsafe.class.getDeclaredField(&quot;theUnsafe&quot;);
 f.setAccessible(true); // private static final Unsafe theUnsafe;
@@ -469,7 +469,7 @@ Class cls = unsafe.defineClass(
 </blockquote>
 <h2 id="0x04-io-nio">0x04 IO / NIO</h2>
 <p>Java SE 中内置了两类文件系统：<code>java.io</code>（阻塞） 和 <code>java.nio</code>（JDK7+，非阻塞），java.nio 的实现是 sun.nio，文件系统底层的 API 实现如下图：</p>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-12-10-20-22.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/2021-02-12-10-20-22.png" alt="" loading="lazy"></figure>
 <p>合理的利用 NIO 文件系统特性可用于绕过某些只是防御了 <code>java.io.FileSystem</code> 的 WAF/RASP。</p>
 <h3 id="fileinoutputstream">FileIn/OutputStream</h3>
 <p>FileInputStreamDemo.java:</p>
@@ -1382,10 +1382,10 @@ public class JNICommandExecution {
     }
 }
 </code></pre>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-14-22-16-35.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/2021-02-14-22-16-35.png" alt="" loading="lazy"></figure>
 <h2 id="0x09-动态代理">0x09 动态代理</h2>
 <p>JDK 提供了 <code>java.lang.reflect.InvocationHandler</code> 接口和 <code>java.lang.reflect.Proxy</code> 类，这两个类相互配合，提供了一种类动态代理机制，可以通过代理接口实现类来完成程序无侵入式扩展。主要使用场景有：统计方法执行所耗时间、在方法执行前后添加日志、检测方法的参数或返回值、方法访问权限控制、方法 Mock 测试等。</p>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-16-17-30-53.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/2021-02-16-17-30-53.png" alt="" loading="lazy"></figure>
 <blockquote>
 <p>动态代理 就是在执行代码的过程中，动态生成了 代理类 Class 的字节码 byte[]，然后通过 defineClass0 加载到 JVM 中。</p>
 </blockquote>
@@ -1506,7 +1506,7 @@ public class GetProxyClassDemo {
 }
 </code></pre>
 <p>编译 &amp; 运行结果：</p>
-<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-16-19-17-33.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://3nd.xyz/post-images/move/2021-02-16-19-17-33.png" alt="" loading="lazy"></figure>
 <p>NewProxyInstanceDemo.java:</p>
 <pre><code class="language-java">package com.ins.z.proxy;
 
@@ -1557,10 +1557,10 @@ public class NewProxyInstanceDemo {
 }
 </code></pre>
 <p>编译 &amp; 运行结果：</p>
-<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-17-00-33-12.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://3nd.xyz/post-images/move/2021-02-17-00-33-12.png" alt="" loading="lazy"></figure>
 <h2 id="0x0a-反序列化">0x0a 反序列化</h2>
 <p><strong>序列化</strong>是一种将对象状态(类成员变量及属性值)转换为字节流的机制，反序列化是与其相反的过程，其中字节流用于重新创建内存中的实际对象。此机制用于持久化对象，便于数据(对象)的存储和(在网络节点中的)传输。</p>
-<figure data-type="image" tabindex="11"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-17-11-51-05.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://3nd.xyz/post-images/move/2021-02-17-11-51-05.png" alt="" loading="lazy"></figure>
 <blockquote>
 <p>在 <code>RMI</code>(Java 远程方法调用-Java Remote Method Invocation)和 <code>JMX</code> (Java 管理扩展-Java Management Extensions)服务中对象反序列化机制被强制性使用，在 Http 请求中也时常会被用到反序列化机制，如：直接接收序列化请求的后端服务、使用 Base 编码序列化字节字符串的方式传递等。</p>
 </blockquote>
@@ -1606,7 +1606,7 @@ public class DeserializeDemo implements Serializable {
     }
 }
 </code></pre>
-<figure data-type="image" tabindex="12"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-17-12-32-38.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://3nd.xyz/post-images/move/2021-02-17-12-32-38.png" alt="" loading="lazy"></figure>
 <h3 id="externalizable">Externalizable</h3>
 <p>java.io.Externalizable 和 java.io.Serializable 基本一致，其定义了 writeExternal 和 readExternal 方法需要序列化和反序列化的类实现。与 Serizable 接口不同，使用 Externalizable，就意味着没有任何东西可以自动序列化，为了正常的运行，我们需要在 writeExtenal() 方法中将自对象的重要信息写入，从而手动完成序列化。对于一个 Externalizable 对象，对象的默认构造函数都会被调用（包括哪些在定义时已经初始化的字段），然后调用 readExternal()，在此方法中必须手动恢复数据，从而借助 Externalizable 对序列化过程进行控制。</p>
 <p>java.io.Externalizable.java:</p>
@@ -1668,7 +1668,7 @@ public class ExternalizableDemo implements Externalizable {
     }
 }
 </code></pre>
-<figure data-type="image" tabindex="13"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-17-18-28-38.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://3nd.xyz/post-images/move/2021-02-17-18-28-38.png" alt="" loading="lazy"></figure>
 <h3 id="reflectionfactory">ReflectionFactory</h3>
 <p>反序列化时<strong>不会调用类构造方法</strong>，创建类实例时使用了 <code>sun.reflect.ReflectionFactory.newConstructorForSerialization</code> 创建了一个反序列化专用的 Constructor(反射构造方法对象)，可以绕过构造函数创建类实例。使用反序列化方法创建类实例：</p>
 <pre><code class="language-java">package com.ins.z.serializes;
@@ -1692,7 +1692,7 @@ public class ReflectionFactoryDemo {
     }
 }
 </code></pre>
-<figure data-type="image" tabindex="14"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-17-18-39-17.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="14"><img src="https://3nd.xyz/post-images/move/2021-02-17-18-39-17.png" alt="" loading="lazy"></figure>
 <h3 id="自定义序列化">自定义序列化</h3>
 <p>我们可以通过在待序列化或反序列化的类中定义 <code>readObject()</code> 和 <code>writeObject()</code> 方法，来实现自定义的序列化和反序列化操作，前提是被序列化的类必须有此方法，且方法的修饰符必须是 <code>private</code>。</p>
 <p>Magic Method：</p>
@@ -1734,7 +1734,7 @@ protected Object readResolve() {
     Object transform(Object var1);
 }
 </code></pre>
-<figure data-type="image" tabindex="15"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-18-18-20-26.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://3nd.xyz/post-images/move/2021-02-18-18-20-26.png" alt="" loading="lazy"></figure>
 <p><code>ConstantTransformer</code> 类是 Transformer 接口的实现类，其 transform() 函数讲一个对象转变成常量并返回。ConstantTransformer.java:</p>
 <pre><code class="language-java">public class ConstantTransformer implements Transformer, Serializable {
     static final long serialVersionUID = 6374440726369055124L;
@@ -1765,7 +1765,7 @@ public Object transform(Object input) {
             return method.invoke(input, this.iArgs);
         } catch ...
 </code></pre>
-<figure data-type="image" tabindex="16"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-18-18-31-35.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="16"><img src="https://3nd.xyz/post-images/move/2021-02-18-18-31-35.png" alt="" loading="lazy"></figure>
 <p><code>ChainedTransformer</code> 类实现了 Transformer 链式调用，只需要传入一个 Transformer 数组即可实现依次的去调用每一个 Transformer 的 transform 方法，并将转化结果作为参数传递到下一步。</p>
 <pre><code class="language-java">public ChainedTransformer(Transformer[] transformers) {
         this.iTransformers = transformers;
@@ -1778,7 +1778,7 @@ public Object transform(Object object) {
     return object;
 }
 </code></pre>
-<figure data-type="image" tabindex="17"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-18-18-43-35.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="17"><img src="https://3nd.xyz/post-images/move/2021-02-18-18-43-35.png" alt="" loading="lazy"></figure>
 <p><code>TransformedMap</code> 类提供将 map 和转换链(ChainedTransformer)绑定的构造函数，只需要添加数据(setValue/put/putAll)至 map 中就会自动调用该转换链，即把触发条件从显性的调用转换链的 transform 函数延伸到修改 map 的值。</p>
 <pre><code class="language-java">@Test
 public void mapt() {
@@ -1804,7 +1804,7 @@ public void mapt() {
     }
 }
 </code></pre>
-<figure data-type="image" tabindex="18"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-18-18-59-26.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="18"><img src="https://3nd.xyz/post-images/move/2021-02-18-18-59-26.png" alt="" loading="lazy"></figure>
 <blockquote>
 <p><strong>AnnotationInvocationHandler</strong> is the invocation handler for (implements the behaviour for) annotation objects in Java. It has a Class object representing the type of the annotation, and a map from properties to values. When you call a method on the annotation interface, it will return the corresponding value from the map.</p>
 </blockquote>
@@ -1927,9 +1927,9 @@ public class CC {
 <p>RMI Service：创建 Remote Object，将其注册到 RMI Registry，存储对象数据。不一定和 Registry 在同一个 JVM，是方法执行的地方，仅把方法返回值返回给 Client。</p>
 </li>
 </ul>
-<figure data-type="image" tabindex="19"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-19-11-07-49.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="19"><img src="https://3nd.xyz/post-images/move/2021-02-19-11-07-49.png" alt="" loading="lazy"></figure>
 <p>RMI 交互过程：</p>
-<figure data-type="image" tabindex="20"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2021-02-19-11-38-01.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="20"><img src="https://3nd.xyz/post-images/move/2021-02-19-11-38-01.png" alt="" loading="lazy"></figure>
 <p>RMI 客户端及服务端实现：</p>
 <p>1. 服务端编写远程接口 RMIInterface:</p>
 <pre><code class="language-java">package com.ins.z.rmi;
@@ -2274,7 +2274,7 @@ public class BindDemo {
         
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://github.com/inspiringz/inspiringz.github.io/post/2021-01-18-ad-kerberos-delegation-md/">
+                <a href="https://3nd.xyz/post/2021-01-18-ad-kerberos-delegation-md/">
                   <h3 class="post-title">
                     域渗透中的 Kerberos 委派攻击
                   </h3>
@@ -2286,7 +2286,7 @@ public class BindDemo {
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

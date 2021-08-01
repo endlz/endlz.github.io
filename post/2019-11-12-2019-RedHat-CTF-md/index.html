@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>第三届红帽杯线上赛 RedHat 2019 Writeup | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="第三届红帽杯线上赛 RedHat 2019 Writeup | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="第三届红帽杯线上赛 RedHat 2019 Writeup | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -27,8 +27,8 @@ Ticket_System
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -97,19 +97,19 @@ Ticket_System
               <span class="page-view" key="20191112154749" title="第三届红帽杯线上赛 RedHat 2019 Writeup">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/sqli/" class="post-tag">
+                <a href="https://3nd.xyz/tag/sqli/" class="post-tag">
                   # SQLi
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/xxe/" class="post-tag">
+                <a href="https://3nd.xyz/tag/xxe/" class="post-tag">
                   # XXE
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                <a href="https://3nd.xyz/tag/writeup/" class="post-tag">
                   # Writeup
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                <a href="https://3nd.xyz/tag/ctf/" class="post-tag">
                   # CTF
                 </a>
                 
@@ -120,7 +120,7 @@ Ticket_System
                     <h2 id="web">Web</h2>
 <h3 id="ticket_system">Ticket_System</h3>
 <p>存在<code>XXE</code> 可读取服务器文件，F12 查看网页源代码提示查看 <code>/hints.txt</code>，获取到提示需要 RCE。</p>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1573381811892.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/1573381811892.png" alt="" loading="lazy"></figure>
 <p>利用 <code>ThinkPHP V5.2.0RC1</code>的 POP Chain，<code>XXE</code> + <code>phar://</code>反弹 shell 后在根目录下<code>trap &quot;&quot; 14</code>使程序不会中断退出，执行 <code>/readflag</code> 完成 challenge 即可获取flag。</p>
 <p><code>Phar</code> exp 可参考: http://m0te.top/articles/Thinkphp%20POP/Thinkphp%20POP.html</p>
 <pre><code class="language-php">&lt;?php
@@ -194,7 +194,7 @@ namespace {
 &lt;!DOCTYPE a [ &lt;!ENTITY b SYSTEM &quot;php://filter/resource=phar:///tmp/uploads/9ee7098eadd66450d552896a0685ea09/20191110/8d696ecb29fbc5ea014d405dad3c4d3e.xml&quot;&gt; ]&gt;
 &lt;ticket&gt;&lt;username&gt;&amp;b;&lt;/username&gt;&lt;code&gt;1&lt;/code&gt;&lt;/ticket&gt;
 </code></pre>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1573403667936.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/1573403667936.png" alt="" loading="lazy"></figure>
 <h3 id="easy_cms">easy_cms</h3>
 <p>下载<code>xyh_cms</code>源代码到本地审计，在 <code>\App\Api\Controller\LtController.class.php</code> 中发现 ThinkPHP 3.2.3 的 SQLi. <code>$order_by</code> 参数可控:</p>
 <pre><code class="language-php">$order_by  = I('orderby', 'id DESC');
@@ -243,13 +243,13 @@ with open('passwd.txt') as file:
 <h2 id="re-by-pwnht">RE (by pwnht)</h2>
 <h3 id="xx">xx</h3>
 <p>从题目上可以联想到xxtea</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1573441291534.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/1573441291534.png" alt="" loading="lazy"></figure>
 <p>关键判断在这了，如果，v20加密之后的字串和v30逐位比较，如果10次比较成功，就会输出 <strong>you win</strong> ，那么，之后看v20怎么来的就可以了</p>
 <p>然后正向看，在<strong>sub_140001AB0（）</strong> 函数里面，魔数 <strong>0x61C88647</strong> 为xxtea加密，那么，如果想得到明文需要key，那么怎么生成key</p>
 <p>用输入的前四位作为key的前4位（<s>前四位肯定是flag。。。当时还寻思着爆破来着2333</s>），高12个字节均为0</p>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1573441847614.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/1573441847614.png" alt="" loading="lazy"></figure>
 <p>然后进行一个下面的操作，就得到了v20，逆向一下，就可以了</p>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1573442276581.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/1573442276581.png" alt="" loading="lazy"></figure>
 <pre><code class="language-c++">#include &lt;stdint.h&gt;
 #include&lt;stdlib.h&gt;
 #include&lt;stdio.h&gt;
@@ -344,10 +344,10 @@ int main()
 </code></pre>
 <h3 id="easyre">easyRE</h3>
 <p>这个题目有一个坑点，就是，过了main函数这个判断，的到不是flag，而是，看雪版主发的一个主动防御的文章？？？</p>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1573445711073.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/1573445711073.png" alt="" loading="lazy"></figure>
 <p>其实真正的条件在fini_arrary调用的函数</p>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1573446213053.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1573446287560.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/1573446213053.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/1573446287560.png" alt="" loading="lazy"></figure>
 <p>只要过这个判断就可以了，正常情况是过不了这个条件的，因为v5是个随机数，不可预期，但是由于，puts为flag字串的话，前四位一定为flag，flag字串和byte_6CC0A0的前四位异或，就能的到v8的值，然后再异或输出flag</p>
 <pre><code class="language-python">#!/usr/bin/env python
 target=[0x40,0x35,0x20,0x56,0x5D,0x18,0x22,0x45,0x17,0x2F,0x24,0x6E,0x62,0x3C,0x27,0x54,0x48,0x6C,0x24,0x6E,0x72,0x3C,0x32,0x45,0x5B]
@@ -362,14 +362,14 @@ print flag
 </code></pre>
 <h3 id="childre">childRE</h3>
 <p>首先正向分析，根据调试，这一段代码会打乱你的输入，是一个位置互换的的算法，但是不改变的你输入的值，你输入是和互换的位置是没有关系的</p>
-<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1573448182456.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://3nd.xyz/post-images/move/1573448182456.png" alt="" loading="lazy"></figure>
 <p>然后，再逆向分析</p>
-<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1573448913949.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://3nd.xyz/post-images/move/1573448913949.png" alt="" loading="lazy"></figure>
 <p>这里求出 <strong>output string</strong> ，得到output string为*<em>private: char * __thiscall R0Pxx::My_Aut0_PWN(unsigned char <em>)</em></em></p>
 <p>得到的长度62，而输入的为31，怎么才能的得到这个呢？？</p>
-<figure data-type="image" tabindex="11"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1573449689566.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://3nd.xyz/post-images/move/1573449689566.png" alt="" loading="lazy"></figure>
 <p>百度了一下这个函数</p>
-<figure data-type="image" tabindex="12"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1573449756676.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://3nd.xyz/post-images/move/1573449756676.png" alt="" loading="lazy"></figure>
 <p>这个函数是为了防止符号冲突，写成特定的格式，防止冲突，那么，这个可以扩展字串吗，当然，我们可以看到output string为一个函数的声明的格式，所以，我输入31个字节，也是可以的到62个字节的</p>
 <pre><code class="language-python">#!/usr/bin/env python
 str_remainder = '(_@4620!08!6_0*0442!@186%%0@3=66!!974*3234=&amp;0^3&amp;1@=&amp;0908!6_0*&amp;'
@@ -394,7 +394,7 @@ print decode_input
 <p>最后flag就是decode_input的md5值.</p>
 <h2 id="pwn-by-pwnht">Pwn (by pwnht)</h2>
 <h3 id="three">three</h3>
-<figure data-type="image" tabindex="13"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1573440323504.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://3nd.xyz/post-images/move/1573440323504.png" alt="" loading="lazy"></figure>
 <p>这个就不算漏洞函数了吧，算是后门函数，让你读三个bit去之后执行这个三个bit如果返回结果正确就就输出1，不然输出二，如果仔细观察内存的话call这个3bit的时候，寄存器的ecx是我们之前tell me输入的buf的指针，正好 <strong>asm(mov eax,[ecx],ret)</strong> 是三个字节，所以，爆破就完事了</p>
 <pre><code class="language-python">from pwn import *
 __author__ = '3summer'
@@ -447,7 +447,7 @@ print ''.join(flag)
 </code></pre>
 <p>获取到 Hint: ????needmoneyandgirlfirend.</p>
 <p>导出 mspaint.exe 进程内存文件，修改后缀为 <code>.data</code> 使用 Gimp 分析原始图像获得：</p>
-<figure data-type="image" tabindex="14"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1573414212499.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="14"><img src="https://3nd.xyz/post-images/move/1573414212499.png" alt="" loading="lazy"></figure>
 <p>翻转 Pineapple 获取到 b1cx（菠萝吹雪），即 <code>b1cxneedmoneyandgirlfirend</code>.</p>
 <p><code>filescan</code> 扫描文件发现桌面上存在图片 <code>vegetable.png</code>，导出图像重命名分析。</p>
 <pre><code class="language-bash">volatility dumpfiles -f Advertising\ for\ Marriage.raw -Q 0x000000000249ae78 -D ./
@@ -472,23 +472,23 @@ for w in range(1024):
             exit()
 </code></pre>
 <p>获取到图片含有模糊的 flag 难以辨认，同时分析出 <code>lsb</code> 含有可能含有隐藏信息。</p>
-<figure data-type="image" tabindex="15"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/vegetable.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://3nd.xyz/post-images/move/vegetable.png" alt="" loading="lazy"></figure>
 <p>使用 <a href="https://github.com/livz/cloacked-pixel">cloacked-pixel/lsb.py</a> 解密获取到隐藏信息：</p>
-<figure data-type="image" tabindex="16"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1573438176727.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="16"><img src="https://3nd.xyz/post-images/move/1573438176727.png" alt="" loading="lazy"></figure>
 <p>使用 <a href="https://planetcalc.com/2468/">Vigenere</a> 在线解密, key 同为 <code>b1cxneedmoneyandgirlfirend</code>, 获取到 flag{d7f1417bfafbf62587e0}.</p>
 <h3 id="恶臭的数据包">恶臭的数据包</h3>
 <p>野兽前辈想玩游戏，但是hacker妨碍了他连上无线网，前辈发出了无奈的吼声。</p>
 <p>打开<code>.cap</code>分析无线流量，WiFi 连接认证的重点在 WPA 的四次握手包，也就是 <code>eapol</code>协议的包，过滤一下：</p>
-<figure data-type="image" tabindex="17"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1573463999838.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="17"><img src="https://3nd.xyz/post-images/move/1573463999838.png" alt="" loading="lazy"></figure>
 <pre><code class="language-bash">aircrack-ng -w ./wpa-dictionary/common.txt cacosmia.cap
 </code></pre>
-<figure data-type="image" tabindex="18"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-11-11_17-25.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="18"><img src="https://3nd.xyz/post-images/move/2019-11-11_17-25.png" alt="" loading="lazy"></figure>
 <p>在 <code>Wireshark</code> 的 编辑 - 首选项 - Protocol(协议) - IEEE802.11 - Decryption Keys导入：<code>mamawoxiangwantiequan:12345678</code>，获取解密流量。</p>
 <p>在 <code>tcp.stream eq 24</code> 中提取出 <code>114514.png</code>，WinHex 打开发现后面隐藏有 Zip 归档，<code>binwalk</code> 分离即可。</p>
 <p>观察 Cookie 字段为 JWT 解密得到 <code>hint</code> (for security, I set my password as a website which i just pinged before)，过滤 <code>icmp</code> 和 <code>dns</code> 流量最终锁定到 <code>26rsfb.dnslog.cn</code> 即为 password，解压获得 <code>flag{f14376d0-793e-4e20-9eab-af23f3fdc158}</code>.</p>
 <h3 id="0x02-玩具车">0x02 玩具车</h3>
 <p>给出的WAV文件是对于所给图片各个通道的时序-电平采样数据，通过导入可以获得各个通道在采样中的电平状态。由wav文件属性可知采样率8000,于是每8000次取样，归一化转换成0-1数据表示电平状态。根据电机驱动模块的工作状态可以得到小车的5种运行状态：前进，后退，左转，右转，不动。对应模拟小车的行进状态画出小车轨迹即可得到flag的图像,最后上下翻转,翻译出<code>flag{63177867-8a43-47ab-9048-298867128b3a}</code>。</p>
-<figure data-type="image" tabindex="19"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/playcar.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="19"><img src="https://3nd.xyz/post-images/move/playcar.png" alt="" loading="lazy"></figure>
 <p>附 Python 脚本 (by FXTi):</p>
 <pre><code class="language-python">from scipy.io import wavfile
 import numpy as np
@@ -700,7 +700,7 @@ plt.show()
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-11-13-phpinfo-memo/">
+              <a href="https://3nd.xyz/post/2019-11-13-phpinfo-memo/">
                 <h3 class="post-title" style="text-align: left;">
                   Just something about phpinfo
                 </h3>
@@ -711,7 +711,7 @@ plt.show()
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-11-06-bypass-disable-functions/">
+              <a href="https://3nd.xyz/post/2019-11-06-bypass-disable-functions/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   PHP Bypass Disable_functions
@@ -725,7 +725,7 @@ plt.show()
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

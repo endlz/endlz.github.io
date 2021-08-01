@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>中关村网络与信息安全领域专项赛 Web&amp;Misc | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="中关村网络与信息安全领域专项赛 Web&amp;Misc | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="中关村网络与信息安全领域专项赛 Web&amp;Misc | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -31,8 +31,8 @@ if(score == 15){
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -101,11 +101,11 @@ if(score == 15){
               <span class="page-view" key="20190822144725" title="中关村网络与信息安全领域专项赛 Web&amp;Misc">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                <a href="https://3nd.xyz/tag/writeup/" class="post-tag">
                   # Writeup
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                <a href="https://3nd.xyz/tag/ctf/" class="post-tag">
                   # CTF
                 </a>
                 
@@ -115,7 +115,7 @@ if(score == 15){
                   <div class="post-content">
                     <h2 id="web">Web</h2>
 <h3 id="game">Game</h3>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-22-14-53-05.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/2019-08-22-14-53-05.png" alt="" loading="lazy"></figure>
 <p>查看网页源代码，在<code>/js/cqg.js</code>发现关键操作如下：</p>
 <pre><code class="language-js">if(score == 15){
     $.ajax({
@@ -134,7 +134,7 @@ if(score == 15){
 flag{30941f66-2145-417f-b9a9-7ea0e252085e}
 </code></pre>
 <h3 id="who_are_you">who_are_you?</h3>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-22-14-53-21.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/2019-08-22-14-53-21.png" alt="" loading="lazy"></figure>
 <p>F12查看网页源代码，发现以下关键操作：</p>
 <pre><code class="language-js">function func() {
     // document.getElementById().value
@@ -193,12 +193,12 @@ if($data != false){
 <blockquote>
 <p>hint: base64 hint2:templates/upload.html</p>
 </blockquote>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-22-14-53-46.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/2019-08-22-14-53-46.png" alt="" loading="lazy"></figure>
 <p>fuzz文件名类似Base64编码，猜测为更改码表的Base64编码。</p>
 <blockquote>
 <p>Base64是一种基于64个可打印字符来表示二进制数据的表示方法。由于2^6=64，所以每6个位元为一个单元，对应某个可打印字符。3个字节有24个位元，对应于4个Base64单元，即3个字节可由4个可打印字符来表示。它可用来作为电子邮件的传输编码。在Base64中的可打印字符包括字母A-Z、a-z、数字0-9，这样共有62个字符，此外两个可打印符号在不同的系统中而不同（标准为+和/）。一些如uuencode的其他编码方法使用不同的64字符集来代表6个二进制数字，但是不被称为Base64。</p>
 </blockquote>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-22-14-54-14.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/2019-08-22-14-54-14.png" alt="" loading="lazy"></figure>
 <p>这样可以通过爆破码表/截取payload片段即可达成任意文件读取，<code>/proc/self/cwd/</code>指向的是当前路径，在本题中可用于填充拼凑3倍数长度的字符串。</p>
 <ul>
 <li>爆破码表</li>
@@ -380,7 +380,7 @@ gamectf.com.		5	IN	TXT	&quot;flag{welcome_TXT}&quot;
 
 </code></pre>
 <h3 id="24word">24word</h3>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-22-14-54-40.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/2019-08-22-14-54-40.png" alt="" loading="lazy"></figure>
 <p><code>zsteg</code>探测到图片中包含<code>zip</code>信息，将核心价值观解码得到zip解压密码。</p>
 <pre><code class="language-bash">C:\Users\MS\Desktop\Misc\24word
 $ zsteg 24w.png
@@ -410,7 +410,7 @@ imagedata           .. text: &quot;IIIBBB777&quot;
 CodeValues
 </code></pre>
 <p>获取新图片如下：</p>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-22-14-54-58.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/2019-08-22-14-54-58.png" alt="" loading="lazy"></figure>
 <p>扫描QR得到flag。</p>
 <pre><code class="language-bash">flag{24_word_m4n7ra}
 </code></pre>
@@ -420,17 +420,17 @@ CodeValues
 GIF (gif)，文件头：47494638 
 </code></pre>
 <p>对66帧的gif动画进行脱帧处理，在第七帧中获取flag.</p>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-22-14-55-06.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/2019-08-22-14-55-06.png" alt="" loading="lazy"></figure>
 <pre><code class="language-bash">flag{49bdbe-abfe-472-9f66-a533331e6}
 </code></pre>
 <h3 id="亚萨西">亚萨西</h3>
 <p>压缩包损坏，使用7-Zip可直接提取文件，解压zip文件(从pass:loli猜测得到解压密码<code>loli</code>)，得到<code>timg.jpg</code>.</p>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-22-14-55-29.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-22-14-55-37.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/2019-08-22-14-55-29.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://3nd.xyz/post-images/move/2019-08-22-14-55-37.png" alt="" loading="lazy"></figure>
 <p>Winhex打开观察到文件末尾存在大量<code>.!?</code>组成的段落，系<code>Ook</code>编码。</p>
-<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-22-14-55-47.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://3nd.xyz/post-images/move/2019-08-22-14-55-47.png" alt="" loading="lazy"></figure>
 <p>https://www.splitbrain.org/services/ook 在线解码即可。</p>
-<figure data-type="image" tabindex="11"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2019-08-22-14-55-57.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://3nd.xyz/post-images/move/2019-08-22-14-55-57.png" alt="" loading="lazy"></figure>
 <pre><code class="language-bash">flag{f71d6bca-3210-4a31-9feb-1768a65a33db}
 </code></pre>
 
@@ -473,7 +473,7 @@ GIF (gif)，文件头：47494638
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-08-22-ssrf-learning-note/">
+              <a href="https://3nd.xyz/post/2019-08-22-ssrf-learning-note/">
                 <h3 class="post-title" style="text-align: left;">
                   SSRF 服务端请求伪造漏洞与利用学习
                 </h3>
@@ -484,7 +484,7 @@ GIF (gif)，文件头：47494638
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-05-27-QWB-3th-Partial-Writeup/">
+              <a href="https://3nd.xyz/post/2019-05-27-QWB-3th-Partial-Writeup/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   QWB 3th Partial Writeup
@@ -498,7 +498,7 @@ GIF (gif)，文件头：47494638
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

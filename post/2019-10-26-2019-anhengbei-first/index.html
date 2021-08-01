@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>2019 全国大学生软件测试大赛预选赛 | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="2019 全国大学生软件测试大赛预选赛 | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="2019 全国大学生软件测试大赛预选赛 | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -27,8 +27,8 @@ HTTP Header 里含有 password 提交正确后可进入 upload.php, 对上传文
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -97,11 +97,11 @@ HTTP Header 里含有 password 提交正确后可进入 upload.php, 对上传文
               <span class="page-view" key="20191026230707" title="2019 全国大学生软件测试大赛预选赛">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                <a href="https://3nd.xyz/tag/writeup/" class="post-tag">
                   # Writeup
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                <a href="https://3nd.xyz/tag/ctf/" class="post-tag">
                   # CTF
                 </a>
                 
@@ -226,7 +226,7 @@ $sth='test5030b66d4bdtest35daed9d51e2688377299test';
 <h2 id="web3-easy">Web3 easy</h2>
 <p>it seems that there are some interesting func in flag.php</p>
 <p>观察路由为 <code>index.php?func1</code>，<code>func1=phpinfo</code> 时发现执行了 phpinfo()，则 <code>func1</code> 可动态执行函数，利用 <code>get_disable_functions</code> 函数可返回所有已定义的函数数组。</p>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191101232043.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/20191101232043.png" alt="" loading="lazy"></figure>
 <p>获得所有内置函数和已定义函数的名称，并且发现函数 <code>jam_source_ctf_flag</code>  得到源码：</p>
 <pre><code class="language-php">&lt;?php
 //include 'real_flag.php';
@@ -272,7 +272,7 @@ if(isset($_POST['flag']) &amp;&amp; $_POST['flag'] === 'I want the flag'){
 <p>需要满足 <code>isset($_POST['flag']) &amp;&amp; $_POST['flag'] === 'I want the flag'</code><br>
 <code>$secret === $_GET['a']</code>，这里可以爆破 6 位随机数 a，但是机率太小了。<br>
 这里还可以利用 <code>get_defined_vars</code> 函数:</p>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191101232925.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/20191101232925.png" alt="" loading="lazy"></figure>
 <p>此时利用思路如下:</p>
 <pre><code class="language-php">POST I want the flag -&gt; include 'real_flag.php' -&gt; get_defined_vars -&gt; $flag
 </code></pre>
@@ -365,7 +365,7 @@ if(isset($_GET['code'])){
 ?&gt;
 </code></pre>
 <p>PHP 默认配置中 <code>short_open_tag</code> = ON，<code>&lt;?=?&gt;</code> 相当于 <code>&lt;?php echo ...;?&gt;</code>.</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191102000631.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/20191102000631.png" alt="" loading="lazy"></figure>
 <ul>
 <li>Payload</li>
 </ul>
@@ -560,7 +560,7 @@ set role =  '/**/union/**/select/**/flag/**/as/**/info/**/from/**/f1ag_233#  '
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-11-06-bypass-disable-functions/">
+              <a href="https://3nd.xyz/post/2019-11-06-bypass-disable-functions/">
                 <h3 class="post-title" style="text-align: left;">
                   PHP Bypass Disable_functions
                 </h3>
@@ -571,7 +571,7 @@ set role =  '/**/union/**/select/**/flag/**/as/**/info/**/from/**/f1ag_233#  '
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-10-07-adworld-web-writeup-2/">
+              <a href="https://3nd.xyz/post/2019-10-07-adworld-web-writeup-2/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   攻防世界 ADWorld Web 部分题解（2）
@@ -585,7 +585,7 @@ set role =  '/**/union/**/select/**/flag/**/as/**/info/**/from/**/f1ag_233#  '
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

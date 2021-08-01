@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Oracle 操作语句及注入总结 | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Oracle 操作语句及注入总结 | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Oracle 操作语句及注入总结 | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -27,8 +27,8 @@ Oracle Server 由两个..." />
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -97,15 +97,15 @@ Oracle Server 由两个..." />
               <span class="page-view" key="20200708102618" title="Oracle 操作语句及注入总结">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/summary/" class="post-tag">
+                <a href="https://3nd.xyz/tag/summary/" class="post-tag">
                   # Summary
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/oracle/" class="post-tag">
+                <a href="https://3nd.xyz/tag/oracle/" class="post-tag">
                   # Oracle
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/sqli/" class="post-tag">
+                <a href="https://3nd.xyz/tag/sqli/" class="post-tag">
                   # SQLi
                 </a>
                 
@@ -116,7 +116,7 @@ Oracle Server 由两个..." />
                     <h2 id="0x01-基础知识">0x01 基础知识</h2>
 <p>Oracle 是甲骨文公司的一款关系数据库管理系统，系统可移植性好、使用方便、功能强，适用于各类大、中、小、微机环境。它是一种高效率、可靠性好的、适应高吞吐量的数据库方案。</p>
 <h3 id="体系结构">体系结构</h3>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-07-08-10-45-28.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/2020-07-08-10-45-28.png" alt="" loading="lazy"></figure>
 <p>Oracle Server 由两个实体组成：</p>
 <ul>
 <li>
@@ -135,11 +135,11 @@ Oracle 数据库除了基本的数据文件，还有控制文件和 Redo 日志�
 </ul>
 <p>在数据库创建过程中，实例首先被创建，然后才创建数据库。在典型的单实例环境中，实例与数据库的关系是一对一的，一个实例连接一个数据库，实例与数据库也可以是多对一的关系，即不同计算机上的多个实例打开共享磁盘系统上的一个公用数据库。这种多对一关系被称为实际应用群集（RAC, Real Application Clusters，RAC）极大提高了数据库的性能、容错与可伸缩性（可能耗费更多的存储空间）并且是 Oracle Grid 概念的必备部分。</p>
 <h3 id="数据结构">数据结构</h3>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-07-08-11-23-55.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/2020-07-08-11-23-55.png" alt="" loading="lazy"></figure>
 <p>Oracle 关系型数据库管理系统从逻辑上把数据保存在表空间内，在物理上以数据文件的形式存储。表空间可以包含多种类型的内存区段，例如数据区段（Data Segment）、索引区段（Index Segment）等等。区段相应的由一个或多个扩展（extent）组成。</p>
 <p><strong>逻辑结构：</strong> 数据库（Database）-&gt; 表空间（TableSpace）-&gt; 区段（Segment）-&gt; 拓展（Extent）-&gt; 块（Block）</p>
 <p>**表空间：**数据文件就是由多个表空间组成的，这些数据文件和相关文件形成一个完整的数据库（*.dbf）。</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/2020-07-08-11-32-03.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/2020-07-08-11-32-03.png" alt="" loading="lazy"></figure>
 <ul>
 <li>SYSTEM 表空间：包含了数据字典以及（默认的）索引和集群。数据字典包含了一个保存了所有数据库中用户对象的信息的表，用于存储系统表和管理配置等基本信息。</li>
 <li>SYSAUX 表空间：SYSTEM 表的辅助表空间，主要存放一些系统附加信息，用来降低 SYSTEM 表空间的负载。</li>
@@ -563,7 +563,7 @@ DBMS_LDAP.INIT and UTL_TCP
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2020-09-10-nim-study-notes/">
+              <a href="https://3nd.xyz/post/2020-09-10-nim-study-notes/">
                 <h3 class="post-title" style="text-align: left;">
                   Nim Manual Study Notes
                 </h3>
@@ -574,7 +574,7 @@ DBMS_LDAP.INIT and UTL_TCP
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2020-07-03-AD-Pentest-lateral-movement/">
+              <a href="https://3nd.xyz/post/2020-07-03-AD-Pentest-lateral-movement/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   内网渗透测试 &lt;5&gt; 横向移动
@@ -588,7 +588,7 @@ DBMS_LDAP.INIT and UTL_TCP
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

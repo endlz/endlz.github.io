@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>2019 西湖论剑 Web 复现 | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="2019 西湖论剑 Web 复现 | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="2019 西湖论剑 Web 复现 | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -28,8 +28,8 @@ babyt3(Ubuntu 16.04 php7.0) 61.164.47.198:10000
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -98,11 +98,11 @@ babyt3(Ubuntu 16.04 php7.0) 61.164.47.198:10000
               <span class="page-view" key="20190425210200" title="2019 西湖论剑 Web 复现">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                <a href="https://3nd.xyz/tag/writeup/" class="post-tag">
                   # Writeup
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                <a href="https://3nd.xyz/tag/ctf/" class="post-tag">
                   # CTF
                 </a>
                 
@@ -114,7 +114,7 @@ babyt3(Ubuntu 16.04 php7.0) 61.164.47.198:10000
 <h2 id="babyt3">babyt3</h2>
 <p>babyt3(Ubuntu 16.04 php7.0) 61.164.47.198:10000</p>
 <p>简单探测存在以下文件:index.php、dir.php、/.DS_Store。</p>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1554987118360-7e79c95d-baaf-417a-bddd-7e92d5e94ca6.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/1554987118360-7e79c95d-baaf-417a-bddd-7e92d5e94ca6.png" alt="" loading="lazy"></figure>
 <p>由<code>include $_GET['file']</code>猜测存在文件包含~ 尝试PHP伪协议读取源代码：</p>
 <pre><code class="language-bash">http://61.164.47.198:10000/?file=php://filter/read=convert.base64-encode/resource=index.php
 </code></pre>
@@ -155,9 +155,9 @@ ZmxhZ3s4ZGMyNWZkMjFjNTI5NThmNzc3Y2U5MjQwOWUyODAyYX0=
 //flag{8dc25fd21c52958f777ce92409e2802a}
 </code></pre>
 <h2 id="breakout">Breakout</h2>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1554988767996-25426f38-a16e-47a3-97d2-d53f27b6de8b.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/1554988767996-25426f38-a16e-47a3-97d2-d53f27b6de8b.png" alt="" loading="lazy"></figure>
 <p>任意账号密码均可登录，个人中心页面如下：</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1554989062396-72a5539d-b01a-4c26-9391-b5c05e0db9c2.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/1554989062396-72a5539d-b01a-4c26-9391-b5c05e0db9c2.png" alt="" loading="lazy"></figure>
 <ul>
 <li><code>message</code>页面可进行留言，经探测对<code>script</code>等关键字进行了过滤，替换为<code>:)</code>。</li>
 <li><code>report</code>页面用于提交BUG，管理员会加上用户的token去登陆查验。</li>
@@ -226,19 +226,19 @@ for line in f.readlines():
 //flag{fa5139pae808c70485dd5f30337026d6}
 </code></pre>
 <h2 id="猜猜flag是什么">猜猜flag是什么</h2>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1554998036810-320186e6-f98a-4349-a516-2a4d41ac42fb.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/1554998036810-320186e6-f98a-4349-a516-2a4d41ac42fb.png" alt="" loading="lazy"></figure>
 <p>探测到<code>.DS_Store</code>文件，进行还原:</p>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1554998298013-b7c0a254-8e1b-4664-91e5-ba73a51e17a0.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/1554998298013-b7c0a254-8e1b-4664-91e5-ba73a51e17a0.png" alt="" loading="lazy"></figure>
 <p>访问<code>/e10adc3949ba59abbe56e057f20f883e/</code>:</p>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1554998403503-f7d8560e-b7c2-4751-9ca0-294672d223b2.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/1554998403503-f7d8560e-b7c2-4751-9ca0-294672d223b2.png" alt="" loading="lazy"></figure>
 <p>在此目录下发现<code>.git</code>泄露，使用Githack进行还原。</p>
-<figure data-type="image" tabindex="7"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1555032494963-e02984c3-1570-47e5-893e-6af105072e12.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/move/1555032494963-e02984c3-1570-47e5-893e-6af105072e12.png" alt="" loading="lazy"></figure>
 <p>加密压缩包<code>BackupForMySite.zip</code>中包含<code>index.php</code>、<code>lengzhu.jpg</code>以及文件<code>hint</code>。已知<code>index.php</code>、<code>lengzhu.jpg</code>文件，我们可以对压缩包进行明文攻击。</p>
 <blockquote>
 <p>简单来说，ZIP明文攻击就是利用已知文件找加密密钥，利用密钥来解锁其它加密文件，因为ZIP压缩包里的所有文件都是使用同一个加密密钥来加密的。</p>
 </blockquote>
 <p>压缩文件<code>index.php</code>、<code>lengzhu.jpg</code>作为已知明文，使用<code>APCHPR</code>进行明文攻击。</p>
-<figure data-type="image" tabindex="8"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1555033592861-03d3fa8f-cd7a-4ccb-910b-b0bfda917693.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/move/1555033592861-03d3fa8f-cd7a-4ccb-910b-b0bfda917693.png" alt="" loading="lazy"></figure>
 <p>成功获取密匙，解压得到hint:</p>
 <pre><code class="language-bash">code is 9faedd5999937171912159d28b219d86
 well ok ur good...By the way, flag saved in flag/seed.txt 
@@ -246,9 +246,9 @@ well ok ur good...By the way, flag saved in flag/seed.txt
 <p>提交code~</p>
 <pre><code class="language-bash">http://61.164.47.198:10002/?code=9faedd5999937171912159d28b219d86
 </code></pre>
-<figure data-type="image" tabindex="9"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1555033816792-8357863c-c4ea-4c3d-8962-9d8b4757c1c0.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://3nd.xyz/post-images/move/1555033816792-8357863c-c4ea-4c3d-8962-9d8b4757c1c0.png" alt="" loading="lazy"></figure>
 <p>可知flag在flag/seed.txt目录下，code=334579419是以seed为种子的播种随机数，可由code进行种子爆破得到seed~</p>
-<figure data-type="image" tabindex="10"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/1555034260821-5c126ad5-9e3b-4ded-b9eb-84341f609989.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://3nd.xyz/post-images/move/1555034260821-5c126ad5-9e3b-4ded-b9eb-84341f609989.png" alt="" loading="lazy"></figure>
 <p>在<code>http://61.164.47.198:10002/flag/814073.txt</code>获取到flag{0730b6193000e9334b12cf7c95fbc736}。</p>
 
                   </div>
@@ -284,7 +284,7 @@ well ok ur good...By the way, flag saved in flag/seed.txt
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-04-25-2017-NJCTF-Web-Guess/">
+              <a href="https://3nd.xyz/post/2019-04-25-2017-NJCTF-Web-Guess/">
                 <h3 class="post-title" style="text-align: left;">
                   攻防世界 2017 NJCTF Web Guess
                 </h3>
@@ -295,7 +295,7 @@ well ok ur good...By the way, flag saved in flag/seed.txt
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-04-25-2019-jiaweisibei-WriteUp/">
+              <a href="https://3nd.xyz/post/2019-04-25-2019-jiaweisibei-WriteUp/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   2019 “嘉韦思杯”上海市网络安全邀请赛 WriteUp
@@ -309,7 +309,7 @@ well ok ur good...By the way, flag saved in flag/seed.txt
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

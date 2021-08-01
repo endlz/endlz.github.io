@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>攻防世界 ADWorld Web 部分题解（2） | 3ND</title>
-<link rel="shortcut icon" href="https://github.com/inspiringz/inspiringz.github.io/favicon.ico?v=1627821474317">
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1627821697412">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://github.com/inspiringz/inspiringz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="攻防世界 ADWorld Web 部分题解（2） | 3ND - Atom Feed" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="攻防世界 ADWorld Web 部分题解（2） | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -29,8 +29,8 @@ config.txt
   <div class="main">
     <div class="main-content">
       <div class="site-header">
-  <a href="https://github.com/inspiringz/inspiringz.github.io">
-  <img class="avatar" src="https://github.com/inspiringz/inspiringz.github.io/images/avatar.png?v=1627821474317" alt="">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1627821697412" alt="">
   </a>
   <h1 class="site-title">
     3ND
@@ -99,11 +99,11 @@ config.txt
               <span class="page-view" key="20191007001006" title="攻防世界 ADWorld Web 部分题解（2）">
               </span>
               
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/writeup/" class="post-tag">
+                <a href="https://3nd.xyz/tag/writeup/" class="post-tag">
                   # Writeup
                 </a>
                 
-                <a href="https://github.com/inspiringz/inspiringz.github.io/tag/ctf/" class="post-tag">
+                <a href="https://3nd.xyz/tag/ctf/" class="post-tag">
                   # CTF
                 </a>
                 
@@ -232,7 +232,7 @@ CREATE TABLE `sshop`.`users` (
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 </code></pre>
 <p><code>User.php</code> 头像上传处可上传任意文件（需满足用户积分 &gt;= 100，可通过邀请用户注册获取积分，每成功注册一名用户邀请人将获取 10 积分，注册10个用户邀请人统一填写统一用户即可集齐 100 积分）。</p>
-<figure data-type="image" tabindex="1"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191007002644.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/move/20191007002644.png" alt="" loading="lazy"></figure>
 <p>考虑升级 文件上传漏洞为 <strong>文件上传 + 文件包含</strong>，结合 config.php 的相关限制（无法替换 auto_prepend_file 从而使用PHP、Phar、Zip伪协议）以及无法进行远程文件包含，则将目光放在新注册的 <code>master</code> 伪协议上。</p>
 <p>分析协议的构成，发现如果我们可以控制协议，则可以给 <strong>任意目录上传/搜索文件</strong>，而协议流程和对象注入差不多，先是执行 __construct 再是 stream_open,upload/search, stream_read... 主要是 upload 和 search，其余方法都做了处理，可以不管。</p>
 <p>上传目录被限制了，我们可以搜索文件。通过上传特定内容的 <code>.htaccess</code>，可以实现在任意目录下搜索文件：</p>
@@ -241,18 +241,18 @@ CREATE TABLE `sshop`.`users` (
 <p>搜索结果可以通过上传并访问一个 1.php 看到 通过几次简单测试，可以得到在如下 payload 时获取到 <code>hiahiahia_flag</code> 文件：</p>
 <pre><code class="language-php">php_value auto_append_file master://search/path=%2fhome%2f&amp;name=flag
 </code></pre>
-<figure data-type="image" tabindex="2"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191007010459.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/move/20191007010459.png" alt="" loading="lazy"></figure>
 <p>此时我们再上传一个 <code>.htaccess</code>，内容为 <code>php_value auto_append_file /home/hiahiahia_flag</code> 即包含 flag，再访问 1.php，即可获取到 flag。</p>
-<figure data-type="image" tabindex="3"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191007010618.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/move/20191007010618.png" alt="" loading="lazy"></figure>
 <h2 id="0x02-flask_sqli">0x02 Flask_SQLi</h2>
-<figure data-type="image" tabindex="4"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191021000729.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/move/20191021000729.png" alt="" loading="lazy"></figure>
 <p>基于 Flask 框架开发的一个 Microblog，题目给出了 Web 应用程序源代码，下载源码进行审计。</p>
 <p>查看注册框架 <code>RegistrationForm</code> 对注册邮箱过滤不严格：</p>
-<figure data-type="image" tabindex="5"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191021001150.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/move/20191021001150.png" alt="" loading="lazy"></figure>
 <p>跟进 <code>validate_email</code> 函数:</p>
 <pre><code class="language-python">validate_email() -&gt; Mysql.One -&gt; Mysql.Sel
 </code></pre>
-<figure data-type="image" tabindex="6"><img src="https://github.com/inspiringz/inspiringz.github.io/post-images/move/20191021001553.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/move/20191021001553.png" alt="" loading="lazy"></figure>
 <p>拼接 SQL 查询语句如下：</p>
 <pre><code class="language-sql">select id from user where email = 'your_input_email'
 </code></pre>
@@ -324,7 +324,7 @@ for i in range(1, 100):
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter;text-align: left;">上一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-10-26-2019-anhengbei-first/">
+              <a href="https://3nd.xyz/post/2019-10-26-2019-anhengbei-first/">
                 <h3 class="post-title" style="text-align: left;">
                   2019 全国大学生软件测试大赛预选赛
                 </h3>
@@ -335,7 +335,7 @@ for i in range(1, 100):
               margin-bottom: 24px;
               color: #343a40;
               font-weight: lighter; text-align: right;">下一篇</div>
-              <a href="https://github.com/inspiringz/inspiringz.github.io/post/2019-10-06-adworld-web-php-wrong-nginx-config/">
+              <a href="https://3nd.xyz/post/2019-10-06-adworld-web-php-wrong-nginx-config/">
                 <h3 class="post-title" style="
                 text-align: right;">
                   攻防世界 Web_php_wrong_nginx_config
@@ -349,7 +349,7 @@ for i in range(1, 100):
 
                                 <div class="site-footer">
   
-  <a class="rss" href="https://github.com/inspiringz/inspiringz.github.io/atom.xml" target="_blank">
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>
